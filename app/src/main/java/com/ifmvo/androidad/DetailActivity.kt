@@ -58,11 +58,7 @@ class DetailActivity : AppCompatActivity() {
             })
 
 
-        TogetherAdSeaBanner.showAdBanner(
-            this,
-            Config.bannerAdConfig(),
-            TogetherAdConst.AD_BANNER,
-            mFlAdBannerContainer,
+        TogetherAdSeaBanner.showAdBanner(this, Config.bannerAdConfig(), TogetherAdConst.AD_BANNER, mFlAdBannerContainer,
             object : TogetherAdSeaBanner.AdListenerBanner {
                 override fun onStartRequest(channel: String) {
                 }

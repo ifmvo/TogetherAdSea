@@ -7,10 +7,10 @@ package com.ifmvo.androidad.ad
  */
 object Config {
 
-    fun splashAdConfig() = "google:0,facebook:1"
+    fun splashAdConfig() = "google:1,facebook:0"
 
-    fun bannerAdConfig() = "google:0,facebook:1"
+    fun bannerAdConfig() = "google:1,facebook:0"
 
-    fun flowAdConfig() = "google:0,facebook:1"
+    fun flowAdConfig() = "google:1,facebook:0"
 
 }
