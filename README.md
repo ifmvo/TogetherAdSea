@@ -53,7 +53,7 @@ class TogetherAdConst {
 ```
 
 ### 第 3 步
-Application 中初始化广告
+Application 中初始化广告，初始化所有广告位对应广告的 ``位ID``
 ```
 Map<String, String> googleIdMap = new HashMap<>();
 googleIdMap.put(TogetherAdConst.AD_SPLASH, "ca-app-pub-3940256099942544/2247696110");
