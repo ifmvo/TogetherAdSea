@@ -1,6 +1,6 @@
 package com.liangzemu.ad.sea.helper
 
-import android.app.Activity
+import android.content.Context
 import android.view.ViewGroup
 import androidx.annotation.NonNull
 import com.facebook.ads.Ad
@@ -26,7 +26,7 @@ import com.liangzemu.ad.sea.other.loge
 object TogetherAdSeaBanner : AdBase {
 
     fun showAdBanner(
-        @NonNull activity: Activity,
+        @NonNull context: Context,
         bannerConfigStr: String?,
         @NonNull adConstStr: String,
         @NonNull adsParentLayout: ViewGroup,
@@ -35,23 +35,23 @@ object TogetherAdSeaBanner : AdBase {
 
         val randomAdName = AdRandomUtil.getRandomAdName(bannerConfigStr)
         when (randomAdName) {
-            AdNameType.GOOGLE -> showAdBannerGoogle(
-                activity,
+            AdNameType.GOOGLE_ADMOB -> showAdBannerGoogle(
+                context,
                 bannerConfigStr,
                 adConstStr,
                 adsParentLayout,
                 adListener
             )
             AdNameType.FACEBOOK -> showAdBannerFacebook(
-                activity,
+                context,
                 bannerConfigStr,
                 adConstStr,
                 adsParentLayout,
                 adListener
             )
             else -> {
-                adListener.onAdFailed(activity.getString(R.string.all_ad_error))
-                loge(activity.getString(R.string.all_ad_error))
+                adListener.onAdFailed(context.getString(R.string.all_ad_error))
+                loge(context.getString(R.string.all_ad_error))
             }
         }
     }
@@ -62,39 +62,39 @@ object TogetherAdSeaBanner : AdBase {
      * adConstStr : 例：TogetherAdConst.AD_SPLASH
      */
     private fun showAdBannerGoogle(
-        @NonNull activity: Activity,
+        @NonNull context: Context,
         bannerConfigStr: String?,
         @NonNull adConstStr: String,
         @NonNull adsParentLayout: ViewGroup,
         @NonNull adListener: AdListenerBanner
     ) {
-        adListener.onStartRequest(AdNameType.GOOGLE.type)
+        adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type)
 
-        val mAdView = AdView(activity)
+        val mAdView = AdView(context)
         adsParentLayout.addView(mAdView)
-        mAdView.adSize = AdSize.BANNER
+        mAdView.adSize = AdSize.SMART_BANNER
         mAdView.adUnitId = TogetherAdSea.idMapGoogle[adConstStr]
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                logd("${AdNameType.GOOGLE.type}: ${activity.getString(R.string.prepared)}")
-                adListener.onAdPrepared(AdNameType.GOOGLE.type)
+                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
+                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type)
             }
 
             override fun onAdFailedToLoad(errorCode: Int) {
-                loge("${AdNameType.GOOGLE.type}: errorCode:$errorCode")
-                val newBannerConfig = bannerConfigStr?.replace(AdNameType.GOOGLE.type, AdNameType.NO.type)
-                showAdBanner(activity, newBannerConfig, adConstStr, adsParentLayout, adListener)
+                loge("${AdNameType.GOOGLE_ADMOB.type}: errorCode:$errorCode")
+                val newBannerConfig = bannerConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
+                showAdBanner(context, newBannerConfig, adConstStr, adsParentLayout, adListener)
             }
 
             override fun onAdClicked() {
-                logd("${AdNameType.GOOGLE.type}: ${activity.getString(R.string.clicked)}")
-                adListener.onAdClick(AdNameType.GOOGLE.type)
+                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.clicked)}")
+                adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type)
             }
 
             override fun onAdImpression() {
-                logd("${AdNameType.GOOGLE.type}: ${activity.getString(R.string.exposure)}")
+                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.exposure)}")
             }
         }
     }
@@ -103,7 +103,7 @@ object TogetherAdSeaBanner : AdBase {
      * Facebook
      */
     private fun showAdBannerFacebook(
-        @NonNull activity: Activity,
+        @NonNull context: Context,
         bannerConfigStr: String?,
         @NonNull adConstStr: String,
         @NonNull adsParentLayout: ViewGroup,
@@ -113,33 +113,33 @@ object TogetherAdSeaBanner : AdBase {
         adListener.onStartRequest(AdNameType.FACEBOOK.type)
 
         val adView = com.facebook.ads.AdView(
-            activity,
+            context,
             TogetherAdSea.idMapFacebook[adConstStr],
             com.facebook.ads.AdSize.BANNER_HEIGHT_50
         )
 
-        // Add the ad view to your activity layout
+        // Add the ad view to your context layout
         adsParentLayout.addView(adView)
 
         adView.setAdListener(object : com.facebook.ads.AdListener {
             override fun onAdClicked(ad: Ad?) {
-                logd("${AdNameType.FACEBOOK.type}: ${activity.getString(R.string.clicked)}")
+                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.clicked)}")
                 adListener.onAdClick(AdNameType.FACEBOOK.type)
             }
 
             override fun onError(ad: Ad?, adError: AdError?) {
                 loge("${AdNameType.FACEBOOK.type}: adError:${adError?.errorCode},${adError?.errorMessage}")
                 val newBannerConfig = bannerConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-                showAdBanner(activity, newBannerConfig, adConstStr, adsParentLayout, adListener)
+                showAdBanner(context, newBannerConfig, adConstStr, adsParentLayout, adListener)
             }
 
             override fun onAdLoaded(ad: Ad?) {
-                logd("${AdNameType.FACEBOOK.type}: ${activity.getString(R.string.prepared)}")
+                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type)
             }
 
             override fun onLoggingImpression(ad: Ad?) {
-                logd("${AdNameType.FACEBOOK.type}: ${activity.getString(R.string.exposure)}")
+                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.exposure)}")
             }
         })
 

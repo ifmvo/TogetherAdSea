@@ -8,10 +8,10 @@ package com.liangzemu.ad.sea.other
 enum class AdNameType(val type: String) {
 
     //Google AdMob
-    GOOGLE("google"),
+    GOOGLE_ADMOB("GOOGLE_ADMOB"),
 
     //Facebook
-    FACEBOOK("facebook"),
+    FACEBOOK("FACEBOOK"),
 
     //不展示
     NO("no")

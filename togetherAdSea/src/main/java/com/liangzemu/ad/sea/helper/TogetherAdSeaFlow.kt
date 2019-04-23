@@ -1,6 +1,6 @@
 package com.liangzemu.ad.sea.helper
 
-import android.app.Activity
+import android.content.Context
 import androidx.annotation.NonNull
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
@@ -28,7 +28,7 @@ import com.liangzemu.ad.sea.other.loge
 object TogetherAdSeaFlow : AdBase {
 
     fun showAdFlow(
-        @NonNull activity: Activity,
+        @NonNull context: Context,
         splashConfigStr: String?,
         @NonNull adConstStr: String,
         @NonNull adListener: AdListenerFlow
@@ -36,21 +36,21 @@ object TogetherAdSeaFlow : AdBase {
 
         val randomAdName = AdRandomUtil.getRandomAdName(splashConfigStr)
         when (randomAdName) {
-            AdNameType.GOOGLE -> showAdFlowGoogle(
-                activity,
+            AdNameType.GOOGLE_ADMOB -> showAdFlowGoogle(
+                context,
                 splashConfigStr,
                 adConstStr,
                 adListener
             )
             AdNameType.FACEBOOK -> showAdFlowFacebook(
-                activity,
+                context,
                 splashConfigStr,
                 adConstStr,
                 adListener
             )
             else -> {
-                adListener.onAdFailed(activity.getString(R.string.all_ad_error))
-                loge(activity.getString(R.string.all_ad_error))
+                adListener.onAdFailed(context.getString(R.string.all_ad_error))
+                loge(context.getString(R.string.all_ad_error))
             }
         }
     }
@@ -61,31 +61,31 @@ object TogetherAdSeaFlow : AdBase {
      * adConstStr : 例：TogetherAdConst.AD_SPLASH
      */
     private fun showAdFlowGoogle(
-        @NonNull activity: Activity,
+        @NonNull context: Context,
         splashConfigStr: String?,
         @NonNull adConstStr: String,
         @NonNull adListener: AdListenerFlow
     ) {
-        adListener.onStartRequest(AdNameType.GOOGLE.type)
-        val adLoader = AdLoader.Builder(activity, TogetherAdSea.idMapGoogle[adConstStr])
+        adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type)
+        val adLoader = AdLoader.Builder(context, TogetherAdSea.idMapGoogle[adConstStr])
             .forUnifiedNativeAd { ad: UnifiedNativeAd ->
-                logd("${AdNameType.GOOGLE.type}: ${activity.getString(R.string.prepared)}")
-                adListener.onAdPrepared(AdNameType.GOOGLE.type, ad)
+                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
+                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, ad)
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(errorCode: Int) {
-                    loge("${AdNameType.GOOGLE.type}: errorCode:$errorCode")
-                    val newSplashConfig = splashConfigStr?.replace(AdNameType.GOOGLE.type, AdNameType.NO.type)
-                    showAdFlow(activity, newSplashConfig, adConstStr, adListener)
+                    loge("${AdNameType.GOOGLE_ADMOB.type}: errorCode:$errorCode")
+                    val newSplashConfig = splashConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
+                    showAdFlow(context, newSplashConfig, adConstStr, adListener)
                 }
 
                 override fun onAdImpression() {
-                    logd("${AdNameType.GOOGLE.type}: ${activity.getString(R.string.exposure)}")
+                    logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.exposure)}")
                 }
 
                 override fun onAdClicked() {
-                    logd("${AdNameType.GOOGLE.type}: ${activity.getString(R.string.clicked)}")
-                    adListener.onAdClick(AdNameType.GOOGLE.type)
+                    logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.clicked)}")
+                    adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type)
                 }
             })
             .withNativeAdOptions(
@@ -104,7 +104,7 @@ object TogetherAdSeaFlow : AdBase {
      * Facebook
      */
     private fun showAdFlowFacebook(
-        @NonNull activity: Activity,
+        @NonNull context: Context,
         splashConfigStr: String?,
         @NonNull adConstStr: String,
         @NonNull adListener: AdListenerFlow
@@ -112,10 +112,10 @@ object TogetherAdSeaFlow : AdBase {
 
         adListener.onStartRequest(AdNameType.FACEBOOK.type)
 
-        val nativeAd = NativeAd(activity, TogetherAdSea.idMapFacebook[adConstStr])
+        val nativeAd = NativeAd(context, TogetherAdSea.idMapFacebook[adConstStr])
         nativeAd.setAdListener(object : NativeAdListener {
             override fun onAdClicked(ad: Ad?) {
-                logd("${AdNameType.FACEBOOK.type}: ${activity.getString(R.string.clicked)}")
+                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.clicked)}")
             }
 
             override fun onMediaDownloaded(ad: Ad?) {
@@ -124,22 +124,22 @@ object TogetherAdSeaFlow : AdBase {
             override fun onError(ad: Ad?, adError: AdError?) {
                 loge("${AdNameType.FACEBOOK.type}: adError:${adError?.errorCode},${adError?.errorMessage}")
                 val newSplashConfig = splashConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-                showAdFlow(activity, newSplashConfig, adConstStr, adListener)
+                showAdFlow(context, newSplashConfig, adConstStr, adListener)
             }
 
             override fun onAdLoaded(ad: Ad?) {
                 if (nativeAd != ad) {
                     loge("${AdNameType.FACEBOOK.type}: 广告返回错误 nativeAd != ad")
                     val newSplashConfig = splashConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-                    showAdFlow(activity, newSplashConfig, adConstStr, adListener)
+                    showAdFlow(context, newSplashConfig, adConstStr, adListener)
                     return
                 }
-                logd("${AdNameType.FACEBOOK.type}: ${activity.getString(R.string.prepared)}")
+                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type, ad)
             }
 
             override fun onLoggingImpression(ad: Ad?) {
-                logd("${AdNameType.FACEBOOK.type}: ${activity.getString(R.string.exposure)}")
+                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.exposure)}")
             }
         })
         nativeAd.loadAd()

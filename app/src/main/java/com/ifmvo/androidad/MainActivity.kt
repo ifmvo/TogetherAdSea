@@ -45,8 +45,4 @@ class MainActivity : AppCompatActivity() {
         }, delayMillis)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-    }
 }

@@ -13,7 +13,7 @@ allprojects {
 ```
 ```
 dependencies {
-    implementation 'com.github.ifmvo:TogetherAdSea:1.0.1'
+    implementation 'com.github.ifmvo:TogetherAdSea:1.0.3'
 }
 ```
 
@@ -133,4 +133,7 @@ TogetherAdSeaBanner.showAdBanner(this, Config.bannerAdConfig(), TogetherAdConst.
         }
     })
 ```
+
+## 查看日志
+
 

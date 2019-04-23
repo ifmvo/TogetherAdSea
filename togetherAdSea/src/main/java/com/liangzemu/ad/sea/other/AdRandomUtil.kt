@@ -5,9 +5,9 @@ package com.liangzemu.ad.sea.other
  *
  * 参数 configStr : "google:2,facebook:8"
  *
- * 按照 2 ：8 的比例随机返回 GOOGLE or FACEBOOK
+ * 按照 2 ：8 的比例随机返回 GOOGLE_ADMOB or FACEBOOK
  *
- * return AdNameType.GOOGLE  || AdNameType.FACEBOOK || ...
+ * return AdNameType.GOOGLE_ADMOB  || AdNameType.FACEBOOK || ...
  *
  * Created by Matthew_Chen on 2018/8/24.
  */
@@ -16,7 +16,7 @@ object AdRandomUtil {
     /**
      * configStr : "google:2,facebook:8"
      *
-     * return AdNameType.GOOGLE  || AdNameType.FACEBOOK || ...
+     * return AdNameType.GOOGLE_ADMOB  || AdNameType.FACEBOOK || ...
      */
     fun getRandomAdName(configStr: String?): AdNameType {
 
@@ -33,14 +33,14 @@ object AdRandomUtil {
             if (itemStr.isNotEmpty()) {
                 val splitKeyValue = itemStr.split(":")
                 if (splitKeyValue.size == 2) {
-                    val keyStr = splitKeyValue[0]//google
+                    val keyStr = splitKeyValue[0].toUpperCase()//google
                     val valueStr = splitKeyValue[1]//2
                     if (keyStr.isNotEmpty() && valueStr.isNotEmpty()) {
                         //加到 list 里面 2 个 "google"
                         repeat(valueStr.toInt()) {
                             when (keyStr) {
-                                AdNameType.GOOGLE.type -> {
-                                    list.add(AdNameType.GOOGLE)
+                                AdNameType.GOOGLE_ADMOB.type -> {
+                                    list.add(AdNameType.GOOGLE_ADMOB)
                                 }
                                 AdNameType.FACEBOOK.type -> {
                                     list.add(AdNameType.FACEBOOK)
