@@ -13,7 +13,7 @@ allprojects {
 ```
 ```
 dependencies {
-    implementation 'com.github.ifmvo:TogetherAdSea:1.0.0'
+    implementation 'com.github.ifmvo:TogetherAdSea:1.0.1'
 }
 ```
 
