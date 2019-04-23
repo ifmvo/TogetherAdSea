@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.ads.NativeAdLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/native_ad_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <FrameLayout
+            android:id="@+id/ad_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <com.facebook.ads.MediaView
+                android:id="@+id/native_ad_media"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"/>
+
+        <TextView
+                android:id="@+id/ad_action"
+                android:layout_width="wrap_content"
+                android:textSize="16sp"
+                tools:text="@string/time_action"
+                android:paddingLeft="11dp"
+                android:paddingRight="11dp"
+                android:paddingBottom="5dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="30dp"
+                android:paddingTop="5dp"
+                android:visibility="gone"
+                android:background="@drawable/shape_time_bg"
+                android:textColor="@android:color/white"
+                android:layout_height="wrap_content"/>
+
+        <com.facebook.ads.AdIconView
+                android:id="@+id/native_ad_icon"
+                android:layout_width="35dp"
+                android:layout_gravity="bottom|right"
+                android:layout_height="35dp"/>
+
+    </FrameLayout>
+
+</com.facebook.ads.NativeAdLayout>
