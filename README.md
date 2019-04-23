@@ -1,5 +1,7 @@
-TogetherAdSea 
-海外版的 TogetherAd 目前包含 Facebook、Google 的广告
+# TogetherAdSea 
+
+海外版的 [TogetherAd](http://a.i33.tv:3000/rocky/TogetherAd-Pro) 目前包含 Facebook、Google 的广告
+
 ### 第 0 步
 ```
 allprojects {
