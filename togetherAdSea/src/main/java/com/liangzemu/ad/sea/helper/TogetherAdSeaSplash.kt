@@ -152,6 +152,7 @@ object TogetherAdSeaSplash : AdBase {
             .withNativeAdOptions(
                 NativeAdOptions.Builder()
                     .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_BOTTOM_RIGHT)
+                    .setImageOrientation(NativeAdOptions.ORIENTATION_PORTRAIT)
                     .build()
             )
             .build()
