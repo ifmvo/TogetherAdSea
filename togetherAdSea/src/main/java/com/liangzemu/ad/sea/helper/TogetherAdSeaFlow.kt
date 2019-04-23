@@ -90,7 +90,7 @@ object TogetherAdSeaFlow : AdBase {
             })
             .withNativeAdOptions(
                 NativeAdOptions.Builder()
-                    .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_BOTTOM_RIGHT)
+                    .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT)
                     .build()
             )
             .build()
