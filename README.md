@@ -1,7 +1,22 @@
 TogetherAdSea 
 海外版的 TogetherAd 目前包含 Facebook、Google 的广告
-
 ### 第 0 步
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+```
+dependencies {
+    implementation 'com.github.ifmvo:TogetherAdSea:1.0.0'
+}
+```
+
+
+### 第 1 步
 注册 Google 广告的 APP_ID：将 ADMOB_APP_ID 替换为自己的 ID
 缺少这一步骤会导致崩溃，报错信息：The Google Mobile Ads SDK was initialized incorrectly."
 ```
@@ -15,7 +30,7 @@ TogetherAdSea
 </manifest>
 ```
 
-### 第 1 步
+### 第 2 步
 新建一个文件，配置所有的广告位
 ```
 class TogetherAdConst {
@@ -33,7 +48,7 @@ class TogetherAdConst {
 }
 ```
 
-### 第 2 步
+### 第 3 步
 Application 中初始化广告
 ```
 Map<String, String> googleIdMap = new HashMap<>();
@@ -49,7 +64,7 @@ facebookIdMap.put(TogetherAdConst.AD_FLOW, "290080388575176_298449734404908");
 TogetherAdSea.INSTANCE.initFacebookAd(this, facebookIdMap);
 ```
 
-### 第三步
+### 第 4 步
 请求开屏广告
 ```
 TogetherAdSeaSplash.showAdFull(this, Config.splashAdConfig(), TogetherAdConst.AD_SPLASH, mFlAdContainer,
