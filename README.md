@@ -3,6 +3,7 @@
 # TogetherAdSea 
 
 海外版的 [TogetherAd](http://a.i33.tv:3000/rocky/TogetherAd-Pro) 目前包含 Facebook、Google 的广告
+项目全都使用 Kotlin 编写
 
 ### 第 0 步
 ```
@@ -15,10 +16,10 @@ allprojects {
 ```
 ```
 dependencies {
-    implementation 'com.github.ifmvo:TogetherAdSea:1.0.3'
+    implementation 'com.github.ifmvo:TogetherAdSea:最新版本'
 }
 ```
-
+可在 [这里](https://jitpack.io/#ifmvo/TogetherAdSea) 查看最新版本，也可在标签列表中查看
 
 ### 第 1 步
 注册 Google 广告的 APP_ID：将 ADMOB_APP_ID 替换为自己的 ID
@@ -53,22 +54,36 @@ class TogetherAdConst {
 ```
 
 ### 第 3 步
+新建一个文件，这个文件中的数据实际项目中是由接口下发。
+不区分大小写，大写小写均可以，已经在项目中做了兼容处理
+```
+object Config {
+
+    fun splashAdConfig() = "google_admob:1,facebook:0"
+
+    fun bannerAdConfig() = "google_admob:1,facebook:0"
+
+    fun flowAdConfig() = "GOOGLE_ADMOB:1,facebook:0"
+
+}
+```
+### 第 4 步
 Application 中初始化广告，初始化所有广告位对应广告的 ``位ID``
 ```
 Map<String, String> googleIdMap = new HashMap<>();
-googleIdMap.put(TogetherAdConst.AD_SPLASH, "ca-app-pub-3940256099942544/2247696110");
-googleIdMap.put(TogetherAdConst.AD_BANNER, "ca-app-pub-3940256099942544/6300978111");
-googleIdMap.put(TogetherAdConst.AD_FLOW, "ca-app-pub-3940256099942544/2247696110");
-TogetherAdSea.INSTANCE.initGoogleAd(this, "ca-app-pub-3940256099942544~3347511713", googleIdMap);
+googleIdMap.put(TogetherAdConst.AD_SPLASH, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+googleIdMap.put(TogetherAdConst.AD_BANNER, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+googleIdMap.put(TogetherAdConst.AD_FLOW, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+TogetherAdSea.INSTANCE.initGoogleAd(this, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", googleIdMap);
 
 Map<String, String> facebookIdMap = new HashMap<>();
-facebookIdMap.put(TogetherAdConst.AD_SPLASH, "290080388575176_290083468574868");
-facebookIdMap.put(TogetherAdConst.AD_BANNER, "290080388575176_298008991115649");
-facebookIdMap.put(TogetherAdConst.AD_FLOW, "290080388575176_298449734404908");
+facebookIdMap.put(TogetherAdConst.AD_SPLASH, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+facebookIdMap.put(TogetherAdConst.AD_BANNER, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+facebookIdMap.put(TogetherAdConst.AD_FLOW, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 TogetherAdSea.INSTANCE.initFacebookAd(this, facebookIdMap);
 ```
 
-### 第 4 步
+### 第 5 步
 请求开屏广告
 ```
 TogetherAdSeaSplash.showAdFull(this, Config.splashAdConfig(), TogetherAdConst.AD_SPLASH, mFlAdContainer,

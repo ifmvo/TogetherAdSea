@@ -18,6 +18,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        //Google 广告的测试 ID
         Map<String, String> googleIdMap = new HashMap<>();
         googleIdMap.put(TogetherAdConst.AD_SPLASH, "ca-app-pub-3940256099942544/2247696110");
         googleIdMap.put(TogetherAdConst.AD_BANNER, "ca-app-pub-3940256099942544/6300978111");
