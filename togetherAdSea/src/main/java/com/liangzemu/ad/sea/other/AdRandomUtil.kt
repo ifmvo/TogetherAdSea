@@ -33,7 +33,7 @@ object AdRandomUtil {
             if (itemStr.isNotEmpty()) {
                 val splitKeyValue = itemStr.split(":")
                 if (splitKeyValue.size == 2) {
-                    val keyStr = splitKeyValue[0].toUpperCase()//google
+                    val keyStr = splitKeyValue[0]//google
                     val valueStr = splitKeyValue[1]//2
                     if (keyStr.isNotEmpty() && valueStr.isNotEmpty()) {
                         //加到 list 里面 2 个 "google"
