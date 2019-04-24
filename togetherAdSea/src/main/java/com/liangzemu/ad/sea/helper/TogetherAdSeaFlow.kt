@@ -96,7 +96,7 @@ object TogetherAdSeaFlow : AdBase {
             .build()
 
         adLoader.loadAd(AdRequest.Builder().build())
-        adLoader.loadAds(AdRequest.Builder().build(), 3)//最大5
+//        adLoader.loadAds(AdRequest.Builder().build(), 3)//最大5
     }
 
     /**
