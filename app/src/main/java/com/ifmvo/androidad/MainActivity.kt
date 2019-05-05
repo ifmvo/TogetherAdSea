@@ -13,6 +13,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+//        Thread {
+//            val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(this)
+//            Log.e("ifmvo", advertisingIdInfo.id)
+//        }.start()
+
         TogetherAdSeaSplash.showAdFull(
             this,
             Config.splashAdConfig(),
