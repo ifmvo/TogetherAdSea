@@ -9,6 +9,7 @@
     <string translatable="false" name="timeout">超时了</string>
     <string translatable="false" name="exposure">曝光成功了</string>
     <string translatable="false" name="prepared">准备好了</string>
+    <string translatable="false" name="opened">广告打开了</string>
     <string translatable="false" name="show">展示了</string>
     <string translatable="false" name="clicked">点击了</string>
     <string translatable="false" name="dismiss">消失了</string>

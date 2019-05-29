@@ -10,18 +10,35 @@
             android:orientation="vertical"
             android:layout_height="wrap_content">
 
-        <ImageView
-                android:id="@+id/iv"
+        <!--
+            插屏
+        -->
+        <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
 
-        <TextView
-                android:id="@+id/tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <Button
+                    android:id="@+id/btnRequestInter"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:text="request插屏"
+                    android:layout_height="wrap_content"/>
+
+            <Button
+                    android:id="@+id/btnShowInter"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:text="show插屏"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
+    <!--
+        横幅
+    -->
     <FrameLayout
             android:id="@+id/mFlAdBannerContainer"
             android:layout_width="match_parent"

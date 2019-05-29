@@ -46,14 +46,14 @@ object TogetherAdSeaSplash : AdBase {
         val randomAdName = AdRandomUtil.getRandomAdName(splashConfigStr)
         when (randomAdName) {
             AdNameType.GOOGLE_ADMOB -> showAdFullGoogle(
-                context,
+                context.applicationContext,
                 splashConfigStr,
                 adConstStr,
                 adsParentLayout,
                 adListener
             )
             AdNameType.FACEBOOK -> showAdFullFacebook(
-                context,
+                context.applicationContext,
                 splashConfigStr,
                 adConstStr,
                 adsParentLayout,

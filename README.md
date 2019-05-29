@@ -153,5 +153,3 @@ TogetherAdSeaBanner.showAdBanner(this, Config.bannerAdConfig(), TogetherAdConst.
 
 ## 查看日志
 只需要在 Logcat 中过滤 ``TogetherAdSeaInfo``
-
-

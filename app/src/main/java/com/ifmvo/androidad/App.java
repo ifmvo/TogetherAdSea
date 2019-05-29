@@ -23,12 +23,14 @@ public class App extends Application {
         googleIdMap.put(TogetherAdConst.AD_SPLASH, "ca-app-pub-3940256099942544/2247696110");
         googleIdMap.put(TogetherAdConst.AD_BANNER, "ca-app-pub-3940256099942544/6300978111");
         googleIdMap.put(TogetherAdConst.AD_FLOW, "ca-app-pub-3940256099942544/2247696110");
+        googleIdMap.put(TogetherAdConst.AD_INTER, "ca-app-pub-3940256099942544/1033173712");
         TogetherAdSea.INSTANCE.initGoogleAd(this, "ca-app-pub-3940256099942544~3347511713", googleIdMap);
 
         Map<String, String> facebookIdMap = new HashMap<>();
-        facebookIdMap.put(TogetherAdConst.AD_SPLASH, "290080388575176_290083468574868");
-        facebookIdMap.put(TogetherAdConst.AD_BANNER, "290080388575176_298008991115649");
-        facebookIdMap.put(TogetherAdConst.AD_FLOW, "290080388575176_298449734404908");
+        facebookIdMap.put(TogetherAdConst.AD_SPLASH, "2418474145048681_2419052008324228");
+        facebookIdMap.put(TogetherAdConst.AD_BANNER, "2418474145048681_2419053121657450");
+        facebookIdMap.put(TogetherAdConst.AD_FLOW, "2418474145048681_2419055058323923");
+        facebookIdMap.put(TogetherAdConst.AD_INTER, "2418474145048681_2423241911238571");
         TogetherAdSea.INSTANCE.initFacebookAd(this, facebookIdMap);
 
     }

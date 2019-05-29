@@ -34,13 +34,13 @@ object TogetherAdSeaBannerView : AdBase {
         val randomAdName = AdRandomUtil.getRandomAdName(bannerConfigStr)
         when (randomAdName) {
             AdNameType.GOOGLE_ADMOB -> showAdBannerGoogle(
-                context,
+                context.applicationContext,
                 bannerConfigStr,
                 adConstStr,
                 adListener
             )
             AdNameType.FACEBOOK -> showAdBannerFacebook(
-                context,
+                context.applicationContext,
                 bannerConfigStr,
                 adConstStr,
                 adListener
@@ -73,7 +73,7 @@ object TogetherAdSeaBannerView : AdBase {
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
-                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type,mAdView)
+                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, mAdView)
             }
 
             override fun onAdFailedToLoad(errorCode: Int) {
@@ -125,7 +125,7 @@ object TogetherAdSeaBannerView : AdBase {
 
             override fun onAdLoaded(ad: Ad?) {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
-                adListener.onAdPrepared(AdNameType.FACEBOOK.type,adView)
+                adListener.onAdPrepared(AdNameType.FACEBOOK.type, adView)
             }
 
             override fun onLoggingImpression(ad: Ad?) {
@@ -147,7 +147,7 @@ object TogetherAdSeaBannerView : AdBase {
 
         fun onAdFailed(failedMsg: String?)
 
-        fun onAdPrepared(channel: String,bannerView:Any)
+        fun onAdPrepared(channel: String, bannerView: Any)
     }
 
 }

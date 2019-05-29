@@ -37,13 +37,13 @@ object TogetherAdSeaFlow : AdBase {
         val randomAdName = AdRandomUtil.getRandomAdName(splashConfigStr)
         when (randomAdName) {
             AdNameType.GOOGLE_ADMOB -> showAdFlowGoogle(
-                context,
+                context.applicationContext,
                 splashConfigStr,
                 adConstStr,
                 adListener
             )
             AdNameType.FACEBOOK -> showAdFlowFacebook(
-                context,
+                context.applicationContext,
                 splashConfigStr,
                 adConstStr,
                 adListener

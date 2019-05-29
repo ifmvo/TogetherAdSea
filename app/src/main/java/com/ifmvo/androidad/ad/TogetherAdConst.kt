@@ -17,5 +17,7 @@ class TogetherAdConst {
         //原生
         const val AD_FLOW = "ad_flow"
 
+        //插屏
+        const val AD_INTER = "ad_inter"
     }
 }

@@ -11,6 +11,7 @@ import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
 import com.liangzemu.ad.sea.helper.TogetherAdSeaBanner
 import com.liangzemu.ad.sea.helper.TogetherAdSeaFlow
+import com.liangzemu.ad.sea.helper.TogetherAdSeaInter
 import kotlinx.android.synthetic.main.activity_detail.*
 
 /* 
@@ -19,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_detail.*
  * Created by Matthew_Chen on 2019-04-23.
  */
 class DetailActivity : AppCompatActivity() {
+
+    private val tag = "DetailActivity"
 
     object Detail {
         fun action(context: Context) {
@@ -31,6 +34,20 @@ class DetailActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_detail)
 
+        btnRequestInter.setOnClickListener {
+            requestInter()
+        }
+
+        btnShowInter.setOnClickListener {
+            TogetherAdSeaInter.showAdInter()
+        }
+
+        requestFlow()
+
+        requestBanner()
+    }
+
+    private fun requestFlow() {
         TogetherAdSeaFlow.showAdFlow(
             this,
             Config.flowAdConfig(),
@@ -56,20 +73,49 @@ class DetailActivity : AppCompatActivity() {
                     }
                 }
             })
+    }
 
-
+    private fun requestBanner() {
         TogetherAdSeaBanner.showAdBanner(this, Config.bannerAdConfig(), TogetherAdConst.AD_BANNER, mFlAdBannerContainer,
             object : TogetherAdSeaBanner.AdListenerBanner {
                 override fun onStartRequest(channel: String) {
+                    Log.e(tag, "onStartRequest:$channel")
                 }
 
                 override fun onAdClick(channel: String) {
+                    Log.e(tag, "onAdClick:$channel")
                 }
 
                 override fun onAdFailed(failedMsg: String?) {
+                    Log.e(tag, "onAdFailed:$failedMsg")
                 }
 
                 override fun onAdPrepared(channel: String) {
+                    Log.e(tag, "onAdPrepared:$channel")
+                }
+            })
+    }
+
+    private fun requestInter() {
+        TogetherAdSeaInter.requestAdInter(
+            this,
+            Config.interAdConfig(),
+            TogetherAdConst.AD_INTER,
+            object : TogetherAdSeaInter.AdListenerInter {
+                override fun onStartRequest(channel: String) {
+                    Log.e(tag, "onStartRequest:$channel")
+                }
+
+                override fun onAdClick(channel: String) {
+                    Log.e(tag, "onAdClick:$channel")
+                }
+
+                override fun onAdFailed(failedMsg: String?) {
+                    Log.e(tag, "onAdFailed:$failedMsg")
+                }
+
+                override fun onAdPrepared(channel: String) {
+                    Log.e(tag, "onAdPrepared:$channel")
                 }
             })
     }
