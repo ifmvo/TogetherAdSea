@@ -114,7 +114,7 @@ class DetailActivity : AppCompatActivity() {
                     Log.e(tag, "onAdFailed:$failedMsg")
                 }
 
-                override fun onAdPrepared(channel: String) {
+                override fun onAdShow(channel: String) {
                     Log.e(tag, "onAdPrepared:$channel")
                 }
             })
