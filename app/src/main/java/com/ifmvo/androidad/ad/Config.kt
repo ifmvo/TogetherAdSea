@@ -13,6 +13,6 @@ object Config {
 
     fun flowAdConfig() = "google_admob:0,facebook:1"
 
-    fun interAdConfig() = "google_admob:0,facebook:1"
+    fun interAdConfig() = "google_admob:1,facebook:0"
 
 }

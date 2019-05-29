@@ -21,11 +21,31 @@ object TogetherAdSea {
     var idMapFacebook = mutableMapOf<String, String?>()
         private set
 
+    var idListGoogleMap = mutableMapOf<String, MutableList<String>>()
+
+    var idListFacebookMap = mutableMapOf<String, MutableList<String>>()
+
     /**
      * 超时时间
      */
 //    var timeOutMillis: Long = 5000
 //        private set
+
+    /**
+     * 初始化广告
+     */
+    fun initAdGoogle(@NonNull context: Context, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, MutableList<String>>) {
+        idListGoogleMap = googleIdMap
+        MobileAds.initialize(context, googleAdAppId)
+    }
+
+    fun initAdFacebook(@NonNull context: Context, @NonNull facebookIdMap: MutableMap<String, MutableList<String>>) {
+        idListFacebookMap = facebookIdMap
+        // Example for setting the SDK to crash when in debug mode
+        AudienceNetworkAds.isInAdsProcess(context)
+        AdSettings.setIntegrationErrorMode(AdSettings.IntegrationErrorMode.INTEGRATION_ERROR_CALLBACK_MODE)
+        AudienceNetworkAds.initialize(context)
+    }
 
     /**
      * 初始化广告
@@ -38,6 +58,7 @@ object TogetherAdSea {
     fun initFacebookAd(@NonNull context: Context, @NonNull facebookIdMap: MutableMap<String, String?>) {
         idMapFacebook = facebookIdMap
         // Example for setting the SDK to crash when in debug mode
+        AudienceNetworkAds.isInAdsProcess(context)
         AdSettings.setIntegrationErrorMode(AdSettings.IntegrationErrorMode.INTEGRATION_ERROR_CALLBACK_MODE)
         AudienceNetworkAds.initialize(context)
     }

@@ -39,12 +39,14 @@ object TogetherAdSeaInter : AdBase {
                 context.applicationContext,
                 interConfigStr,
                 adConstStr,
+                0,
                 adListener
             )
             AdNameType.FACEBOOK -> TogetherAdSeaInter.requestAdInterFacebook(
                 context.applicationContext,
                 interConfigStr,
                 adConstStr,
+                0,
                 adListener
             )
             else -> {
@@ -58,12 +60,29 @@ object TogetherAdSeaInter : AdBase {
         @NonNull context: Context,
         bannerConfigStr: String?,
         @NonNull adConstStr: String,
+        indexGoogle: Int,
         @NonNull adListener: AdListenerInter
     ) {
+        val idList = TogetherAdSea.idListGoogleMap[adConstStr]
+
+        if (indexGoogle >= idList?.size ?: 0) {
+            //如果所有档位都请求失败了，就切换另外一种广告
+            val newBannerConfig = bannerConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
+            requestAdInter(context, newBannerConfig, adConstStr, adListener)
+            return
+        }
+
+        if (idList.isNullOrEmpty()) {
+            //如果在 Map 里面获取不到该广告位的 idList 意味着初始化的时候没有设置这个广告位
+            loge("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.ad_id_no)}")
+            adListener.onAdFailed(context.getString(R.string.ad_id_no))
+            return
+        }
+
         adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type)
 
         interGoogle = InterstitialAd(context)
-        interGoogle?.adUnitId = TogetherAdSea.idMapGoogle[adConstStr]
+        interGoogle?.adUnitId = idList[indexGoogle]
         interGoogle?.loadAd(AdRequest.Builder().build())
         interGoogle?.adListener = object : AdListener() {
             override fun onAdLoaded() {
@@ -76,9 +95,15 @@ object TogetherAdSeaInter : AdBase {
             }
 
             override fun onAdFailedToLoad(errorCode: Int) {
-                loge("${AdNameType.GOOGLE_ADMOB.type}: errorCode:$errorCode")
-                val newBannerConfig = bannerConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
-                requestAdInter(context, newBannerConfig, adConstStr, adListener)
+                loge("${AdNameType.GOOGLE_ADMOB.type}: indexGoogle:$indexGoogle, errorCode:$errorCode")
+
+                if (indexGoogle < TogetherAdSea.idListGoogleMap[adConstStr]?.size ?: 0) {
+                    val newIndexGoogle = indexGoogle + 1
+                    requestAdInterGoogle(context, bannerConfigStr, adConstStr, newIndexGoogle, adListener)
+                } else {
+                    val newBannerConfig = bannerConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
+                    requestAdInter(context, newBannerConfig, adConstStr, adListener)
+                }
             }
 
             override fun onAdClicked() {
@@ -100,11 +125,29 @@ object TogetherAdSeaInter : AdBase {
         @NonNull context: Context,
         bannerConfigStr: String?,
         @NonNull adConstStr: String,
+        indexFacebook: Int,
         @NonNull adListener: AdListenerInter
     ) {
+
+        val idList = TogetherAdSea.idListFacebookMap[adConstStr]
+
+        if (indexFacebook >= idList?.size ?: 0) {
+            //如果所有档位都请求失败了，就切换另外一种广告
+            val newBannerConfig = bannerConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
+            requestAdInter(context, newBannerConfig, adConstStr, adListener)
+            return
+        }
+
+        if (idList.isNullOrEmpty()) {
+            //如果在 Map 里面获取不到该广告位的 idList 意味着初始化的时候没有设置这个广告位
+            loge("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.ad_id_no)}")
+            adListener.onAdFailed(context.getString(R.string.ad_id_no))
+            return
+        }
+
         adListener.onStartRequest(AdNameType.FACEBOOK.type)
 
-        interFacebook = com.facebook.ads.InterstitialAd(context, TogetherAdSea.idMapFacebook[adConstStr])
+        interFacebook = com.facebook.ads.InterstitialAd(context, idList[indexFacebook])
         interFacebook?.setAdListener(object : InterstitialAdListener {
             override fun onInterstitialDisplayed(p0: Ad?) {
             }
@@ -119,9 +162,10 @@ object TogetherAdSeaInter : AdBase {
             }
 
             override fun onError(p0: Ad?, adError: AdError?) {
-                loge("${AdNameType.FACEBOOK.type}: errorCode:${adError?.errorCode} ${adError?.errorMessage}")
-                val newBannerConfig = bannerConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-                requestAdInter(context, newBannerConfig, adConstStr, adListener)
+                loge("${AdNameType.FACEBOOK.type}: indexFacebook:$indexFacebook, errorCode:${adError?.errorCode} ${adError?.errorMessage}")
+
+                val newIndexFacebook = indexFacebook + 1
+                requestAdInterFacebook(context, bannerConfigStr, adConstStr, newIndexFacebook, adListener)
             }
 
             override fun onAdLoaded(p0: Ad?) {

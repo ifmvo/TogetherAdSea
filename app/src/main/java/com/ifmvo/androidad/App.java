@@ -4,7 +4,9 @@ import android.app.Application;
 import com.ifmvo.androidad.ad.TogetherAdConst;
 import com.liangzemu.ad.sea.TogetherAdSea;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -33,5 +35,19 @@ public class App extends Application {
         facebookIdMap.put(TogetherAdConst.AD_INTER, "2418474145048681_2423241911238571");
         TogetherAdSea.INSTANCE.initFacebookAd(this, facebookIdMap);
 
+
+        Map<String, List<String>> googleIdListMap = new HashMap<>();
+        List<String> googleInterList = new ArrayList<>();
+        googleInterList.add("");
+        googleInterList.add("ca-app-pub-3940256099942544/1033173712");
+        googleIdListMap.put(TogetherAdConst.AD_INTER, googleInterList);
+        TogetherAdSea.INSTANCE.initAdGoogle(this, "ca-app-pub-3940256099942544~3347511713", googleIdListMap);
+
+        Map<String, List<String>> facebookIdListMap = new HashMap<>();
+        List<String> facebookInterList = new ArrayList<>();
+        facebookInterList.add("2418474145048681_2423366054559490");
+        facebookInterList.add("2418474145048681_2423366241226138");
+        facebookIdListMap.put(TogetherAdConst.AD_INTER, facebookInterList);
+        TogetherAdSea.INSTANCE.initAdFacebook(this, facebookIdListMap);
     }
 }
