@@ -87,7 +87,6 @@ object TogetherAdSeaInter : AdBase {
         interGoogle?.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
-                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type)
             }
 
             override fun onAdClosed() {
@@ -116,7 +115,8 @@ object TogetherAdSeaInter : AdBase {
             }
 
             override fun onAdOpened() {
-                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.opened)}")
+                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.show)}")
+                adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type)
             }
         }
     }
@@ -150,6 +150,8 @@ object TogetherAdSeaInter : AdBase {
         interFacebook = com.facebook.ads.InterstitialAd(context, idList[indexFacebook])
         interFacebook?.setAdListener(object : InterstitialAdListener {
             override fun onInterstitialDisplayed(p0: Ad?) {
+                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.show)}")
+                adListener.onAdShow(AdNameType.FACEBOOK.type)
             }
 
             override fun onAdClicked(p0: Ad?) {
@@ -170,7 +172,6 @@ object TogetherAdSeaInter : AdBase {
 
             override fun onAdLoaded(p0: Ad?) {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
-                adListener.onAdPrepared(AdNameType.FACEBOOK.type)
             }
 
             override fun onLoggingImpression(p0: Ad?) {
@@ -195,12 +196,16 @@ object TogetherAdSeaInter : AdBase {
      */
     interface AdListenerInter {
 
+        //开始请求
         fun onStartRequest(channel: String)
 
+        //点击了
         fun onAdClick(channel: String)
 
+        //失败了
         fun onAdFailed(failedMsg: String?)
 
-        fun onAdPrepared(channel: String)
+        //展示了
+        fun onAdShow(channel: String)
     }
 }
