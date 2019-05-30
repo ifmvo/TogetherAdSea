@@ -79,6 +79,7 @@ object TogetherAdSeaInter : AdBase {
             return
         }
 
+        loge("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.start_request)}")
         adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type)
 
         interGoogle = InterstitialAd(context)
@@ -147,6 +148,7 @@ object TogetherAdSeaInter : AdBase {
             return
         }
 
+        loge("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.start_request)}")
         adListener.onStartRequest(AdNameType.FACEBOOK.type)
 
         interFacebook = com.facebook.ads.InterstitialAd(context, idList[indexFacebook])
@@ -183,6 +185,10 @@ object TogetherAdSeaInter : AdBase {
             }
         })
         interFacebook?.loadAd()
+    }
+
+    fun isLoaded(): Boolean {
+        return interGoogle?.isLoaded == true || interFacebook?.isAdLoaded == true
     }
 
     fun showAdInter() {

@@ -52,15 +52,15 @@ object TogetherAdSea {
      */
     fun initGoogleAd(@NonNull context: Context, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, String?>) {
         idMapGoogle = googleIdMap
-        MobileAds.initialize(context, googleAdAppId)
+//        MobileAds.initialize(context, googleAdAppId)
     }
 
     fun initFacebookAd(@NonNull context: Context, @NonNull facebookIdMap: MutableMap<String, String?>) {
         idMapFacebook = facebookIdMap
         // Example for setting the SDK to crash when in debug mode
-        AudienceNetworkAds.isInAdsProcess(context)
-        AdSettings.setIntegrationErrorMode(AdSettings.IntegrationErrorMode.INTEGRATION_ERROR_CALLBACK_MODE)
-        AudienceNetworkAds.initialize(context)
+//        AudienceNetworkAds.isInAdsProcess(context)
+//        AdSettings.setIntegrationErrorMode(AdSettings.IntegrationErrorMode.INTEGRATION_ERROR_CALLBACK_MODE)
+//        AudienceNetworkAds.initialize(context)
     }
 
 //    fun setAdTimeOutMillis(millis: Long) {

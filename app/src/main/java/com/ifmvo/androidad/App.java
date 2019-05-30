@@ -38,15 +38,15 @@ public class App extends Application {
 
         Map<String, List<String>> googleIdListMap = new HashMap<>();
         List<String> googleInterList = new ArrayList<>();
-        googleInterList.add("ca-app-pub-3940256099942544/1033173712");
-        googleInterList.add("ca-app-pub-3940256099942544/1033173712");
+        googleInterList.add("ca-app-pub-6810306854458967/3276250160");
+        googleInterList.add("ca-app-pub-6810306854458967/5710841812");
         googleIdListMap.put(TogetherAdConst.AD_INTER, googleInterList);
-        TogetherAdSea.INSTANCE.initAdGoogle(this, "ca-app-pub-3940256099942544~3347511713", googleIdListMap);
+        TogetherAdSea.INSTANCE.initAdGoogle(this, "ca-app-pub-6810306854458967~4172564328", googleIdListMap);
 
         Map<String, List<String>> facebookIdListMap = new HashMap<>();
         List<String> facebookInterList = new ArrayList<>();
-        facebookInterList.add("2418474145048681_2423366054559490");
-        facebookInterList.add("2418474145048681_2423366241226138");
+        facebookInterList.add("290080388575176_320011412248740");
+        facebookInterList.add("290080388575176_320011565582058");
         facebookIdListMap.put(TogetherAdConst.AD_INTER, facebookInterList);
         TogetherAdSea.INSTANCE.initAdFacebook(this, facebookIdListMap);
     }

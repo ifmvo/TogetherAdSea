@@ -153,3 +153,22 @@ TogetherAdSeaBanner.showAdBanner(this, Config.bannerAdConfig(), TogetherAdConst.
 
 ## 查看日志
 只需要在 Logcat 中过滤 ``TogetherAdSeaInfo``
+
+## Google 广告的错误码
+```
+public static final int ERROR_CODE_INTERNAL_ERROR
+Something happened internally; for instance, an invalid response was received from the ad server.
+Constant Value: 0
+
+public static final int ERROR_CODE_INVALID_REQUEST
+The ad request was invalid; for instance, the ad unit ID was incorrect.
+Constant Value: 1
+
+public static final int ERROR_CODE_NETWORK_ERROR
+The ad request was unsuccessful due to network connectivity.
+Constant Value: 2
+
+public static final int ERROR_CODE_NO_FILL
+The ad request was successful, but no ad was returned due to lack of ad inventory.
+Constant Value: 3
+```

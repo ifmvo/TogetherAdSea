@@ -8,6 +8,8 @@
     <string translatable="false" name="all_ad_error">配置中的广告全部加载失败，或配置中没有匹配的广告</string>
     <string translatable="false" name="ad_id_no">该广告位没有初始化ID</string>
 
+
+    <string translatable="false" name="start_request">开始请求</string>
     <string translatable="false" name="timeout">超时了</string>
     <string translatable="false" name="exposure">曝光成功了</string>
     <string translatable="false" name="prepared">准备好了</string>
