@@ -38,7 +38,7 @@ public class App extends Application {
 
         Map<String, List<String>> googleIdListMap = new HashMap<>();
         List<String> googleInterList = new ArrayList<>();
-        googleInterList.add("");
+        googleInterList.add("ca-app-pub-3940256099942544/1033173712");
         googleInterList.add("ca-app-pub-3940256099942544/1033173712");
         googleIdListMap.put(TogetherAdConst.AD_INTER, googleInterList);
         TogetherAdSea.INSTANCE.initAdGoogle(this, "ca-app-pub-3940256099942544~3347511713", googleIdListMap);
