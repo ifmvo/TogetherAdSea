@@ -102,6 +102,10 @@ class DetailActivity : AppCompatActivity() {
             Config.interAdConfig(),
             TogetherAdConst.AD_INTER,
             object : TogetherAdSeaInter.AdListenerInter {
+                override fun onAdPrepared(channel: String) {
+                    Log.e(tag, "onAdPrepared:$channel")
+                }
+
                 override fun onAdClose(channel: String) {
                     Log.e(tag, "onAdClose:$channel")
                 }

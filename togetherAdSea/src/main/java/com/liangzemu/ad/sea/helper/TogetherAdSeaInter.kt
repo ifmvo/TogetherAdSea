@@ -87,6 +87,7 @@ object TogetherAdSeaInter : AdBase {
         interGoogle?.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
+                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type)
             }
 
             override fun onAdClosed() {
@@ -174,6 +175,7 @@ object TogetherAdSeaInter : AdBase {
 
             override fun onAdLoaded(p0: Ad?) {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
+                adListener.onAdPrepared(AdNameType.FACEBOOK.type)
             }
 
             override fun onLoggingImpression(p0: Ad?) {
@@ -212,5 +214,8 @@ object TogetherAdSeaInter : AdBase {
 
         //关闭了
         fun onAdClose(channel: String)
+
+        //准备好了
+        fun onAdPrepared(channel: String)
     }
 }
