@@ -91,6 +91,7 @@ object TogetherAdSeaInter : AdBase {
 
             override fun onAdClosed() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.dismiss)}")
+                adListener.onAdClose(AdNameType.FACEBOOK.type)
             }
 
             override fun onAdFailedToLoad(errorCode: Int) {
@@ -161,6 +162,7 @@ object TogetherAdSeaInter : AdBase {
 
             override fun onInterstitialDismissed(p0: Ad?) {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.dismiss)}")
+                adListener.onAdClose(AdNameType.FACEBOOK.type)
             }
 
             override fun onError(p0: Ad?, adError: AdError?) {
@@ -207,5 +209,8 @@ object TogetherAdSeaInter : AdBase {
 
         //展示了
         fun onAdShow(channel: String)
+
+        //关闭了
+        fun onAdClose(channel: String)
     }
 }
