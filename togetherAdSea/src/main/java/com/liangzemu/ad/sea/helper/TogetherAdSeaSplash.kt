@@ -2,11 +2,11 @@ package com.liangzemu.ad.sea.helper
 
 import android.content.Context
 import android.os.CountDownTimer
+import android.support.annotation.NonNull
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.annotation.NonNull
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
 import com.facebook.ads.NativeAd

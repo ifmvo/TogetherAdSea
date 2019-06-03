@@ -1,6 +1,8 @@
 package com.ifmvo.androidad;
 
 import android.app.Application;
+import com.facebook.ads.AdSettings;
+import com.google.android.gms.ads.AdRequest;
 import com.ifmvo.androidad.ad.TogetherAdConst;
 import com.liangzemu.ad.sea.TogetherAdSea;
 
@@ -41,13 +43,17 @@ public class App extends Application {
         googleInterList.add("ca-app-pub-6810306854458967/3276250160");
         googleInterList.add("ca-app-pub-6810306854458967/5710841812");
         googleIdListMap.put(TogetherAdConst.AD_INTER, googleInterList);
-        TogetherAdSea.INSTANCE.initAdGoogle(this, "ca-app-pub-6810306854458967~4172564328", googleIdListMap);
+        //这里填写日志中的device id
+        TogetherAdSea.INSTANCE.initAdGoogle(this, "ca-app-pub-6810306854458967~4172564328", googleIdListMap,"AD84300E9B7D7E2DC6479CFB2F31E5C7");
 
         Map<String, List<String>> facebookIdListMap = new HashMap<>();
         List<String> facebookInterList = new ArrayList<>();
         facebookInterList.add("290080388575176_320011412248740");
         facebookInterList.add("290080388575176_320011565582058");
         facebookIdListMap.put(TogetherAdConst.AD_INTER, facebookInterList);
-        TogetherAdSea.INSTANCE.initAdFacebook(this, facebookIdListMap);
+        TogetherAdSea.INSTANCE.initAdFacebook(this, facebookIdListMap,true);
+
+
+
     }
 }

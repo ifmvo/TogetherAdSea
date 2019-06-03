@@ -3,8 +3,8 @@ package com.ifmvo.androidad
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import com.facebook.ads.Ad
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.ifmvo.androidad.ad.Config

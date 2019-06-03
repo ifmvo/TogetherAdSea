@@ -1,7 +1,7 @@
 package com.liangzemu.ad.sea
 
 import android.content.Context
-import androidx.annotation.NonNull
+import android.support.annotation.NonNull
 import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
 import com.google.android.gms.ads.MobileAds
@@ -24,7 +24,11 @@ object TogetherAdSea {
     var idListGoogleMap = mutableMapOf<String, MutableList<String>>()
 
     var idListFacebookMap = mutableMapOf<String, MutableList<String>>()
-
+    /**
+     * google测试id
+     */
+    var testDeviceID:String?=null
+        private set
     /**
      * 超时时间
      */
@@ -34,17 +38,19 @@ object TogetherAdSea {
     /**
      * 初始化广告
      */
-    fun initAdGoogle(@NonNull context: Context, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, MutableList<String>>) {
+    fun initAdGoogle(@NonNull context: Context, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, MutableList<String>>,testDeviceID:String?=null) {
         idListGoogleMap = googleIdMap
         MobileAds.initialize(context, googleAdAppId)
+        this.testDeviceID=testDeviceID
     }
 
-    fun initAdFacebook(@NonNull context: Context, @NonNull facebookIdMap: MutableMap<String, MutableList<String>>) {
+    fun initAdFacebook(@NonNull context: Context, @NonNull facebookIdMap: MutableMap<String, MutableList<String>>,testMode:Boolean=false) {
         idListFacebookMap = facebookIdMap
         // Example for setting the SDK to crash when in debug mode
         AudienceNetworkAds.isInAdsProcess(context)
         AdSettings.setIntegrationErrorMode(AdSettings.IntegrationErrorMode.INTEGRATION_ERROR_CALLBACK_MODE)
         AudienceNetworkAds.initialize(context)
+        AdSettings.setTestMode(testMode)
     }
 
     /**

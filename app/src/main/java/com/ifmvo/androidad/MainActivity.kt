@@ -1,7 +1,7 @@
 package com.ifmvo.androidad
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.support.v7.app.AppCompatActivity
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
 import com.liangzemu.ad.sea.helper.TogetherAdSeaSplash

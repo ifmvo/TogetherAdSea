@@ -1,7 +1,7 @@
 package com.liangzemu.ad.sea.helper
 
 import android.content.Context
-import androidx.annotation.NonNull
+import android.support.annotation.NonNull
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
 import com.facebook.ads.InterstitialAdListener
@@ -84,7 +84,7 @@ object TogetherAdSeaInter : AdBase {
 
         interGoogle = InterstitialAd(context)
         interGoogle?.adUnitId = idList[indexGoogle]
-        interGoogle?.loadAd(AdRequest.Builder().build())
+        interGoogle?.loadAd(AdRequest.Builder().apply { if(TogetherAdSea.testDeviceID !=null)  addTestDevice(TogetherAdSea.testDeviceID)}.build())
         interGoogle?.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
