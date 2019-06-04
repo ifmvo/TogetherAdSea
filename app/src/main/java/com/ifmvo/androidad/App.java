@@ -36,18 +36,39 @@ public class App extends Application {
         TogetherAdSea.INSTANCE.initFacebookAd(this, facebookIdMap);
 
 
+        /*
+         * 初始化 Google 广告
+         */
         Map<String, List<String>> googleIdListMap = new HashMap<>();
+
         List<String> googleInterList = new ArrayList<>();
         googleInterList.add("ca-app-pub-6810306854458967/3276250160");
         googleInterList.add("ca-app-pub-6810306854458967/5710841812");
         googleIdListMap.put(TogetherAdConst.AD_INTER, googleInterList);
+
+        List<String> googlePauseList = new ArrayList<>();
+        googlePauseList.add("ca-app-pub-3940256099942544/6300978111");
+        googlePauseList.add("ca-app-pub-3940256099942544/6300978111");
+        googleIdListMap.put(TogetherAdConst.AD_PAUSE, googlePauseList);
+
         TogetherAdSea.INSTANCE.initAdGoogle(this, "ca-app-pub-6810306854458967~4172564328", googleIdListMap);
 
+
+        /*
+         * 初始化 Facebook 广告
+         */
         Map<String, List<String>> facebookIdListMap = new HashMap<>();
+
         List<String> facebookInterList = new ArrayList<>();
         facebookInterList.add("290080388575176_320011412248740");
         facebookInterList.add("290080388575176_320011565582058");
         facebookIdListMap.put(TogetherAdConst.AD_INTER, facebookInterList);
+
+        List<String> facebookPauseList = new ArrayList<>();
+        facebookPauseList.add("290080388575176_298008991115649");
+        facebookPauseList.add("290080388575176_299645454285336");
+        facebookIdListMap.put(TogetherAdConst.AD_PAUSE, facebookPauseList);
+
         TogetherAdSea.INSTANCE.initAdFacebook(this, facebookIdListMap);
     }
 }
