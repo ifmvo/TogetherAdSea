@@ -22,5 +22,8 @@ class TogetherAdConst {
 
         //暂停
         const val AD_PAUSE = "ad_pause"
+
+        //激励
+        const val AD_REWARD = "ad_reward"
     }
 }

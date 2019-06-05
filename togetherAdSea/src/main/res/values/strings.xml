@@ -15,6 +15,7 @@
     <string translatable="false" name="prepared">准备好了</string>
     <string translatable="false" name="opened">广告打开了</string>
     <string translatable="false" name="show">展示了</string>
+    <string translatable="false" name="complete">完成了</string>
     <string translatable="false" name="clicked">点击了</string>
     <string translatable="false" name="dismiss">消失了</string>
     <string translatable="false" name="clicked_action">点击了跳过</string>

@@ -99,13 +99,8 @@ object TogetherAdSeaInter : AdBase {
             override fun onAdFailedToLoad(errorCode: Int) {
                 loge("${AdNameType.GOOGLE_ADMOB.type}: indexGoogle:$indexGoogle, errorCode:$errorCode")
 
-                if (indexGoogle < TogetherAdSea.idListGoogleMap[adConstStr]?.size ?: 0) {
-                    val newIndexGoogle = indexGoogle + 1
-                    requestAdInterGoogle(context, bannerConfigStr, adConstStr, newIndexGoogle, adListener)
-                } else {
-                    val newBannerConfig = bannerConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
-                    requestAdInter(context, newBannerConfig, adConstStr, adListener)
-                }
+                val newIndexGoogle = indexGoogle + 1
+                requestAdInterGoogle(context, bannerConfigStr, adConstStr, newIndexGoogle, adListener)
             }
 
             override fun onAdClicked() {

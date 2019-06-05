@@ -43,15 +43,24 @@ public class App extends Application {
          */
         Map<String, List<String>> googleIdListMap = new HashMap<>();
 
+        //插页广告
         List<String> googleInterList = new ArrayList<>();
         googleInterList.add("ca-app-pub-6810306854458967/3276250160");
         googleInterList.add("ca-app-pub-6810306854458967/5710841812");
         googleIdListMap.put(TogetherAdConst.AD_INTER, googleInterList);
 
+        //播放暂停
         List<String> googlePauseList = new ArrayList<>();
         googlePauseList.add("ca-app-pub-3940256099942544/6300978111");
         googlePauseList.add("ca-app-pub-3940256099942544/6300978111");
         googleIdListMap.put(TogetherAdConst.AD_PAUSE, googlePauseList);
+
+        //激励
+        List<String> googleRewardList = new ArrayList<>();
+        googleRewardList.add("ca-app-pub-3940256099942544/5224354917");
+        googleRewardList.add("ca-app-pub-3940256099942544/5224354917");
+        googleIdListMap.put(TogetherAdConst.AD_REWARD, googleRewardList);
+
         /**
          * "AD84300E9B7D7E2DC6479CFB2F31E5C7"
          */
@@ -64,16 +73,23 @@ public class App extends Application {
          */
         Map<String, List<String>> facebookIdListMap = new HashMap<>();
 
+        //插页广告
         List<String> facebookInterList = new ArrayList<>();
         facebookInterList.add("308281803417604_308823620030089");
         facebookInterList.add("308281803417604_308823840030067");
         facebookIdListMap.put(TogetherAdConst.AD_INTER, facebookInterList);
 
+        //播放暂停
         List<String> facebookPauseList = new ArrayList<>();
         facebookPauseList.add("290080388575176_298008991115649");
         facebookPauseList.add("290080388575176_299645454285336");
         facebookIdListMap.put(TogetherAdConst.AD_PAUSE, facebookPauseList);
 
+        //激励
+        List<String> facebookRewardList = new ArrayList<>();
+        facebookRewardList.add("308281803417604_312311299681321");
+        facebookRewardList.add("308281803417604_312311643014620");
+        facebookIdListMap.put(TogetherAdConst.AD_REWARD, facebookRewardList);
         TogetherAdSea.INSTANCE.initAdFacebook(this, facebookIdListMap,true);
     }
 }
