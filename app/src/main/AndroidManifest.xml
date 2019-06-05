@@ -29,6 +29,7 @@
         </activity>
 
         <activity
+                android:screenOrientation="landscape"
                 android:name=".DetailActivity"/>
 
     </application>

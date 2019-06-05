@@ -60,8 +60,8 @@ public class App extends Application {
         Map<String, List<String>> facebookIdListMap = new HashMap<>();
 
         List<String> facebookInterList = new ArrayList<>();
-        facebookInterList.add("290080388575176_320011412248740");
-        facebookInterList.add("290080388575176_320011565582058");
+        facebookInterList.add("308281803417604_308823620030089");
+        facebookInterList.add("308281803417604_308823840030067");
         facebookIdListMap.put(TogetherAdConst.AD_INTER, facebookInterList);
 
         List<String> facebookPauseList = new ArrayList<>();
