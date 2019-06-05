@@ -9,10 +9,7 @@ import com.facebook.ads.Ad
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
-import com.liangzemu.ad.sea.helper.TogetherAdSeaBanner
-import com.liangzemu.ad.sea.helper.TogetherAdSeaFlow
-import com.liangzemu.ad.sea.helper.TogetherAdSeaInter
-import com.liangzemu.ad.sea.helper.TogetherAdSeaPause
+import com.liangzemu.ad.sea.helper.*
 import kotlinx.android.synthetic.main.activity_detail.*
 
 /* 
@@ -45,6 +42,14 @@ class DetailActivity : AppCompatActivity() {
 
         btnRequestPause.setOnClickListener {
             requestPause()
+        }
+
+        btnRequestReward.setOnClickListener {
+            requestReward()
+        }
+
+        btnShowReward.setOnClickListener {
+            TogetherAdSeaReward.showAdReward()
         }
 
         requestFlow()
@@ -151,6 +156,38 @@ class DetailActivity : AppCompatActivity() {
 
                 override fun onAdFailed(failedMsg: String?) {
                     Log.e(tag, "onAdFailed:$failedMsg")
+                }
+
+                override fun onAdPrepared(channel: String) {
+                    Log.e(tag, "onAdPrepared:$channel")
+                }
+            })
+    }
+
+    private fun requestReward() {
+        TogetherAdSeaReward.requestAdReward(
+            this,
+            Config.rewardAdConfig(),
+            TogetherAdConst.AD_REWARD,
+            object : TogetherAdSeaReward.AdListenerReward {
+                override fun onStartRequest(channel: String) {
+                    Log.e(tag, "onStartRequest:$channel")
+                }
+
+                override fun onAdClick(channel: String) {
+                    Log.e(tag, "onAdClick:$channel")
+                }
+
+                override fun onAdFailed(failedMsg: String?) {
+                    Log.e(tag, "onAdFailed:$failedMsg")
+                }
+
+                override fun onAdShow(channel: String) {
+                    Log.e(tag, "onAdShow:$channel")
+                }
+
+                override fun onAdComplete(channel: String) {
+                    Log.e(tag, "onAdComplete:$channel")
                 }
 
                 override fun onAdPrepared(channel: String) {

@@ -27,7 +27,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
     implementation 'androidx.core:core-ktx:1.1.0-alpha05'
 
-    api 'com.google.android.gms:play-services-ads:17.2.0'
+    api 'com.google.android.gms:play-services-ads:17.2.1'
 
     api 'com.facebook.android:audience-network-sdk:5.3.0'
 }

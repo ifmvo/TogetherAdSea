@@ -43,6 +43,30 @@
                 android:text="request暂停插屏"
                 android:layout_height="wrap_content"/>
 
+        <!--
+            激励
+        -->
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <Button
+                    android:id="@+id/btnRequestReward"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:text="request激励"
+                    android:layout_height="wrap_content"/>
+
+            <Button
+                    android:id="@+id/btnShowReward"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:text="show激励"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <!--

@@ -13,8 +13,6 @@ import com.facebook.ads.Ad
 import com.facebook.ads.AdError
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
 import com.liangzemu.ad.sea.AdBase
 import com.liangzemu.ad.sea.R
 import com.liangzemu.ad.sea.TogetherAdSea
@@ -95,8 +93,8 @@ object TogetherAdSeaPause : AdBase {
         logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.start_request)}")
         adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type)
 
-        val mAdView = AdView(context)
-        mAdView.adSize = AdSize.MEDIUM_RECTANGLE
+        val mAdView = com.google.android.gms.ads.AdView(context)
+        mAdView.adSize = com.google.android.gms.ads.AdSize.MEDIUM_RECTANGLE
         mAdView.adUnitId = idList[indexGoogle]
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
@@ -212,7 +210,7 @@ object TogetherAdSeaPause : AdBase {
                 context.windowManager.defaultDisplay.getMetrics(dm)
                 //图片以16：9的宽高比展示
                 //无论是横屏还是竖屏都是取小的那个长度的80%
-                val n = ((if (dm.widthPixels > dm.heightPixels) dm.heightPixels else dm.widthPixels) * 0.7).toInt()
+                val n = ((if (dm.widthPixels > dm.heightPixels) dm.heightPixels else dm.widthPixels) * 0.8).toInt()
                 val frameLayout = FrameLayout(context)
                 val frameParams = FrameLayout.LayoutParams(
                     n,
