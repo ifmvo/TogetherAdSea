@@ -30,23 +30,23 @@ object TogetherAdSeaReward : AdBase {
 
     fun requestAdReward(
         @NonNull context: Context,
-        interConfigStr: String?,
+        rewardConfigStr: String?,
         @NonNull adConstStr: String,
         @NonNull adListener: AdListenerReward
     ) {
 
-        val randomAdName = AdRandomUtil.getRandomAdName(interConfigStr)
+        val randomAdName = AdRandomUtil.getRandomAdName(rewardConfigStr)
         when (randomAdName) {
             AdNameType.GOOGLE_ADMOB -> requestAdRewardGoogle(
                 context.applicationContext,
-                interConfigStr,
+                rewardConfigStr,
                 adConstStr,
                 0,
                 adListener
             )
             AdNameType.FACEBOOK -> requestAdRewardFacebook(
                 context.applicationContext,
-                interConfigStr,
+                rewardConfigStr,
                 adConstStr,
                 0,
                 adListener
@@ -83,7 +83,7 @@ object TogetherAdSeaReward : AdBase {
 
         logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(com.liangzemu.ad.sea.R.string.start_request)}")
         adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type)
-
+        var isRewarded = false
         mRewardedVideoAdGoogle = MobileAds.getRewardedVideoAdInstance(context)
         mRewardedVideoAdGoogle?.rewardedVideoAdListener = object : RewardedVideoAdListener {
             override fun onRewarded(reward: RewardItem) {
@@ -95,6 +95,8 @@ object TogetherAdSeaReward : AdBase {
             }
 
             override fun onRewardedVideoAdClosed() {
+                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.dismiss)}")
+                adListener.onAdClose(AdNameType.GOOGLE_ADMOB.type, isRewarded)
             }
 
             override fun onRewardedVideoAdFailedToLoad(errorCode: Int) {
@@ -118,7 +120,7 @@ object TogetherAdSeaReward : AdBase {
 
             override fun onRewardedVideoCompleted() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.complete)}")
-                adListener.onAdComplete(AdNameType.GOOGLE_ADMOB.type)
+                isRewarded = true
             }
         }
 
@@ -151,10 +153,12 @@ object TogetherAdSeaReward : AdBase {
 
         logd("${AdNameType.FACEBOOK.type}: ${context.getString(com.liangzemu.ad.sea.R.string.start_request)}")
         adListener.onStartRequest(AdNameType.FACEBOOK.type)
-
+        var isRewarded = false
         mRewardedVideoAdFacebook = com.facebook.ads.RewardedVideoAd(context, idList[indexFacebook])
         mRewardedVideoAdFacebook?.setAdListener(object : com.facebook.ads.RewardedVideoAdListener {
             override fun onRewardedVideoClosed() {
+                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.dismiss)}")
+                adListener.onAdClose(AdNameType.FACEBOOK.type, isRewarded)
             }
 
             override fun onAdClicked(p0: Ad?) {
@@ -164,7 +168,7 @@ object TogetherAdSeaReward : AdBase {
 
             override fun onRewardedVideoCompleted() {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.complete)}")
-                adListener.onAdComplete(AdNameType.FACEBOOK.type)
+                isRewarded = true
             }
 
             override fun onError(p0: Ad?, adError: AdError?) {
@@ -218,8 +222,8 @@ object TogetherAdSeaReward : AdBase {
         //展示了
         fun onAdShow(channel: String)
 
-        //播放完成了
-        fun onAdComplete(channel: String)
+        //关闭了
+        fun onAdClose(channel: String, isReward: Boolean)
 
         //准备好了
         fun onAdPrepared(channel: String)
