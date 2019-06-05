@@ -6,7 +6,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId "cn.downloader.video.free"
+        applicationId "cn.social.video.downloader"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1

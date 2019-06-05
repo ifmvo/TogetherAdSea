@@ -15,6 +15,6 @@ object Config {
 
     fun interAdConfig() = "google_admob:1,facebook:0"
 
-    fun pauseAdConfig() = "google_admob:0,facebook:1"
+    fun pauseAdConfig() = "google_admob:1,facebook:1"
 
 }

@@ -1,7 +1,8 @@
 package com.liangzemu.ad.sea.helper
 
-import android.content.Context
+import android.app.Activity
 import android.graphics.Color
+import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +31,7 @@ import com.liangzemu.ad.sea.other.loge
 object TogetherAdSeaPause : AdBase {
 
     fun showAdPause(
-        @NonNull context: Context,
+        @NonNull context: Activity,
         bannerConfigStr: String?,
         @NonNull adConstStr: String,
         @NonNull adsParentLayout: ViewGroup,
@@ -40,7 +41,7 @@ object TogetherAdSeaPause : AdBase {
         val randomAdName = AdRandomUtil.getRandomAdName(bannerConfigStr)
         when (randomAdName) {
             AdNameType.GOOGLE_ADMOB -> showAdPauseGoogle(
-                context.applicationContext,
+                context,
                 bannerConfigStr,
                 adConstStr,
                 adsParentLayout,
@@ -48,7 +49,7 @@ object TogetherAdSeaPause : AdBase {
                 adListener
             )
             AdNameType.FACEBOOK -> showAdPauseFacebook(
-                context.applicationContext,
+                context,
                 bannerConfigStr,
                 adConstStr,
                 adsParentLayout,
@@ -68,7 +69,7 @@ object TogetherAdSeaPause : AdBase {
      * adConstStr : 例：TogetherAdConst.AD_SPLASH
      */
     private fun showAdPauseGoogle(
-        @NonNull context: Context,
+        @NonNull context: Activity,
         bannerConfigStr: String?,
         @NonNull adConstStr: String,
         @NonNull adsParentLayout: ViewGroup,
@@ -105,12 +106,18 @@ object TogetherAdSeaPause : AdBase {
                 adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type)
 
                 val frameLayout = FrameLayout(context)
-                val frameParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+                val frameParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                )
                 frameParams.gravity = Gravity.CENTER
                 frameLayout.layoutParams = frameParams
 
                 val closeImageView = ImageView(context)
-                val closeParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+                val closeParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                )
                 closeParams.gravity = Gravity.END
                 closeImageView.layoutParams = closeParams
                 closeImageView.setImageResource(R.mipmap.ad_close)
@@ -152,7 +159,7 @@ object TogetherAdSeaPause : AdBase {
      * Facebook
      */
     private fun showAdPauseFacebook(
-        @NonNull context: Context,
+        @NonNull context: Activity,
         bannerConfigStr: String?,
         @NonNull adConstStr: String,
         @NonNull adsParentLayout: ViewGroup,
@@ -185,9 +192,6 @@ object TogetherAdSeaPause : AdBase {
             com.facebook.ads.AdSize.RECTANGLE_HEIGHT_250
         )
 
-        // Add the ad view to your context layout
-        adsParentLayout.addView(adView)
-
         adView.setAdListener(object : com.facebook.ads.AdListener {
             override fun onAdClicked(ad: Ad?) {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.clicked)}")
@@ -203,6 +207,43 @@ object TogetherAdSeaPause : AdBase {
             override fun onAdLoaded(ad: Ad?) {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type)
+
+                val dm = DisplayMetrics()
+                context.windowManager.defaultDisplay.getMetrics(dm)
+                //图片以16：9的宽高比展示
+                //无论是横屏还是竖屏都是取小的那个长度的80%
+                val n = ((if (dm.widthPixels > dm.heightPixels) dm.heightPixels else dm.widthPixels) * 0.7).toInt()
+                val frameLayout = FrameLayout(context)
+                val frameParams = FrameLayout.LayoutParams(
+                    n,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                )
+                frameParams.gravity = Gravity.CENTER
+                frameLayout.layoutParams = frameParams
+
+                val closeImageView = ImageView(context)
+                val closeParams = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                )
+                closeParams.gravity = Gravity.END
+                closeImageView.layoutParams = closeParams
+                closeImageView.setImageResource(R.mipmap.ad_close)
+                closeImageView.setOnClickListener {
+                    adsParentLayout.setBackgroundColor(Color.parseColor("#00000000"))
+                    adsParentLayout.visibility = View.GONE
+                }
+
+                frameLayout.addView(adView)
+                frameLayout.addView(closeImageView)
+                adsParentLayout.setBackgroundColor(Color.parseColor("#80000000"))
+                adsParentLayout.setOnClickListener {}
+
+                adsParentLayout.visibility = View.VISIBLE
+                if (adsParentLayout.childCount > 0) {
+                    adsParentLayout.removeAllViews()
+                }
+                adsParentLayout.addView(frameLayout)
             }
 
             override fun onLoggingImpression(ad: Ad?) {
