@@ -121,13 +121,22 @@ object TogetherAdSeaPause : AdBase {
                 closeImageView.setImageResource(R.mipmap.ad_close)
                 closeImageView.setOnClickListener {
                     adsParentLayout.setBackgroundColor(Color.parseColor("#00000000"))
+                    if (adsParentLayout.childCount > 0) {
+                        adsParentLayout.removeAllViews()
+                    }
                     adsParentLayout.visibility = View.GONE
                 }
 
                 frameLayout.addView(mAdView)
                 frameLayout.addView(closeImageView)
                 adsParentLayout.setBackgroundColor(Color.parseColor("#80000000"))
-                adsParentLayout.setOnClickListener {}
+                adsParentLayout.setOnClickListener {
+                    adsParentLayout.setBackgroundColor(Color.parseColor("#00000000"))
+                    if (adsParentLayout.childCount > 0) {
+                        adsParentLayout.removeAllViews()
+                    }
+                    adsParentLayout.visibility = View.GONE
+                }
 
                 adsParentLayout.visibility = View.VISIBLE
                 if (adsParentLayout.childCount > 0) {
@@ -229,13 +238,22 @@ object TogetherAdSeaPause : AdBase {
                 closeImageView.setImageResource(R.mipmap.ad_close)
                 closeImageView.setOnClickListener {
                     adsParentLayout.setBackgroundColor(Color.parseColor("#00000000"))
+                    if (adsParentLayout.childCount > 0) {
+                        adsParentLayout.removeAllViews()
+                    }
                     adsParentLayout.visibility = View.GONE
                 }
 
                 frameLayout.addView(adView)
                 frameLayout.addView(closeImageView)
                 adsParentLayout.setBackgroundColor(Color.parseColor("#80000000"))
-                adsParentLayout.setOnClickListener {}
+                adsParentLayout.setOnClickListener {
+                    adsParentLayout.setBackgroundColor(Color.parseColor("#00000000"))
+                    if (adsParentLayout.childCount > 0) {
+                        adsParentLayout.removeAllViews()
+                    }
+                    adsParentLayout.visibility = View.GONE
+                }
 
                 adsParentLayout.visibility = View.VISIBLE
                 if (adsParentLayout.childCount > 0) {
