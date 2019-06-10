@@ -170,6 +170,10 @@ class DetailActivity : AppCompatActivity() {
             Config.rewardAdConfig(),
             TogetherAdConst.AD_REWARD,
             object : TogetherAdSeaReward.AdListenerReward {
+                override fun onAdClose(channel: String, isReward: Boolean) {
+                    Log.e(tag, "onAdClose:$channel $isReward")
+                }
+
                 override fun onStartRequest(channel: String) {
                     Log.e(tag, "onStartRequest:$channel")
                 }
@@ -186,9 +190,6 @@ class DetailActivity : AppCompatActivity() {
                     Log.e(tag, "onAdShow:$channel")
                 }
 
-                override fun onAdComplete(channel: String) {
-                    Log.e(tag, "onAdComplete:$channel")
-                }
 
                 override fun onAdPrepared(channel: String) {
                     Log.e(tag, "onAdPrepared:$channel")
