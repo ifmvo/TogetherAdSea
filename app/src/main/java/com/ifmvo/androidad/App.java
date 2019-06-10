@@ -60,6 +60,11 @@ public class App extends Application {
         googleRewardList.add("ca-app-pub-3940256099942544/5224354917");
         googleRewardList.add("ca-app-pub-3940256099942544/5224354917");
         googleIdListMap.put(TogetherAdConst.AD_REWARD, googleRewardList);
+        //原生 ID是错的  用的激励的。。
+        List<String> googleFlowList = new ArrayList<>();
+        googleRewardList.add("ca-app-pub-3940256099942544/5224354917");
+        googleRewardList.add("ca-app-pub-3940256099942544/5224354917");
+        googleIdListMap.put(TogetherAdConst.AD_FLOW, googleRewardList);
 
         /**
          * "AD84300E9B7D7E2DC6479CFB2F31E5C7"
@@ -90,6 +95,13 @@ public class App extends Application {
         facebookRewardList.add("308281803417604_312311299681321");
         facebookRewardList.add("308281803417604_312311643014620");
         facebookIdListMap.put(TogetherAdConst.AD_REWARD, facebookRewardList);
+
+        //原生 ID是错的  用的激励的。。
+        List<String> facebookFlowList = new ArrayList<>();
+        facebookFlowList.add("308281803417604_312311299681321");
+        facebookFlowList.add("308281803417604_312311643014620");
+        facebookIdListMap.put(TogetherAdConst.AD_FLOW, facebookFlowList);
+
         TogetherAdSea.INSTANCE.initAdFacebook(this, facebookIdListMap,true);
     }
 }

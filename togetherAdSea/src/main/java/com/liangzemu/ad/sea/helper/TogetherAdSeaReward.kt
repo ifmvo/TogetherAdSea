@@ -18,8 +18,8 @@ import com.liangzemu.ad.sea.other.logd
 import com.liangzemu.ad.sea.other.loge
 
 
-/*
- * (●ﾟωﾟ●) 激励视频广告
+/**
+ * (●ﾟωﾟ●) 激励视频广告：已实现档位
  * 
  * Created by Matthew_Chen on 2019-06-05.
  */
@@ -27,7 +27,14 @@ object TogetherAdSeaReward : AdBase {
 
     private var mRewardedVideoAdGoogle: RewardedVideoAd? = null
     private var mRewardedVideoAdFacebook: com.facebook.ads.RewardedVideoAd? = null
-
+    /**
+     * 请求激励广告 根据rewardConfigStr随机比例
+     * @param context Context
+     * @param rewardConfigStr String?  表示google和facebook广告的比例  当某一部分广告请求失败后  将该部分的key置为no
+     * @param adConstStr String  标识字段  区分是哪种广告类型  对应的是初始化时对应广告id的key
+     * @param adListener AdListenerReward 监听器
+     * @return Unit
+     */
     fun requestAdReward(
         @NonNull context: Context,
         rewardConfigStr: String?,
@@ -66,14 +73,14 @@ object TogetherAdSeaReward : AdBase {
         @NonNull adListener: AdListenerReward
     ) {
         val idList = TogetherAdSea.idListGoogleMap[adConstStr]
-
+        //分档位请求完毕  都没广告
         if (indexGoogle >= idList?.size ?: 0) {
             //如果所有档位都请求失败了，就切换另外一种广告
             val newRewardConfig = rewardConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
             requestAdReward(context, newRewardConfig, adConstStr, adListener)
             return
         }
-
+        //理论上来说不存在这种情况。。。因为上面已经判断了
         if (idList.isNullOrEmpty()) {
             //如果在 Map 里面获取不到该广告位的 idList 意味着初始化的时候没有设置这个广告位
             loge("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(com.liangzemu.ad.sea.R.string.ad_id_no)}")

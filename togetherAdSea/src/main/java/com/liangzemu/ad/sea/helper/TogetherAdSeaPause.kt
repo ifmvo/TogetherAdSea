@@ -21,8 +21,8 @@ import com.liangzemu.ad.sea.other.AdRandomUtil
 import com.liangzemu.ad.sea.other.logd
 import com.liangzemu.ad.sea.other.loge
 
-/* 
- * (●ﾟωﾟ●) 使用大的 Banner 模拟实现播放暂停的插屏
+/**
+ * (●ﾟωﾟ●)暂停插屏：使用大的 Banner 模拟实现播放暂停的插屏
  * 
  * Created by Matthew_Chen on 2019-06-04.
  */
