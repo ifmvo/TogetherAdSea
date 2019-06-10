@@ -80,7 +80,6 @@ object TogetherAdSeaReward : AdBase {
             requestAdReward(context, newRewardConfig, adConstStr, adListener)
             return
         }
-        //理论上来说不存在这种情况。。。因为上面已经判断了
         if (idList.isNullOrEmpty()) {
             //如果在 Map 里面获取不到该广告位的 idList 意味着初始化的时候没有设置这个广告位
             loge("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(com.liangzemu.ad.sea.R.string.ad_id_no)}")

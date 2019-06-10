@@ -81,9 +81,14 @@ object TogetherAdSeaFlow : AdBase {
             return
         }
         //检测结束 开始请求
-
+        if (idList.isNullOrEmpty()) {
+            //如果在 Map 里面获取不到该广告位的 idList 意味着初始化的时候没有设置这个广告位
+            loge("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.ad_id_no)}")
+            adListener.onAdFailed(context.getString(R.string.ad_id_no))
+            return
+        }
         adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type)
-        val adLoader = AdLoader.Builder(context, TogetherAdSea.idMapGoogle[adConstStr])
+        val adLoader = AdLoader.Builder(context, idList[requestIndex])
             .forUnifiedNativeAd { ad: UnifiedNativeAd ->
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, ad)
@@ -91,8 +96,7 @@ object TogetherAdSeaFlow : AdBase {
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(errorCode: Int) {
                     loge("${AdNameType.GOOGLE_ADMOB.type}: errorCode:$errorCode")
-                    val newSplashConfig = splashConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
-                    showAdFlow(context, newSplashConfig, adConstStr, adListener)
+                    showAdFlowGoogle(context, splashConfigStr, adConstStr, requestIndex+1, adListener)
                 }
 
                 override fun onAdImpression() {
@@ -112,6 +116,7 @@ object TogetherAdSeaFlow : AdBase {
             .build()
 
         adLoader.loadAd(AdRequest.Builder().build())
+        adLoader
 //        adLoader.loadAds(AdRequest.Builder().build(), 3)//最大5
     }
 
@@ -137,10 +142,15 @@ object TogetherAdSeaFlow : AdBase {
             return
         }
         //检测结束 开始请求
-
+        if (idList.isNullOrEmpty()) {
+            //如果在 Map 里面获取不到该广告位的 idList 意味着初始化的时候没有设置这个广告位
+            loge("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.ad_id_no)}")
+            adListener.onAdFailed(context.getString(R.string.ad_id_no))
+            return
+        }
         adListener.onStartRequest(AdNameType.FACEBOOK.type)
 
-        val nativeAd = NativeAd(context, TogetherAdSea.idMapFacebook[adConstStr])
+        val nativeAd = NativeAd(context, idList[requestIndex])
         nativeAd.setAdListener(object : NativeAdListener {
             override fun onAdClicked(ad: Ad?) {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.clicked)}")
@@ -151,15 +161,13 @@ object TogetherAdSeaFlow : AdBase {
 
             override fun onError(ad: Ad?, adError: AdError?) {
                 loge("${AdNameType.FACEBOOK.type}: adError:${adError?.errorCode},${adError?.errorMessage}")
-                val newSplashConfig = splashConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-                showAdFlow(context, newSplashConfig, adConstStr, adListener)
+                showAdFlowFacebook(context, splashConfigStr, adConstStr, requestIndex+1, adListener)
             }
 
             override fun onAdLoaded(ad: Ad?) {
                 if (nativeAd != ad) {
                     loge("${AdNameType.FACEBOOK.type}: 广告返回错误 nativeAd != ad")
-                    val newSplashConfig = splashConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-                    showAdFlow(context, newSplashConfig, adConstStr, adListener)
+                    showAdFlowFacebook(context, splashConfigStr, adConstStr, requestIndex+1, adListener)
                     return
                 }
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")

@@ -25,5 +25,7 @@ class TogetherAdConst {
 
         //激励
         const val AD_REWARD = "ad_reward"
+        //原生横幅  仅facebook有
+        const val AD_FLOW_BANNER = "ad_flow_banner"
     }
 }
