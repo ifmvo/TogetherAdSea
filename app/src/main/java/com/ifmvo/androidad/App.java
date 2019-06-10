@@ -26,14 +26,14 @@ public class App extends Application {
         Map<String, String> googleIdMap = new HashMap<>();
         googleIdMap.put(TogetherAdConst.AD_SPLASH, "ca-app-pub-3940256099942544/2247696110");
         googleIdMap.put(TogetherAdConst.AD_BANNER, "ca-app-pub-3940256099942544/6300978111");
-        googleIdMap.put(TogetherAdConst.AD_FLOW, "ca-app-pub-3940256099942544/2247696110");
+       // googleIdMap.put(TogetherAdConst.AD_FLOW, "ca-app-pub-3940256099942544/2247696110");
         googleIdMap.put(TogetherAdConst.AD_INTER, "ca-app-pub-3940256099942544/1033173712");
         TogetherAdSea.INSTANCE.initGoogleAd(this, "ca-app-pub-3940256099942544~3347511713", googleIdMap);
 
         Map<String, String> facebookIdMap = new HashMap<>();
         facebookIdMap.put(TogetherAdConst.AD_SPLASH, "2418474145048681_2419052008324228");
         facebookIdMap.put(TogetherAdConst.AD_BANNER, "2418474145048681_2419053121657450");
-        facebookIdMap.put(TogetherAdConst.AD_FLOW, "2418474145048681_2419055058323923");
+        //facebookIdMap.put(TogetherAdConst.AD_FLOW, "2418474145048681_2419055058323923");
         facebookIdMap.put(TogetherAdConst.AD_INTER, "2418474145048681_2423241911238571");
         TogetherAdSea.INSTANCE.initFacebookAd(this, facebookIdMap);
 
@@ -62,9 +62,13 @@ public class App extends Application {
         googleIdListMap.put(TogetherAdConst.AD_REWARD, googleRewardList);
         //原生 ID是错的  用的激励的。。
         List<String> googleFlowList = new ArrayList<>();
-        googleRewardList.add("ca-app-pub-3940256099942544/5224354917");
-        googleRewardList.add("ca-app-pub-3940256099942544/5224354917");
-        googleIdListMap.put(TogetherAdConst.AD_FLOW, googleRewardList);
+        googleFlowList.add("ca-app-pub-3940256099942544/5224354917");
+        //right
+        //googleFlowList.add("ca-app-pub-3940256099942544/2247696110");
+        googleFlowList.add("ca-app-pub-3940256099942544/5224354917");
+        googleFlowList.add("ca-app-pub-3940256099942544/2247696110");
+
+        googleIdListMap.put(TogetherAdConst.AD_FLOW, googleFlowList);
 
         /**
          * "AD84300E9B7D7E2DC6479CFB2F31E5C7"
@@ -99,7 +103,10 @@ public class App extends Application {
         //原生 ID是错的  用的激励的。。
         List<String> facebookFlowList = new ArrayList<>();
         facebookFlowList.add("308281803417604_312311299681321");
-        facebookFlowList.add("308281803417604_312311643014620");
+        //right
+        //facebookFlowList.add("2418474145048681_2419055058323923");
+        facebookFlowList.add("308281803417604_312311299681321");
+        facebookFlowList.add("2418474145048681_2419055058323923");
         facebookIdListMap.put(TogetherAdConst.AD_FLOW, facebookFlowList);
 
         TogetherAdSea.INSTANCE.initAdFacebook(this, facebookIdListMap,true);

@@ -58,7 +58,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun requestFlow() {
-        TogetherAdSeaFlow.showAdFlow(
+        TogetherAdSeaFlowHorizontal.showAdFlow(
             this,
             Config.flowAdConfig(),
             TogetherAdConst.AD_FLOW,

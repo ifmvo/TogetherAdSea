@@ -34,6 +34,13 @@ object TogetherAdSea {
      */
 //    var timeOutMillis: Long = 5000
 //        private set
+    /**
+     *
+     * @param channel String 标识 google/facebook的key
+     * @param type String
+     * @param vertical Boolean
+     * @return Unit
+     */
 
     /**
      * 初始化广告
@@ -72,5 +79,4 @@ object TogetherAdSea {
 //    fun setAdTimeOutMillis(millis: Long) {
 //        timeOutMillis = millis
 //    }
-
 }

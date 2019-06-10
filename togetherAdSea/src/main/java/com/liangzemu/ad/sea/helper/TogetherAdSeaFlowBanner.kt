@@ -36,6 +36,7 @@ object TogetherAdSeaFlowBanner : AdBase {
         val randomAdName = AdRandomUtil.getRandomAdName(splashConfigStr)
         when (randomAdName) {
             AdNameType.FACEBOOK -> showAdFlowFacebook(
+
                 context.applicationContext,
                 splashConfigStr,
                 adConstStr,

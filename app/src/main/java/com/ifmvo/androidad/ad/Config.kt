@@ -11,7 +11,7 @@ object Config {
 
     fun bannerAdConfig() = "google_admob:1,facebook:0"
 
-    fun flowAdConfig() = "google_admob:1,facebook:0"
+    fun flowAdConfig() = "google_admob:1,facebook:2"
 
     fun interAdConfig() = "google_admob:1,facebook:0"
 

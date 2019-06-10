@@ -25,18 +25,62 @@ import com.liangzemu.ad.sea.other.loge
  * 
  * Created by Matthew_Chen on 2019-04-22.
  */
+//横向
+object TogetherAdSeaFlowHorizontal{
+    fun showAdFlow(
+        @NonNull context: Context,
+        splashConfigStr: String?,
+        @NonNull adConstStr: String,
+        @NonNull adListener: TogetherAdSeaFlow.AdListenerFlow
+    ){
+        //取最高等级
+        val levelCount=Math.max(TogetherAdSea.idListGoogleMap[adConstStr]?.size?:0,TogetherAdSea.idListFacebookMap[adConstStr]?.size?:0)
+        var level=0
+        loge("total level:$levelCount level:$level start")
+        //循环等级请求
+        fun showAdFlowByLevel(){//修改处 3
+
+            TogetherAdSeaFlow.showAdFlow(context, splashConfigStr, adConstStr, object :TogetherAdSeaFlow.AdListenerFlow{
+                override fun onStartRequest(channel: String) {adListener.onStartRequest(channel)}
+                override fun onAdClick(channel: String) {adListener.onAdClick(channel)}
+
+                override fun onAdFailed(failedMsg: String?) {
+                    loge("TogetherAdSeaFlowHorizontal: level:$level failed:$failedMsg")
+                    if(level>=levelCount){
+                        adListener.onAdFailed(failedMsg)
+                    }else{
+                        level++
+                        showAdFlowByLevel()//修改处 3
+                    }
+
+                }
+                override fun onAdPrepared(channel: String, ad: Any) {
+                    loge("TogetherAdSeaFlowHorizontal: level:$level success:$channel")
+                    adListener.onAdPrepared(channel, ad)
+                }
+
+            },level)
+
+        }
+        //开始请求
+        showAdFlowByLevel()//修改处 3
+    }
+}
 object TogetherAdSeaFlow : AdBase {
 
     fun showAdFlow(
         @NonNull context: Context,
         splashConfigStr: String?,
         @NonNull adConstStr: String,
-        @NonNull adListener: AdListenerFlow
+        @NonNull adListener: AdListenerFlow,
+        level:Int=-1
     ) {
 
         val randomAdName = AdRandomUtil.getRandomAdName(splashConfigStr)
+        loge("splashConfigStr:$splashConfigStr randomAdName:$randomAdName")
         when (randomAdName) {
             AdNameType.GOOGLE_ADMOB -> showAdFlowGoogle(
+                level,
                 context.applicationContext,
                 splashConfigStr,
                 adConstStr,
@@ -44,6 +88,7 @@ object TogetherAdSeaFlow : AdBase {
                 adListener
             )
             AdNameType.FACEBOOK -> showAdFlowFacebook(
+                level,
                 context.applicationContext,
                 splashConfigStr,
                 adConstStr,
@@ -63,6 +108,7 @@ object TogetherAdSeaFlow : AdBase {
      * adConstStr : 例：TogetherAdConst.AD_SPLASH
      */
     private fun showAdFlowGoogle(
+        level:Int,
         @NonNull context: Context,
         splashConfigStr: String?,
         @NonNull adConstStr: String,
@@ -72,12 +118,19 @@ object TogetherAdSeaFlow : AdBase {
         /**
          * 分档检测
          */
-        val idList = TogetherAdSea.idListGoogleMap[adConstStr]
+        val idList =
+        if(level!=-1){
+            TogetherAdSea.idListGoogleMap[adConstStr]?.filterIndexed { index, _ ->
+                level==index
+            }
+        }else{
+            TogetherAdSea.idListGoogleMap[adConstStr]
+        }
         //分档位请求完毕  都没广告
         if (requestIndex >= idList?.size ?: 0) {
             //如果所有档位都请求失败了，就切换另外一种广告
             val newConfig = splashConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
-            showAdFlow(context, newConfig, adConstStr, adListener)
+            showAdFlow(context, newConfig, adConstStr, adListener,level)
             return
         }
         //检测结束 开始请求
@@ -96,7 +149,7 @@ object TogetherAdSeaFlow : AdBase {
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(errorCode: Int) {
                     loge("${AdNameType.GOOGLE_ADMOB.type}: errorCode:$errorCode")
-                    showAdFlowGoogle(context, splashConfigStr, adConstStr, requestIndex+1, adListener)
+                    showAdFlowGoogle(level,context, splashConfigStr, adConstStr, requestIndex+1, adListener)
                 }
 
                 override fun onAdImpression() {
@@ -124,6 +177,7 @@ object TogetherAdSeaFlow : AdBase {
      * Facebook
      */
     private fun showAdFlowFacebook(
+        level:Int=-1,
         @NonNull context: Context,
         splashConfigStr: String?,
         @NonNull adConstStr: String,
@@ -133,12 +187,19 @@ object TogetherAdSeaFlow : AdBase {
         /**
          * 分档检测
          */
-        val idList = TogetherAdSea.idListFacebookMap[adConstStr]
+        val idList =
+            if (level != -1) {
+                TogetherAdSea.idListFacebookMap[adConstStr]?.filterIndexed { index, _ ->
+                    level == index
+                }
+            } else {
+                TogetherAdSea.idListFacebookMap[adConstStr]
+            }
         //分档位请求完毕  都没广告
         if (requestIndex >= idList?.size ?: 0) {
             //如果所有档位都请求失败了，就切换另外一种广告
             val newConfig = splashConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-            showAdFlow(context, newConfig, adConstStr, adListener)
+            showAdFlow(context, newConfig, adConstStr, adListener,level)
             return
         }
         //检测结束 开始请求
@@ -161,13 +222,13 @@ object TogetherAdSeaFlow : AdBase {
 
             override fun onError(ad: Ad?, adError: AdError?) {
                 loge("${AdNameType.FACEBOOK.type}: adError:${adError?.errorCode},${adError?.errorMessage}")
-                showAdFlowFacebook(context, splashConfigStr, adConstStr, requestIndex+1, adListener)
+                showAdFlowFacebook(level,context, splashConfigStr, adConstStr, requestIndex+1, adListener)
             }
 
             override fun onAdLoaded(ad: Ad?) {
                 if (nativeAd != ad) {
                     loge("${AdNameType.FACEBOOK.type}: 广告返回错误 nativeAd != ad")
-                    showAdFlowFacebook(context, splashConfigStr, adConstStr, requestIndex+1, adListener)
+                    showAdFlowFacebook(level,context, splashConfigStr, adConstStr, requestIndex+1, adListener)
                     return
                 }
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
@@ -196,3 +257,5 @@ object TogetherAdSeaFlow : AdBase {
     }
 
 }
+
+
