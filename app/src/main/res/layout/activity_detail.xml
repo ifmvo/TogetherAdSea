@@ -34,6 +34,15 @@
 
         </LinearLayout>
 
+        <!--
+            暂停插屏
+        -->
+        <Button
+                android:id="@+id/btnRequestPause"
+                android:layout_width="match_parent"
+                android:text="request暂停插屏"
+                android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
     <!--
@@ -44,5 +53,13 @@
             android:layout_width="match_parent"
             android:layout_gravity="bottom"
             android:layout_height="wrap_content"/>
+
+    <!--
+        横幅模仿暂停插页
+    -->
+    <FrameLayout
+            android:id="@+id/mFlAdPause"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
 </FrameLayout>

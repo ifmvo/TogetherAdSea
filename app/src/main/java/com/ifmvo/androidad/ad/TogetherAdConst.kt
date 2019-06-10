@@ -19,5 +19,8 @@ class TogetherAdConst {
 
         //插屏
         const val AD_INTER = "ad_inter"
+
+        //暂停
+        const val AD_PAUSE = "ad_pause"
     }
 }

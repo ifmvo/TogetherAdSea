@@ -12,6 +12,7 @@ import com.ifmvo.androidad.ad.TogetherAdConst
 import com.liangzemu.ad.sea.helper.TogetherAdSeaBanner
 import com.liangzemu.ad.sea.helper.TogetherAdSeaFlow
 import com.liangzemu.ad.sea.helper.TogetherAdSeaInter
+import com.liangzemu.ad.sea.helper.TogetherAdSeaPause
 import kotlinx.android.synthetic.main.activity_detail.*
 
 /* 
@@ -40,6 +41,10 @@ class DetailActivity : AppCompatActivity() {
 
         btnShowInter.setOnClickListener {
             TogetherAdSeaInter.showAdInter()
+        }
+
+        btnRequestPause.setOnClickListener {
+            requestPause()
         }
 
         requestFlow()
@@ -126,6 +131,31 @@ class DetailActivity : AppCompatActivity() {
                     Log.e(tag, "onAdPrepared:$channel")
                 }
 
+            })
+    }
+
+    private fun requestPause() {
+        TogetherAdSeaPause.showAdPause(
+            this,
+            Config.pauseAdConfig(),
+            TogetherAdConst.AD_PAUSE,
+            mFlAdPause,
+            object : TogetherAdSeaPause.AdListenerPause {
+                override fun onStartRequest(channel: String) {
+                    Log.e(tag, "onAdPrepared:$channel")
+                }
+
+                override fun onAdClick(channel: String) {
+                    Log.e(tag, "onAdClick:$channel")
+                }
+
+                override fun onAdFailed(failedMsg: String?) {
+                    Log.e(tag, "onAdFailed:$failedMsg")
+                }
+
+                override fun onAdPrepared(channel: String) {
+                    Log.e(tag, "onAdPrepared:$channel")
+                }
             })
     }
 }
