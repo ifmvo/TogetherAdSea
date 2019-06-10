@@ -18,7 +18,7 @@ import com.liangzemu.ad.sea.other.loge
 
 
 /**
- * 原生横幅广告  因为仅在facebook有  所以不采用比例  仅仅使用分级
+ * 原生横幅广告  因为仅在facebook有  所以不采用比例，也不需要分方向  仅仅使用分级
  * 
  * Created by Matthew_Chen on 2019-04-22.
  */

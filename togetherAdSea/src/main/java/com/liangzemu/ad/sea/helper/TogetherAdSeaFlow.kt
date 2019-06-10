@@ -38,7 +38,7 @@ object TogetherAdSeaFlowHorizontal{
         var level=0
         loge("total level:$levelCount level:$level start")
         //循环等级请求
-        fun showAdFlowByLevel(){//修改处 3
+        fun showAdFlowByLevel(){
 
             TogetherAdSeaFlow.showAdFlow(context, splashConfigStr, adConstStr, object :TogetherAdSeaFlow.AdListenerFlow{
                 override fun onStartRequest(channel: String) {adListener.onStartRequest(channel)}
@@ -50,7 +50,7 @@ object TogetherAdSeaFlowHorizontal{
                         adListener.onAdFailed(failedMsg)
                     }else{
                         level++
-                        showAdFlowByLevel()//修改处 3
+                        showAdFlowByLevel()
                     }
 
                 }
@@ -63,7 +63,7 @@ object TogetherAdSeaFlowHorizontal{
 
         }
         //开始请求
-        showAdFlowByLevel()//修改处 3
+        showAdFlowByLevel()
     }
 }
 object TogetherAdSeaFlow : AdBase {
