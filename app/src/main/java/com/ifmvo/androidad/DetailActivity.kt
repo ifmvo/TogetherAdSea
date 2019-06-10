@@ -58,7 +58,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun requestFlow() {
-        TogetherAdSeaFlow.showAdFlow(
+        TogetherAdSeaFlowHorizontal.showAdFlow(
             this,
             Config.flowAdConfig(),
             TogetherAdConst.AD_FLOW,
@@ -186,7 +186,7 @@ class DetailActivity : AppCompatActivity() {
                     Log.e(tag, "onAdShow:$channel")
                 }
 
-                override fun onAdComplete(channel: String) {
+                override fun onAdClose(channel: String, isReward: Boolean) {
                     Log.e(tag, "onAdComplete:$channel")
                 }
 

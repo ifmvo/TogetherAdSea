@@ -23,3 +23,6 @@ internal fun AdRandomUtil.logd(msg: String?) {
 internal fun AdRandomUtil.loge(msg: String?) {
     Log.e("TogetherAdSeaInfo", "${this.javaClass.simpleName}: $msg")
 }
+internal fun Any.loge(msg: String?) {
+    Log.e("TogetherAdSeaInfo",  "${this.javaClass.simpleName}: $msg")
+}
