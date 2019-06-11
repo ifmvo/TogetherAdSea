@@ -34,8 +34,11 @@ object TogetherAdSeaFlow : AdBase {
         @NonNull context: Context,
         splashConfigStr: String?,
         @NonNull adConstStr: String,
-        @NonNull adListener: TogetherAdSeaFlow.AdListenerFlow
+        @NonNull adListener: AdListenerFlow
     ){
+        if(TogetherAdSea.loadingAdTask[adConstStr]!=null){//已经在加载中  就不再请求了
+            return
+        }
         //取最高等级
         val levelCount=Math.max(TogetherAdSea.idListGoogleMap[adConstStr]?.size?:0,TogetherAdSea.idListFacebookMap[adConstStr]?.size?:0)
         var level=0
@@ -43,13 +46,15 @@ object TogetherAdSeaFlow : AdBase {
         //循环等级请求
         fun showAdFlowByLevel(){
 
-            TogetherAdSeaFlow.showAdFlowVertical(context, splashConfigStr, adConstStr, object :TogetherAdSeaFlow.AdListenerFlow{
+            showAdFlowVertical(context, splashConfigStr, adConstStr, object : AdListenerFlow{
                 override fun onStartRequest(channel: String) {adListener.onStartRequest(channel)}
                 override fun onAdClick(channel: String) {adListener.onAdClick(channel)}
 
                 override fun onAdFailed(failedMsg: String?) {
                     loge("TogetherAdSeaFlowHorizontal: level:$level failed:$failedMsg")
                     if(level>=levelCount){
+                        //加载完成  移除
+                        TogetherAdSea.loadingAdTask.remove(adConstStr)
                         adListener.onAdFailed(failedMsg)
                     }else{
                         level++
@@ -59,6 +64,8 @@ object TogetherAdSeaFlow : AdBase {
                 }
                 override fun onAdPrepared(channel: String, ad: Any) {
                     loge("TogetherAdSeaFlowHorizontal: level:$level success:$channel")
+                    //加载完成  移除
+                    TogetherAdSea.loadingAdTask.remove(adConstStr)
                     adListener.onAdPrepared(channel, ad)
                 }
 
@@ -99,6 +106,10 @@ object TogetherAdSeaFlow : AdBase {
                 adListener
             )
             else -> {
+                if(TogetherAdSea.loadingAdTask[adConstStr]==level){//广告加载完毕并且已经是目标等级了
+                    //加载完成  移除
+                    TogetherAdSea.loadingAdTask.remove(adConstStr)
+                }
                 adListener.onAdFailed(context.getString(R.string.all_ad_error))
                 loge(context.getString(R.string.all_ad_error))
             }

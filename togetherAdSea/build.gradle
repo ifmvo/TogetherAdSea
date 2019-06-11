@@ -36,14 +36,14 @@ ext {
     bintrayRepo ='TogetherAdSeaSupport'//bintray中建立的仓库名称
     bintrayName ='AdSeaSupport'//bintray中存储此项目的包名
 
-    publishedGroupId ='com.liangzemu.adsea'//引入时前面的名字
-    libraryName ='AdSeaSupport'
+    publishedGroupId ='com.liangzemu.ad.sea'//引入时前面的名字
+    libraryName ='support'//同下方的artifact
     artifact ='support'//引入时后面的名字
 
     libraryDescription ='AdSea for support'
     siteUrl ='https://github.com/ifmvo/TogetherAdSea/tree/support'
     gitUrl ='https://github.com/ifmvo/TogetherAdSea.git'
-    libraryVersion ='1.2.0'
+    libraryVersion ='1.2.2'
     developerId ='daveboy'
     developerName ='daveboy'
     developerEmail ='1130198893@qq.com'

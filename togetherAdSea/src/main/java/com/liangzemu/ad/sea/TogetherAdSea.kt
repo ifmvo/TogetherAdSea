@@ -30,6 +30,10 @@ object TogetherAdSea {
     var testDeviceID:String?=null
         private set
     /**
+     * 当前正在加载中的广告
+     */
+    val loadingAdTask=HashMap<String,Int>() //HashMap<adConstStr,lastLevel>()
+    /**
      * 超时时间
      */
 //    var timeOutMillis: Long = 5000

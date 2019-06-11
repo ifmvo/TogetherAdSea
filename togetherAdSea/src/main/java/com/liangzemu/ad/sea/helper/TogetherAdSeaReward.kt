@@ -36,6 +36,9 @@ object TogetherAdSeaReward : AdBase {
         @NonNull adConstStr: String,
         @NonNull adListener: AdListenerReward
     ){
+        if(TogetherAdSea.loadingAdTask[adConstStr]!=null){//已经在加载中  就不再请求了
+            return
+        }
         //取最高等级
         val levelCount=Math.max(TogetherAdSea.idListGoogleMap[adConstStr]?.size?:0,TogetherAdSea.idListFacebookMap[adConstStr]?.size?:0)
         var level=0
@@ -54,6 +57,8 @@ object TogetherAdSeaReward : AdBase {
 
                 override fun onAdPrepared(channel: String) {
                     loge("TogetherAdSeaRewardVertical: level:$level success:$channel")
+                    //加载完成  移除
+                    TogetherAdSea.loadingAdTask.remove(adConstStr)
                     adListener.onAdPrepared(channel)
                 }
 
@@ -65,6 +70,9 @@ object TogetherAdSeaReward : AdBase {
                 override fun onAdFailed(failedMsg: String?) {
                     loge("TogetherAdSeaRewardVertical: level:$level failed:$failedMsg")
                     if(level>=levelCount){
+                        //加载完成  移除
+                        TogetherAdSea.loadingAdTask.remove(adConstStr)
+
                         adListener.onAdFailed(failedMsg)
                     }else{
                         level++
@@ -85,6 +93,7 @@ object TogetherAdSeaReward : AdBase {
      * @param rewardConfigStr String?  表示google和facebook广告的比例  当某一部分广告请求失败后  将该部分的key置为no
      * @param adConstStr String  标识字段  区分是哪种广告类型  对应的是初始化时对应广告id的key
      * @param adListener AdListenerReward 监听器
+     * @param level Int 目前轮次等级  只有横向切换的时候需要  竖向切换默认为-1
      * @return Unit
      */
     fun requestAdRewardVertical(
@@ -114,6 +123,10 @@ object TogetherAdSeaReward : AdBase {
                 adListener
             )
             else -> {
+                if(TogetherAdSea.loadingAdTask[adConstStr]==level){//广告加载完毕并且已经是目标等级了
+                    //加载完成  移除
+                    TogetherAdSea.loadingAdTask.remove(adConstStr)
+                }
                 adListener.onAdFailed(context.getString(com.liangzemu.ad.sea.R.string.all_ad_error))
                 loge(context.getString(com.liangzemu.ad.sea.R.string.all_ad_error))
             }
@@ -152,6 +165,7 @@ object TogetherAdSeaReward : AdBase {
         logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(com.liangzemu.ad.sea.R.string.start_request)}")
         adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type)
         var isRewarded = false
+
         mRewardedVideoAdGoogle = MobileAds.getRewardedVideoAdInstance(context)
         mRewardedVideoAdGoogle?.rewardedVideoAdListener = object : RewardedVideoAdListener {
             override fun onRewarded(reward: RewardItem) {
@@ -267,7 +281,7 @@ object TogetherAdSeaReward : AdBase {
     }
 
     fun isLoaded(): Boolean {
-        return mRewardedVideoAdGoogle?.isLoaded == true || mRewardedVideoAdFacebook?.isAdLoaded == true
+        return mRewardedVideoAdGoogle?.isLoaded == true || (mRewardedVideoAdFacebook?.isAdLoaded == true&&mRewardedVideoAdFacebook?.isAdInvalidated==false)
     }
 
     fun showAdReward() {
