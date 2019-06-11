@@ -165,7 +165,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun requestReward() {
-        TogetherAdSeaReward.requestAdReward(
+        TogetherAdSeaReward.requestAdRewardVertical(
             this,
             Config.rewardAdConfig(),
             TogetherAdConst.AD_REWARD,

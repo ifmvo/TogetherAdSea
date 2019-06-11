@@ -25,9 +25,12 @@ import com.liangzemu.ad.sea.other.loge
  * 
  * Created by Matthew_Chen on 2019-04-22.
  */
-//横向
-object TogetherAdSeaFlowHorizontal{
-    fun showAdFlow(
+
+object TogetherAdSeaFlow : AdBase {
+    /**
+     * 横向切换
+     */
+    fun showAdFlowHorizontal(
         @NonNull context: Context,
         splashConfigStr: String?,
         @NonNull adConstStr: String,
@@ -40,7 +43,7 @@ object TogetherAdSeaFlowHorizontal{
         //循环等级请求
         fun showAdFlowByLevel(){
 
-            TogetherAdSeaFlow.showAdFlow(context, splashConfigStr, adConstStr, object :TogetherAdSeaFlow.AdListenerFlow{
+            TogetherAdSeaFlow.showAdFlowVertical(context, splashConfigStr, adConstStr, object :TogetherAdSeaFlow.AdListenerFlow{
                 override fun onStartRequest(channel: String) {adListener.onStartRequest(channel)}
                 override fun onAdClick(channel: String) {adListener.onAdClick(channel)}
 
@@ -65,10 +68,10 @@ object TogetherAdSeaFlowHorizontal{
         //开始请求
         showAdFlowByLevel()
     }
-}
-object TogetherAdSeaFlow : AdBase {
-
-    fun showAdFlow(
+    /**
+     * 竖向切换
+     */
+    fun showAdFlowVertical(
         @NonNull context: Context,
         splashConfigStr: String?,
         @NonNull adConstStr: String,
@@ -130,7 +133,7 @@ object TogetherAdSeaFlow : AdBase {
         if (requestIndex >= idList?.size ?: 0) {
             //如果所有档位都请求失败了，就切换另外一种广告
             val newConfig = splashConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
-            showAdFlow(context, newConfig, adConstStr, adListener,level)
+            showAdFlowVertical(context, newConfig, adConstStr, adListener,level)
             return
         }
         //检测结束 开始请求
@@ -199,7 +202,7 @@ object TogetherAdSeaFlow : AdBase {
         if (requestIndex >= idList?.size ?: 0) {
             //如果所有档位都请求失败了，就切换另外一种广告
             val newConfig = splashConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-            showAdFlow(context, newConfig, adConstStr, adListener,level)
+            showAdFlowVertical(context, newConfig, adConstStr, adListener,level)
             return
         }
         //检测结束 开始请求

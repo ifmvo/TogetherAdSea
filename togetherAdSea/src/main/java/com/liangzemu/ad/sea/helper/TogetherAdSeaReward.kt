@@ -23,13 +23,18 @@ import com.liangzemu.ad.sea.other.loge
  * 
  * Created by Matthew_Chen on 2019-06-05.
  */
-//横向
-object TogetherAdSeaRewardHorizontal{
-    fun requestAdReward(
+object TogetherAdSeaReward : AdBase {
+
+    private var mRewardedVideoAdGoogle: RewardedVideoAd? = null
+    private var mRewardedVideoAdFacebook: com.facebook.ads.RewardedVideoAd? = null
+    /**
+     * 横向切换
+     */
+    fun requestAdRewardHorizontal(
         @NonNull context: Context,
         splashConfigStr: String?,
         @NonNull adConstStr: String,
-        @NonNull adListener: TogetherAdSeaReward.AdListenerReward
+        @NonNull adListener: AdListenerReward
     ){
         //取最高等级
         val levelCount=Math.max(TogetherAdSea.idListGoogleMap[adConstStr]?.size?:0,TogetherAdSea.idListFacebookMap[adConstStr]?.size?:0)
@@ -38,7 +43,7 @@ object TogetherAdSeaRewardHorizontal{
         //循环等级请求
         fun requestAdRewardByLevel(){
 
-            TogetherAdSeaReward.requestAdReward(context, splashConfigStr, adConstStr, object :TogetherAdSeaReward.AdListenerReward{
+            requestAdRewardVertical(context, splashConfigStr, adConstStr, object :AdListenerReward{
                 override fun onAdShow(channel: String) {
                     adListener.onAdShow(channel)
                 }
@@ -74,20 +79,15 @@ object TogetherAdSeaRewardHorizontal{
         //开始请求
         requestAdRewardByLevel()
     }
-}
-object TogetherAdSeaReward : AdBase {
-
-    private var mRewardedVideoAdGoogle: RewardedVideoAd? = null
-    private var mRewardedVideoAdFacebook: com.facebook.ads.RewardedVideoAd? = null
     /**
-     * 请求激励广告 根据rewardConfigStr随机比例
+     * 竖向切换 请求激励广告 根据rewardConfigStr随机比例
      * @param context Context
      * @param rewardConfigStr String?  表示google和facebook广告的比例  当某一部分广告请求失败后  将该部分的key置为no
      * @param adConstStr String  标识字段  区分是哪种广告类型  对应的是初始化时对应广告id的key
      * @param adListener AdListenerReward 监听器
      * @return Unit
      */
-    fun requestAdReward(
+    fun requestAdRewardVertical(
         @NonNull context: Context,
         rewardConfigStr: String?,
         @NonNull adConstStr: String,
@@ -139,7 +139,7 @@ object TogetherAdSeaReward : AdBase {
         if (indexGoogle >= idList?.size ?: 0) {
             //如果所有档位都请求失败了，就切换另外一种广告
             val newRewardConfig = rewardConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
-            requestAdReward(context, newRewardConfig, adConstStr, adListener,level)
+            requestAdRewardVertical(context, newRewardConfig, adConstStr, adListener,level)
             return
         }
         if (idList.isNullOrEmpty()) {
@@ -215,7 +215,7 @@ object TogetherAdSeaReward : AdBase {
         if (indexFacebook >= idList?.size ?: 0) {
             //如果所有档位都请求失败了，就切换另外一种广告
             val newRewardConfig = rewardConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-            requestAdReward(context, newRewardConfig, adConstStr, adListener,level)
+            requestAdRewardVertical(context, newRewardConfig, adConstStr, adListener,level)
             return
         }
 
