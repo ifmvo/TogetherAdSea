@@ -42,6 +42,7 @@ object TogetherAdSeaFlow : AdBase {
         //取最高等级
         val levelCount=Math.max(TogetherAdSea.idListGoogleMap[adConstStr]?.size?:0,TogetherAdSea.idListFacebookMap[adConstStr]?.size?:0)
         var level=0
+        TogetherAdSea.loadingAdTask[adConstStr]=levelCount
         loge("total level:$levelCount level:$level start")
         //循环等级请求
         fun showAdFlowByLevel(){
@@ -85,7 +86,9 @@ object TogetherAdSeaFlow : AdBase {
         @NonNull adListener: AdListenerFlow,
         level:Int=-1
     ) {
-
+        if(level==-1){
+            TogetherAdSea.loadingAdTask[adConstStr]=-1
+        }
         val randomAdName = AdRandomUtil.getRandomAdName(splashConfigStr)
         loge("splashConfigStr:$splashConfigStr randomAdName:$randomAdName")
         when (randomAdName) {
