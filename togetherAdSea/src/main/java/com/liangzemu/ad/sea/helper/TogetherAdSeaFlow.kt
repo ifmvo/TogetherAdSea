@@ -60,7 +60,7 @@ object TogetherAdSeaFlow : AdBase {
                     }
 
                     override fun onAdFailed(failedMsg: String?) {
-                        loge("TogetherAdSeaFlowHorizontal: level:$level failed:$failedMsg")
+                        loge("level:$level failed:$failedMsg")
                         if (level >= levelCount) {
                             adListener.onAdFailed(failedMsg)
                         } else {
@@ -71,7 +71,7 @@ object TogetherAdSeaFlow : AdBase {
                     }
 
                     override fun onAdPrepared(channel: String, ad: Any) {
-                        loge("TogetherAdSeaFlowHorizontal: level:$level success:$channel")
+                        loge("level:$level success:$channel")
                         adListener.onAdPrepared(channel, ad)
                     }
 
@@ -96,7 +96,6 @@ object TogetherAdSeaFlow : AdBase {
     ) {
 
         val randomAdName = AdRandomUtil.getRandomAdName(splashConfigStr)
-        loge("splashConfigStr:$splashConfigStr randomAdName:$randomAdName")
         when (randomAdName) {
             AdNameType.GOOGLE_ADMOB -> showAdFlowGoogle(
                 level,

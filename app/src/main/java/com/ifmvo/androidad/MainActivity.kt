@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
 import com.liangzemu.ad.sea.helper.TogetherAdSeaSplash
+import com.liangzemu.ad.sea.other.TogetherAdSeaSP
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -12,6 +13,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        TogetherAdSeaSP.getInstance(this).clear()
 
 //        Thread {
 //            val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(this)

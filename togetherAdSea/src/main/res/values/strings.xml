@@ -5,7 +5,7 @@
     <!--
         log 用到，translatable="false" 不需要翻译其他语言
     -->
-    <string translatable="false" name="all_ad_error">配置中的广告全部加载失败，或配置中没有匹配的广告</string>
+    <string translatable="false" name="all_ad_error">当前Level的所有广告加载失败</string>
     <string translatable="false" name="ad_id_no">该广告位没有初始化ID</string>
 
 

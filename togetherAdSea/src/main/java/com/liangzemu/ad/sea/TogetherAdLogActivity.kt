@@ -24,13 +24,19 @@ class TogetherAdLogActivity : ListActivity() {
         super.onCreate(savedInstanceState)
 
 
-        val list = mutableListOf<String>()
-        TogetherAdSeaSP.getInstance(this).allMap.values.forEach {
+        val keyList = mutableListOf<String>()
+        TogetherAdSeaSP.getInstance(this).allMap.keys.forEach {
             if (it is String) {
-                list.add(it)
+                keyList.add(it)
             }
         }
+        keyList.sort()
 
-        listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, list)
+        val valueList = mutableListOf<String>()
+        keyList.forEach {
+            valueList.add(TogetherAdSeaSP.getInstance(this).getString(it, ""))
+        }
+
+        listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, valueList)
     }
 }

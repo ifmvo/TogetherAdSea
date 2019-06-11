@@ -84,10 +84,6 @@ object TogetherAdSeaSplash : AdBase {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type)
 
-                val images = ad.images
-
-                logd(images.toString())
-
                 val adView = View.inflate(
                     context,
                     R.layout.layout_splash_google,
