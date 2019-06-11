@@ -63,7 +63,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun requestFlow() {
-        TogetherAdSeaFlow.showAdFlow(
+        TogetherAdSeaFlow.showAdFlowHorizontal(
             this,
             Config.flowAdConfig(),
             TogetherAdConst.AD_FLOW,
@@ -170,7 +170,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun requestReward() {
-        TogetherAdSeaReward.requestAdReward(
+        TogetherAdSeaReward.requestAdRewardHorizontal(
             this,
             Config.rewardAdConfig(),
             TogetherAdConst.AD_REWARD,

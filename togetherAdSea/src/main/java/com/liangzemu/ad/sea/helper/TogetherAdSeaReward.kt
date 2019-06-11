@@ -28,16 +28,82 @@ object TogetherAdSeaReward : AdBase {
     private var mRewardedVideoAdGoogle: RewardedVideoAd? = null
     private var mRewardedVideoAdFacebook: com.facebook.ads.RewardedVideoAd? = null
 
-    fun requestAdReward(
+    /**
+     * 横向的
+     */
+    fun requestAdRewardHorizontal(
         @NonNull context: Context,
-        rewardConfigStr: String?,
+        splashConfigStr: String?,
         @NonNull adConstStr: String,
-        @NonNull adListener: AdListenerReward
+        @NonNull adListener: TogetherAdSeaReward.AdListenerReward
+    ) {
+        //取最高等级
+        val levelCount = Math.max(
+            TogetherAdSea.idListGoogleMap[adConstStr]?.size ?: 0,
+            TogetherAdSea.idListFacebookMap[adConstStr]?.size ?: 0
+        )
+        var level = 0
+        logd("total level:$levelCount level:$level start")
+        //循环等级请求
+        fun requestAdRewardByLevel() {
+
+            requestAdRewardVertical(context, splashConfigStr, adConstStr, level, object : AdListenerReward {
+                override fun onAdShow(channel: String) {
+                    adListener.onAdShow(channel)
+                }
+
+                override fun onAdClose(channel: String, isReward: Boolean) {
+                    adListener.onAdClose(channel, isReward)
+                }
+
+                override fun onAdPrepared(channel: String) {
+                    logd("level:$level success:$channel")
+                    adListener.onAdPrepared(channel)
+                }
+
+                override fun onStartRequest(channel: String) {
+                    adListener.onStartRequest(channel)
+                }
+
+                override fun onAdClick(channel: String) {
+                    adListener.onAdClick(channel)
+                }
+
+                override fun onAdFailed(failedMsg: String?) {
+                    loge("level:$level failed:$failedMsg")
+                    if (level >= levelCount) {
+                        adListener.onAdFailed(failedMsg)
+                    } else {
+                        level++
+                        requestAdRewardByLevel()
+                    }
+                }
+            }
+            )
+        }
+        //开始请求
+        requestAdRewardByLevel()
+    }
+
+
+    /**
+     * 竖向的
+     * 请求激励广告 根据rewardConfigStr随机比例
+     * @param context Context
+     * @param rewardConfigStr String?  表示google和facebook广告的比例  当某一部分广告请求失败后  将该部分的key置为no
+     * @param adConstStr String  标识字段  区分是哪种广告类型  对应的是初始化时对应广告id的key
+     * @param adListener AdListenerReward 监听器
+     * @return Unit
+     */
+    fun requestAdRewardVertical(
+        @NonNull context: Context, rewardConfigStr: String?, @NonNull adConstStr: String,
+        level: Int = -1, @NonNull adListener: AdListenerReward
     ) {
 
         val randomAdName = AdRandomUtil.getRandomAdName(rewardConfigStr)
         when (randomAdName) {
             AdNameType.GOOGLE_ADMOB -> requestAdRewardGoogle(
+                level,
                 context.applicationContext,
                 rewardConfigStr,
                 adConstStr,
@@ -45,6 +111,7 @@ object TogetherAdSeaReward : AdBase {
                 adListener
             )
             AdNameType.FACEBOOK -> requestAdRewardFacebook(
+                level,
                 context.applicationContext,
                 rewardConfigStr,
                 adConstStr,
@@ -52,28 +119,31 @@ object TogetherAdSeaReward : AdBase {
                 adListener
             )
             else -> {
-                adListener.onAdFailed(context.getString(com.liangzemu.ad.sea.R.string.all_ad_error))
-                loge(context.getString(com.liangzemu.ad.sea.R.string.all_ad_error))
+                adListener.onAdFailed(context.getString(R.string.all_ad_error))
+                loge(context.getString(R.string.all_ad_error))
             }
         }
     }
 
     private fun requestAdRewardGoogle(
-        @NonNull context: Context,
-        rewardConfigStr: String?,
-        @NonNull adConstStr: String,
-        indexGoogle: Int,
-        @NonNull adListener: AdListenerReward
+        level: Int, @NonNull context: Context,
+        rewardConfigStr: String?, @NonNull adConstStr: String,
+        indexGoogle: Int, @NonNull adListener: AdListenerReward
     ) {
-        val idList = TogetherAdSea.idListGoogleMap[adConstStr]
-
+        val idList = if (level != -1) {
+            TogetherAdSea.idListGoogleMap[adConstStr]?.filterIndexed { index, _ ->
+                level == index
+            }
+        } else {
+            TogetherAdSea.idListGoogleMap[adConstStr]
+        }
+        //分档位请求完毕  都没广告
         if (indexGoogle >= idList?.size ?: 0) {
             //如果所有档位都请求失败了，就切换另外一种广告
             val newRewardConfig = rewardConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
-            requestAdReward(context, newRewardConfig, adConstStr, adListener)
+            requestAdRewardVertical(context, newRewardConfig, adConstStr, level, adListener)
             return
         }
-
         if (idList.isNullOrEmpty()) {
             //如果在 Map 里面获取不到该广告位的 idList 意味着初始化的时候没有设置这个广告位
             loge("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(com.liangzemu.ad.sea.R.string.ad_id_no)}")
@@ -103,7 +173,7 @@ object TogetherAdSeaReward : AdBase {
             override fun onRewardedVideoAdFailedToLoad(errorCode: Int) {
                 loge("${AdNameType.GOOGLE_ADMOB.type}: indexGoogle:$indexGoogle, errorCode:$errorCode")
                 val newIndexGoogle = indexGoogle + 1
-                requestAdRewardGoogle(context, rewardConfigStr, adConstStr, newIndexGoogle, adListener)
+                requestAdRewardGoogle(level, context, rewardConfigStr, adConstStr, newIndexGoogle, adListener)
             }
 
             override fun onRewardedVideoAdLoaded() {
@@ -129,19 +199,23 @@ object TogetherAdSeaReward : AdBase {
     }
 
     private fun requestAdRewardFacebook(
-        @NonNull context: Context,
-        rewardConfigStr: String?,
-        @NonNull adConstStr: String,
-        indexFacebook: Int,
-        @NonNull adListener: AdListenerReward
+        level: Int, @NonNull context: Context,
+        rewardConfigStr: String?, @NonNull adConstStr: String,
+        indexFacebook: Int, @NonNull adListener: AdListenerReward
     ) {
 
-        val idList = TogetherAdSea.idListFacebookMap[adConstStr]
+        val idList = if (level != -1) {
+            TogetherAdSea.idListFacebookMap[adConstStr]?.filterIndexed { index, _ ->
+                level == index
+            }
+        } else {
+            TogetherAdSea.idListFacebookMap[adConstStr]
+        }
 
         if (indexFacebook >= idList?.size ?: 0) {
             //如果所有档位都请求失败了，就切换另外一种广告
             val newRewardConfig = rewardConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-            requestAdReward(context, newRewardConfig, adConstStr, adListener)
+            requestAdRewardVertical(context, newRewardConfig, adConstStr, level, adListener)
             return
         }
 
@@ -176,7 +250,7 @@ object TogetherAdSeaReward : AdBase {
             override fun onError(p0: Ad?, adError: AdError?) {
                 loge("${AdNameType.FACEBOOK.type}: indexFacebook:$indexFacebook, errorCode:${adError?.errorCode} ${adError?.errorMessage}")
                 val newIndexFacebook = indexFacebook + 1
-                requestAdRewardFacebook(context, rewardConfigStr, adConstStr, newIndexFacebook, adListener)
+                requestAdRewardFacebook(level, context, rewardConfigStr, adConstStr, newIndexFacebook, adListener)
             }
 
             override fun onAdLoaded(p0: Ad?) {
