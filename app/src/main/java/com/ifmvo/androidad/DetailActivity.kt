@@ -9,6 +9,7 @@ import com.facebook.ads.Ad
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
+import com.liangzemu.ad.sea.TogetherAdLogActivity
 import com.liangzemu.ad.sea.helper.*
 import kotlinx.android.synthetic.main.activity_detail.*
 
@@ -50,6 +51,10 @@ class DetailActivity : AppCompatActivity() {
 
         btnShowReward.setOnClickListener {
             TogetherAdSeaReward.showAdReward()
+        }
+
+        btnLog.setOnClickListener {
+            TogetherAdLogActivity.action(this)
         }
 
         requestFlow()
@@ -170,6 +175,10 @@ class DetailActivity : AppCompatActivity() {
             Config.rewardAdConfig(),
             TogetherAdConst.AD_REWARD,
             object : TogetherAdSeaReward.AdListenerReward {
+                override fun onAdClose(channel: String, isReward: Boolean) {
+                    Log.e(tag, "onAdClose:$channel")
+                }
+
                 override fun onStartRequest(channel: String) {
                     Log.e(tag, "onStartRequest:$channel")
                 }
@@ -184,10 +193,6 @@ class DetailActivity : AppCompatActivity() {
 
                 override fun onAdShow(channel: String) {
                     Log.e(tag, "onAdShow:$channel")
-                }
-
-                override fun onAdComplete(channel: String) {
-                    Log.e(tag, "onAdComplete:$channel")
                 }
 
                 override fun onAdPrepared(channel: String) {

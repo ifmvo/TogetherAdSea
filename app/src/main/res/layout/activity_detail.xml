@@ -11,6 +11,15 @@
             android:layout_height="wrap_content">
 
         <!--
+            日志
+        -->
+        <Button
+                android:id="@+id/btnLog"
+                android:layout_width="match_parent"
+                android:text="查看日志"
+                android:layout_height="wrap_content"/>
+
+        <!--
             插屏
         -->
         <LinearLayout

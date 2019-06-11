@@ -1,6 +1,6 @@
 package com.liangzemu.ad.sea
 
-import android.content.Context
+import android.app.Application
 import androidx.annotation.NonNull
 import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
@@ -12,6 +12,9 @@ import com.google.android.gms.ads.MobileAds
  * Created by Matthew_Chen on 2019-04-22.
  */
 object TogetherAdSea {
+
+    lateinit var mContext: Application
+        private set
 
     /**
      * 位ID的Map
@@ -34,12 +37,14 @@ object TogetherAdSea {
     /**
      * 初始化广告
      */
-    fun initAdGoogle(@NonNull context: Context, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, MutableList<String>>) {
+    fun initAdGoogle(@NonNull context: Application, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, MutableList<String>>) {
+        mContext = context
         idListGoogleMap = googleIdMap
         MobileAds.initialize(context, googleAdAppId)
     }
 
-    fun initAdFacebook(@NonNull context: Context, @NonNull facebookIdMap: MutableMap<String, MutableList<String>>) {
+    fun initAdFacebook(@NonNull context: Application, @NonNull facebookIdMap: MutableMap<String, MutableList<String>>) {
+        mContext = context
         idListFacebookMap = facebookIdMap
         // Example for setting the SDK to crash when in debug mode
         AudienceNetworkAds.isInAdsProcess(context)
@@ -50,12 +55,12 @@ object TogetherAdSea {
     /**
      * 初始化广告
      */
-    fun initGoogleAd(@NonNull context: Context, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, String?>) {
+    fun initGoogleAd(@NonNull context: Application, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, String?>) {
         idMapGoogle = googleIdMap
 //        MobileAds.initialize(context, googleAdAppId)
     }
 
-    fun initFacebookAd(@NonNull context: Context, @NonNull facebookIdMap: MutableMap<String, String?>) {
+    fun initFacebookAd(@NonNull context: Application, @NonNull facebookIdMap: MutableMap<String, String?>) {
         idMapFacebook = facebookIdMap
         // Example for setting the SDK to crash when in debug mode
 //        AudienceNetworkAds.isInAdsProcess(context)

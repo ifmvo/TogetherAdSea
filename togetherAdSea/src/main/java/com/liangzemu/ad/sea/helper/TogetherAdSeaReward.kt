@@ -83,6 +83,7 @@ object TogetherAdSeaReward : AdBase {
 
         logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(com.liangzemu.ad.sea.R.string.start_request)}")
         adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type)
+
         var isRewarded = false
         mRewardedVideoAdGoogle = MobileAds.getRewardedVideoAdInstance(context)
         mRewardedVideoAdGoogle?.rewardedVideoAdListener = object : RewardedVideoAdListener {
@@ -153,6 +154,7 @@ object TogetherAdSeaReward : AdBase {
 
         logd("${AdNameType.FACEBOOK.type}: ${context.getString(com.liangzemu.ad.sea.R.string.start_request)}")
         adListener.onStartRequest(AdNameType.FACEBOOK.type)
+
         var isRewarded = false
         mRewardedVideoAdFacebook = com.facebook.ads.RewardedVideoAd(context, idList[indexFacebook])
         mRewardedVideoAdFacebook?.setAdListener(object : com.facebook.ads.RewardedVideoAdListener {
@@ -191,6 +193,9 @@ object TogetherAdSeaReward : AdBase {
 
     }
 
+    /**
+     * 是否有请求好的广告
+     */
     fun isLoaded(): Boolean {
         return mRewardedVideoAdGoogle?.isLoaded == true || mRewardedVideoAdFacebook?.isAdLoaded == true
     }
