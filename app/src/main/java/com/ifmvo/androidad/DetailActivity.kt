@@ -10,6 +10,7 @@ import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
 import com.liangzemu.ad.sea.helper.*
+import com.liangzemu.ad.sea.other.Direction
 import kotlinx.android.synthetic.main.activity_detail.*
 
 /* 
@@ -20,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_detail.*
 class DetailActivity : AppCompatActivity() {
 
     private val tag = "DetailActivity"
-
+    lateinit var togetherAdSeaReward:TogetherAdSeaReward
     object Detail {
         fun action(context: Context) {
             context.startActivity(Intent(context, DetailActivity::class.java))
@@ -31,7 +32,7 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_detail)
-
+        togetherAdSeaReward=TogetherAdSeaReward(TogetherAdConst.AD_REWARD)
         btnRequestInter.setOnClickListener {
             requestInter()
         }
@@ -46,10 +47,11 @@ class DetailActivity : AppCompatActivity() {
 
         btnRequestReward.setOnClickListener {
             requestReward()
+            requestReward1()
         }
 
         btnShowReward.setOnClickListener {
-            TogetherAdSeaReward.showAdReward()
+            togetherAdSeaReward.showAdReward()
         }
 
         requestFlow()
@@ -58,7 +60,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun requestFlow() {
-        TogetherAdSeaFlowHorizontal.showAdFlow(
+        TogetherAdSeaFlow.showAdFlowHorizontal(
             this,
             Config.flowAdConfig(),
             TogetherAdConst.AD_FLOW,
@@ -165,11 +167,10 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun requestReward() {
-        TogetherAdSeaReward.requestAdRewardVertical(
-            this,
+        togetherAdSeaReward.requestAdReward(
             Config.rewardAdConfig(),
-            TogetherAdConst.AD_REWARD,
-            object : TogetherAdSeaReward.AdListenerReward {
+            Direction.HORIZONTAL,
+            object : TogetherAdSeaReward.MultipleRewarListener() {
                 override fun onAdClose(channel: String, isReward: Boolean) {
                     Log.e(tag, "onAdClose:$channel $isReward")
                 }
@@ -193,6 +194,37 @@ class DetailActivity : AppCompatActivity() {
 
                 override fun onAdPrepared(channel: String) {
                     Log.e(tag, "onAdPrepared:$channel")
+                }
+            })
+    }
+    private fun requestReward1() {
+        togetherAdSeaReward.requestAdReward(
+            Config.rewardAdConfig(),
+            Direction.HORIZONTAL,
+            object : TogetherAdSeaReward.MultipleRewarListener() {
+                override fun onAdClose(channel: String, isReward: Boolean) {
+                    Log.e(tag, "onAdClose1:$channel $isReward")
+                }
+
+                override fun onStartRequest(channel: String) {
+                    Log.e(tag, "onStartRequest1:$channel")
+                }
+
+                override fun onAdClick(channel: String) {
+                    Log.e(tag, "onAdClick1:$channel")
+                }
+
+                override fun onAdFailed(failedMsg: String?) {
+                    Log.e(tag, "onAdFailed1:$failedMsg")
+                }
+
+                override fun onAdShow(channel: String) {
+                    Log.e(tag, "onAdShow1:$channel")
+                }
+
+
+                override fun onAdPrepared(channel: String) {
+                    Log.e(tag, "onAdPrepared1:$channel")
                 }
             })
     }

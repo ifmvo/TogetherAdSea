@@ -1,3 +1,11 @@
+1.单例->class
+2.抽离复用 上层只留具体的请求方式
+3.参数链式
+4.listener置空
+5.缓存广告
+
+
+
 ![TogetherAdSea](app/src/main/res/mipmap-xxhdpi/ic_logo.png)
 
 # TogetherAdSea 

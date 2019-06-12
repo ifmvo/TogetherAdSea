@@ -34,6 +34,15 @@ object TogetherAdSea {
      */
     val loadingAdTask=HashMap<String,Int>() //HashMap<adConstStr,lastLevel>()
     /**
+     * 保存application
+     */
+    lateinit var context:Context
+    /**
+     * 缓存广告
+     */
+    val adCacheMap=HashMap<String,Any>()//HashMap<adConstStr,AD>()
+
+    /**
      * 超时时间
      */
 //    var timeOutMillis: Long = 5000
@@ -50,12 +59,14 @@ object TogetherAdSea {
      * 初始化广告
      */
     fun initAdGoogle(@NonNull context: Context, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, MutableList<String>>,testDeviceID:String?=null) {
+        this.context=context
         idListGoogleMap = googleIdMap
         MobileAds.initialize(context, googleAdAppId)
         this.testDeviceID=testDeviceID
     }
 
     fun initAdFacebook(@NonNull context: Context, @NonNull facebookIdMap: MutableMap<String, MutableList<String>>,testMode:Boolean=false) {
+        this.context=context
         idListFacebookMap = facebookIdMap
         // Example for setting the SDK to crash when in debug mode
         AudienceNetworkAds.isInAdsProcess(context)

@@ -1,12 +1,16 @@
 package com.liangzemu.ad.sea.helper
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Color
+import android.graphics.Point
+import android.os.Build
 import android.support.annotation.NonNull
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import com.facebook.ads.Ad
@@ -214,6 +218,15 @@ object TogetherAdSeaPause : AdBase {
             override fun onAdLoaded(ad: Ad?) {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type)
+                val wm = context.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+                val point = Point()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+
+                    wm.defaultDisplay.getRealSize(point)
+                } else {
+
+                    wm.defaultDisplay.getSize(point)
+                }
 
                 val dm = DisplayMetrics()
                 context.windowManager.defaultDisplay.getMetrics(dm)
