@@ -62,11 +62,11 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun requestFlow() {
-//        TogetherAdSeaFlow.showAdFlowHorizontal(
+//        TogetherAdSeaFlowPro.showAdFlowHorizontal(
 //            this,
 //            Config.flowAdConfig(),
 //            TogetherAdConst.AD_FLOW,
-//            object : TogetherAdSeaFlow.AdListenerFlow {
+//            object : TogetherAdSeaFlowPro.AdListenerFlow {
 //                override fun onAdShow(channel: String) {
 //                }
 //
@@ -82,10 +82,10 @@ class DetailActivity : AppCompatActivity() {
 //                override fun onAdPrepared(channel: String, ad: Any) {
 //                    when (ad) {
 //                        is Ad -> {
-//                            Log.e("ifmvo", "TogetherAdSeaFlow:facebook")
+//                            Log.e("ifmvo", "TogetherAdSeaFlowPro:facebook")
 //                        }
 //                        is UnifiedNativeAd -> {
-//                            Log.e("ifmvo", "TogetherAdSeaFlow:google")
+//                            Log.e("ifmvo", "TogetherAdSeaFlowPro:google")
 //                        }
 //                    }
 //                }
