@@ -1,6 +1,6 @@
 package com.liangzemu.ad.sea.helper
 
-import android.support.annotation.NonNull
+import androidx.annotation.NonNull
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
 import com.google.android.gms.ads.AdRequest

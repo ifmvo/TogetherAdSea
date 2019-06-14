@@ -1,7 +1,8 @@
 package com.liangzemu.ad.sea
 
+import android.app.Application
 import android.content.Context
-import android.support.annotation.NonNull
+import androidx.annotation.NonNull
 import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
 import com.google.android.gms.ads.MobileAds
@@ -27,20 +28,20 @@ object TogetherAdSea {
     /**
      * google测试id
      */
-    var testDeviceID:String?=null
+    var testDeviceID: String? = null
         private set
     /**
      * 当前正在加载中的广告
      */
-    val loadingAdTask=HashMap<String,Int>() //HashMap<adConstStr,lastLevel>()
+    val loadingAdTask = HashMap<String, Int>() //HashMap<adConstStr,lastLevel>()
     /**
      * 保存application
      */
-    lateinit var context:Context
+    lateinit var context: Application
     /**
      * 缓存广告
      */
-    internal val adCacheMap=HashMap<String,Any>()//HashMap<adConstStr,AD>()
+    internal val adCacheMap = HashMap<String, Any>()//HashMap<adConstStr,AD>()
 
     /**
      * 超时时间
@@ -58,15 +59,20 @@ object TogetherAdSea {
     /**
      * 初始化广告
      */
-    fun initAdGoogle(@NonNull context: Context, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, MutableList<String>>,testDeviceID:String?=null) {
-        this.context=context
+    fun initAdGoogle(
+        @NonNull context: Application, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, MutableList<String>>,
+        testDeviceID: String? = null
+    ) {
+        this.context = context
         idListGoogleMap = googleIdMap
         MobileAds.initialize(context, googleAdAppId)
-        this.testDeviceID=testDeviceID
+        this.testDeviceID = testDeviceID
     }
 
-    fun initAdFacebook(@NonNull context: Context, @NonNull facebookIdMap: MutableMap<String, MutableList<String>>,testMode:Boolean=false) {
-        this.context=context
+    fun initAdFacebook(
+        @NonNull context: Application, @NonNull facebookIdMap: MutableMap<String, MutableList<String>>, testMode: Boolean = false
+    ) {
+        this.context = context
         idListFacebookMap = facebookIdMap
         // Example for setting the SDK to crash when in debug mode
         AudienceNetworkAds.isInAdsProcess(context)

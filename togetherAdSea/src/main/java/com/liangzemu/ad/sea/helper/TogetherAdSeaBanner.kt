@@ -1,8 +1,8 @@
 package com.liangzemu.ad.sea.helper
 
 import android.content.Context
-import android.support.annotation.NonNull
 import android.view.ViewGroup
+import androidx.annotation.NonNull
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
 import com.google.android.gms.ads.AdListener
@@ -75,7 +75,7 @@ object TogetherAdSeaBanner : AdBase {
         adsParentLayout.addView(mAdView)
         mAdView.adSize = AdSize.SMART_BANNER
         mAdView.adUnitId = TogetherAdSea.idMapGoogle[adConstStr]
-        val adRequest = AdRequest.Builder().apply { if(testDeviceID!=null)  addTestDevice(testDeviceID)}.build()
+        val adRequest = AdRequest.Builder().apply { if (testDeviceID != null) addTestDevice(testDeviceID) }.build()
         mAdView.loadAd(adRequest)
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {

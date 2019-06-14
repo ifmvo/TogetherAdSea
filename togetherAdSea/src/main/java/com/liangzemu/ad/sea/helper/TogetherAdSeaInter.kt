@@ -1,7 +1,7 @@
 package com.liangzemu.ad.sea.helper
 
 import android.content.Context
-import android.support.annotation.NonNull
+import androidx.annotation.NonNull
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
 import com.facebook.ads.InterstitialAdListener
