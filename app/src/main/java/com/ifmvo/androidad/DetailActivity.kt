@@ -10,7 +10,7 @@ import com.ifmvo.androidad.ad.TogetherAdConst
 import com.liangzemu.ad.sea.helper.TogetherAdSeaBanner
 import com.liangzemu.ad.sea.helper.TogetherAdSeaInter
 import com.liangzemu.ad.sea.helper.TogetherAdSeaPause
-import com.liangzemu.ad.sea.helper.TogetherAdSeaReward
+import com.liangzemu.ad.sea.helper.TogetherAdSeaRewardTemp
 import com.liangzemu.ad.sea.other.Direction
 import kotlinx.android.synthetic.main.activity_detail.*
 
@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_detail.*
 class DetailActivity : AppCompatActivity() {
 
     private val tag = "DetailActivity"
-    lateinit var togetherAdSeaReward: TogetherAdSeaReward
+    val togetherAdSeaReward by lazy { TogetherAdSeaRewardTemp(TogetherAdConst.AD_REWARD) }
 
     object Detail {
         fun action(context: Context) {
@@ -34,7 +34,6 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_detail)
-        togetherAdSeaReward = TogetherAdSeaReward(TogetherAdConst.AD_REWARD)
         btnRequestInter.setOnClickListener {
             requestInter()
         }
@@ -175,7 +174,7 @@ class DetailActivity : AppCompatActivity() {
         togetherAdSeaReward.requestAdReward(
             Config.rewardAdConfig(),
             Direction.HORIZONTAL,
-            object : TogetherAdSeaReward.MultipleRewarListener() {
+            object : TogetherAdSeaRewardTemp.MultipleRewarListener() {
                 override fun onAdClose(channel: String, isReward: Boolean) {
                     Log.e(tag, "onAdClose:$channel $isReward")
                 }
@@ -207,7 +206,7 @@ class DetailActivity : AppCompatActivity() {
         togetherAdSeaReward.requestAdReward(
             Config.rewardAdConfig(),
             Direction.HORIZONTAL,
-            object : TogetherAdSeaReward.MultipleRewarListener() {
+            object : TogetherAdSeaRewardTemp.MultipleRewarListener() {
                 override fun onAdClose(channel: String, isReward: Boolean) {
                     Log.e(tag, "onAdClose1:$channel $isReward")
                     togetherAdSeaReward.destoryAdAndListener()

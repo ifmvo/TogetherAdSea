@@ -3,6 +3,8 @@ package com.liangzemu.ad.sea.helper
 import androidx.annotation.NonNull
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
+import com.facebook.ads.InterstitialAd
+import com.facebook.ads.InterstitialAdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
@@ -18,9 +20,12 @@ import com.liangzemu.ad.sea.other.*
 /**
  * (●ﾟωﾟ●) 激励视频广告：已实现档位
  *
+ * 其中 Facebook 使用插页广告 模拟 激励广告
+ *
  * Created by Matthew_Chen on 2019-06-05.
  */
-class TogetherAdSeaReward(val adConstStr: String) : AdBase {
+class TogetherAdSeaRewardTemp(val adConstStr: String) : AdBase {
+
     companion object {
         /**
          * 存放由activity传递过来的监听器 页面销毁时需要清理 避免内存泄漏
@@ -109,7 +114,7 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
                     loge("google:更新监听器并通知完成")
                     ad.rewardedVideoAdListener = adListener
                     it.onAdPrepared(AdNameType.GOOGLE_ADMOB.type)
-                } else if (ad is com.facebook.ads.RewardedVideoAd) {
+                } else if (ad is InterstitialAd) {
                     loge("facebook:更新监听器并通知完成")
                     ad.setAdListener(adListener)
                     it.onAdPrepared(AdNameType.FACEBOOK.type)
@@ -254,6 +259,10 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
 
         val mRewardedVideoAdGoogle = MobileAds.getRewardedVideoAdInstance(context)
         mRewardedVideoAdGoogle.rewardedVideoAdListener = object : MultipleRewarListener() {
+            override fun onRewardedVideoCompleted() {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
             override fun onStartRequest(channel: String) {}
 
             override fun onAdClick(channel: String) {
@@ -320,8 +329,9 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
 
         logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.start_request)}")
         adListener.onStartRequest(AdNameType.FACEBOOK.type)
-        val mRewardedVideoAdFacebook = com.facebook.ads.RewardedVideoAd(context, idList[indexFacebook])
-        mRewardedVideoAdFacebook.setAdListener(object : MultipleRewarListener() {
+
+        val mInterFacebook = InterstitialAd(context, idList[indexFacebook])
+        mInterFacebook.setAdListener(object : MultipleRewarListener() {
             override fun onStartRequest(channel: String) {}
 
             override fun onAdClick(channel: String) {
@@ -348,9 +358,12 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
                 logd("$channel: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(channel)
             }
+
+            override fun onRewardedVideoCompleted() {
+            }
         })
-        TogetherAdSea.adCacheMap[adConstStr] = mRewardedVideoAdFacebook
-        mRewardedVideoAdFacebook.loadAd()
+        TogetherAdSea.adCacheMap[adConstStr] = mInterFacebook
+        mInterFacebook.loadAd()
 
     }
 
@@ -366,7 +379,7 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
                 ad?.rewardedVideoAdListener = null
             }
 
-        } else if (ad is com.facebook.ads.RewardedVideoAd?) {
+        } else if (ad is InterstitialAd?) {
             if (ad?.isAdLoaded == true) {
                 ad?.setAdListener(null)
             }
@@ -381,7 +394,7 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
         val ad = TogetherAdSea.adCacheMap[adConstStr]
         if (ad is RewardedVideoAd?) {
             return ad?.isLoaded == true
-        } else if (ad is com.facebook.ads.RewardedVideoAd?) {
+        } else if (ad is InterstitialAd?) {
             return ad?.isAdLoaded == true && ad?.isAdInvalidated == false
         }
         return false
@@ -396,7 +409,7 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
         val ad = TogetherAdSea.adCacheMap[adConstStr]
         if (ad is RewardedVideoAd?) {
             ad?.destroy(context)
-        } else if (ad is com.facebook.ads.RewardedVideoAd?) {
+        } else if (ad is InterstitialAd??) {
             ad?.destroy()
         }
         TogetherAdSea.adCacheMap.remove(adConstStr)
@@ -422,7 +435,7 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
         val ad = TogetherAdSea.adCacheMap[adConstStr]
         if (ad is RewardedVideoAd?) {
             ad?.show()
-        } else if (ad is com.facebook.ads.RewardedVideoAd?) {
+        } else if (ad is InterstitialAd?) {
             ad?.show()
         }
         return true
@@ -434,12 +447,13 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
      * @property isRewarded Boolean
      * @constructor
      */
-    abstract class MultipleRewarListener : AdListenerReward, com.facebook.ads.RewardedVideoAdListener,
+    abstract class MultipleRewarListener : AdListenerReward, InterstitialAdListener,
         RewardedVideoAdListener {
         var isRewarded = false
-        override fun onRewardedVideoClosed() {
-            loge("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.dismiss)}")
-            onAdClose(AdNameType.FACEBOOK.type, isRewarded)
+
+        override fun onInterstitialDisplayed(p0: Ad?) {
+            loge("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.show)}")
+            onAdShow(AdNameType.FACEBOOK.type)
         }
 
         override fun onAdClicked(p0: Ad?) {
@@ -447,9 +461,15 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
             onAdClick(AdNameType.FACEBOOK.type)
         }
 
-        override fun onError(p0: Ad?, p1: AdError?) {
-            loge("${AdNameType.FACEBOOK.type}: errorCode:${p1?.errorCode} ${p1?.errorMessage}")
-            onAdFailed(p1?.errorMessage ?: "")
+        override fun onInterstitialDismissed(p0: Ad?) {
+            loge("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.dismiss)} $isRewarded")
+            isRewarded = true
+            onAdClose(AdNameType.FACEBOOK.type, isRewarded)
+        }
+
+        override fun onError(p0: Ad?, adError: AdError?) {
+            loge("${AdNameType.FACEBOOK.type}: errorCode:${adError?.errorCode} ${adError?.errorMessage}")
+            onAdFailed(adError?.errorMessage ?: "")
         }
 
         override fun onAdLoaded(p0: Ad?) {
@@ -457,16 +477,10 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
         }
 
         override fun onLoggingImpression(p0: Ad?) {
-            loge("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.show)}")
-            onAdShow(AdNameType.FACEBOOK.type)
+            loge("${AdNameType.FACEBOOK.type} ${context.getString(R.string.exposure)}")
         }
 
-        //分割线
-
-        override fun onRewardedVideoCompleted() {
-            loge(context.getString(R.string.complete))
-            isRewarded = true
-        }
+        //--------------分割线-----------------------
         override fun onRewardedVideoAdClosed() {
             loge("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.dismiss)} $isRewarded")
             onAdClose(AdNameType.GOOGLE_ADMOB.type, isRewarded)
@@ -493,11 +507,15 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
         override fun onRewardedVideoStarted() {
         }
 
+        override fun onRewardedVideoCompleted() {
+            loge(context.getString(R.string.complete))
+            isRewarded = true
+        }
+
         override fun onRewardedVideoAdFailedToLoad(p0: Int) {
             loge("${AdNameType.GOOGLE_ADMOB.type}: errorCode:$p0")
             onAdFailed(p0.toString())
         }
-
     }
 
     /**

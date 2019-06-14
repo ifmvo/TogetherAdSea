@@ -17,6 +17,6 @@ object Config {
 
     fun pauseAdConfig() = "google_admob:1,facebook:0"
 
-    fun rewardAdConfig() = "google_admob:1,facebook:0"
+    fun rewardAdConfig() = "google_admob:1,facebook:1"
 
 }
