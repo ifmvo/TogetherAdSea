@@ -68,7 +68,8 @@ object TogetherAdSeaBannerView : AdBase {
         val mAdView = AdView(context)
         mAdView.adSize = AdSize.SMART_BANNER
         mAdView.adUnitId = TogetherAdSea.idMapGoogle[adConstStr]
-        val adRequest = AdRequest.Builder().apply { if(TogetherAdSea.testDeviceID !=null)  addTestDevice(TogetherAdSea.testDeviceID)}.build()
+        val adRequest = AdRequest.Builder()
+            .apply { if (TogetherAdSea.testDeviceID != null) addTestDevice(TogetherAdSea.testDeviceID) }.build()
         mAdView.loadAd(adRequest)
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {

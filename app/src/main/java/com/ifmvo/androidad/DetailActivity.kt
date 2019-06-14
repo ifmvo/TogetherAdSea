@@ -5,11 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.facebook.ads.Ad
-import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
-import com.liangzemu.ad.sea.helper.*
+import com.liangzemu.ad.sea.helper.TogetherAdSeaBanner
+import com.liangzemu.ad.sea.helper.TogetherAdSeaInter
+import com.liangzemu.ad.sea.helper.TogetherAdSeaPause
+import com.liangzemu.ad.sea.helper.TogetherAdSeaReward
 import com.liangzemu.ad.sea.other.Direction
 import kotlinx.android.synthetic.main.activity_detail.*
 
@@ -21,7 +22,8 @@ import kotlinx.android.synthetic.main.activity_detail.*
 class DetailActivity : AppCompatActivity() {
 
     private val tag = "DetailActivity"
-    lateinit var togetherAdSeaReward:TogetherAdSeaReward
+    lateinit var togetherAdSeaReward: TogetherAdSeaReward
+
     object Detail {
         fun action(context: Context) {
             context.startActivity(Intent(context, DetailActivity::class.java))
@@ -32,7 +34,7 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_detail)
-        togetherAdSeaReward=TogetherAdSeaReward(TogetherAdConst.AD_REWARD)
+        togetherAdSeaReward = TogetherAdSeaReward(TogetherAdConst.AD_REWARD)
         btnRequestInter.setOnClickListener {
             requestInter()
         }
@@ -60,31 +62,34 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun requestFlow() {
-        TogetherAdSeaFlow.showAdFlowHorizontal(
-            this,
-            Config.flowAdConfig(),
-            TogetherAdConst.AD_FLOW,
-            object : TogetherAdSeaFlow.AdListenerFlow {
-                override fun onStartRequest(channel: String) {
-                }
-
-                override fun onAdClick(channel: String) {
-                }
-
-                override fun onAdFailed(failedMsg: String?) {
-                }
-
-                override fun onAdPrepared(channel: String, ad: Any) {
-                    when (ad) {
-                        is Ad -> {
-                            Log.e("ifmvo", "TogetherAdSeaFlow:facebook")
-                        }
-                        is UnifiedNativeAd -> {
-                            Log.e("ifmvo", "TogetherAdSeaFlow:google")
-                        }
-                    }
-                }
-            })
+//        TogetherAdSeaFlow.showAdFlowHorizontal(
+//            this,
+//            Config.flowAdConfig(),
+//            TogetherAdConst.AD_FLOW,
+//            object : TogetherAdSeaFlow.AdListenerFlow {
+//                override fun onAdShow(channel: String) {
+//                }
+//
+//                override fun onStartRequest(channel: String) {
+//                }
+//
+//                override fun onAdClick(channel: String) {
+//                }
+//
+//                override fun onAdFailed(failedMsg: String?) {
+//                }
+//
+//                override fun onAdPrepared(channel: String, ad: Any) {
+//                    when (ad) {
+//                        is Ad -> {
+//                            Log.e("ifmvo", "TogetherAdSeaFlow:facebook")
+//                        }
+//                        is UnifiedNativeAd -> {
+//                            Log.e("ifmvo", "TogetherAdSeaFlow:google")
+//                        }
+//                    }
+//                }
+//            })
     }
 
     private fun requestBanner() {
@@ -197,6 +202,7 @@ class DetailActivity : AppCompatActivity() {
                 }
             })
     }
+
     private fun requestReward1() {
         togetherAdSeaReward.requestAdReward(
             Config.rewardAdConfig(),
@@ -204,6 +210,7 @@ class DetailActivity : AppCompatActivity() {
             object : TogetherAdSeaReward.MultipleRewarListener() {
                 override fun onAdClose(channel: String, isReward: Boolean) {
                     Log.e(tag, "onAdClose1:$channel $isReward")
+                    togetherAdSeaReward.destoryAdAndListener()
                 }
 
                 override fun onStartRequest(channel: String) {
@@ -221,7 +228,6 @@ class DetailActivity : AppCompatActivity() {
                 override fun onAdShow(channel: String) {
                     Log.e(tag, "onAdShow1:$channel")
                 }
-
 
                 override fun onAdPrepared(channel: String) {
                     Log.e(tag, "onAdPrepared1:$channel")
