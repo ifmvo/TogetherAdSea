@@ -1,7 +1,6 @@
 package com.liangzemu.ad.sea.helper
 
 import android.support.annotation.NonNull
-import android.util.Log
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -14,8 +13,6 @@ import com.liangzemu.ad.sea.R
 import com.liangzemu.ad.sea.TogetherAdSea
 import com.liangzemu.ad.sea.TogetherAdSea.context
 import com.liangzemu.ad.sea.other.*
-import com.liangzemu.ad.sea.other.logd
-import com.liangzemu.ad.sea.other.loge
 
 
 /**
@@ -277,7 +274,9 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
         }
         //先存起来，加载失败就移除
         TogetherAdSea.adCacheMap[adConstStr]=mRewardedVideoAdGoogle
-        mRewardedVideoAdGoogle.loadAd(idList[indexGoogle], AdRequest.Builder().build())
+        mRewardedVideoAdGoogle.loadAd(idList[indexGoogle], AdRequest.Builder().apply { if(TogetherAdSea.testDeviceID !=null)  addTestDevice(
+            TogetherAdSea.testDeviceID
+        )}.build())
     }
 
     private fun requestAdRewardFacebook(
@@ -423,7 +422,7 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
      * @property isRewarded Boolean
      * @constructor
      */
-     abstract class MultipleRewarListener(rewardDelete:Boolean=true):AdListenerReward, com.facebook.ads.RewardedVideoAdListener,RewardedVideoAdListener {
+     abstract class MultipleRewarListener():AdListenerReward, com.facebook.ads.RewardedVideoAdListener,RewardedVideoAdListener {
          var isRewarded = false
          override fun onRewardedVideoClosed() {
              loge("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.dismiss)}")

@@ -14,8 +14,8 @@ import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.liangzemu.ad.sea.AdBase
 import com.liangzemu.ad.sea.R
 import com.liangzemu.ad.sea.TogetherAdSea
-import com.liangzemu.ad.sea.other.AdNameType
-import com.liangzemu.ad.sea.other.AdRandomUtil
+import com.liangzemu.ad.sea.TogetherAdSea.context
+import com.liangzemu.ad.sea.other.*
 import com.liangzemu.ad.sea.other.logd
 import com.liangzemu.ad.sea.other.loge
 
@@ -26,37 +26,112 @@ import com.liangzemu.ad.sea.other.loge
  * Created by Matthew_Chen on 2019-04-22.
  */
 
-object TogetherAdSeaFlow : AdBase {
+class TogetherAdSeaFlow(val adConstStr: String) : AdBase {
+    init {
+        val any = TogetherAdSea.adCacheMap[adConstStr]
+        if(any==null)
+            TogetherAdSea.adCacheMap[adConstStr]=ArrayList<Any>()
+    }
+    companion object{
+        /**
+         * 存放由activity传递过来的监听器 页面销毁时需要清理 避免内存泄漏
+         */
+        private val multipleAdListenerFlowMap=HashMap<String,AdListenerFlow>()//HashMap<adConstStr+objectStr,监听器>()
+    }
+    private var outListener:AdListenerFlow?
+        get() = multipleAdListenerFlowMap[adConstStr]
+        private set(value) {
+            value?.let {
+                multipleAdListenerFlowMap[adConstStr]=it
+            }
+        }
+
+    /**
+     * 不区分横向纵向   ！！！！激励展示后如果要删除缓存必须手动调用删除
+     * @param splashConfigStr String?
+     * @param adListener AdListenerReward 对外的监听器 负责最后回调给用户
+     * @return Unit
+     */
+    fun requestAdFlow(
+        splashConfigStr: String?,
+        direction: Direction =Direction.HORIZONTAL,
+        @NonNull adListener: AdListenerFlow
+    ){
+
+        outListener=adListener
+        loge("开始请求")
+        if(direction== Direction.HORIZONTAL){
+            showAdFlowHorizontal(splashConfigStr)
+        }else{
+            showAdFlowVertical(splashConfigStr, object : AdListenerFlow {
+                override fun onAdShow(channel: String) {
+                    outListener?.onAdShow(channel)
+                }
+
+                override fun onAdPrepared(channel: String, ad: Any) {
+                    callPrepare(TogetherAdSea.adCacheMap[adConstStr], outListener)
+                }
+
+                override fun onStartRequest(channel: String) {
+                    outListener?.onStartRequest(channel)
+                }
+
+                override fun onAdClick(channel: String) {
+                    outListener?.onAdClick(channel)
+                }
+
+                override fun onAdFailed(failedMsg: String?) {
+                    outListener?.onAdFailed(failedMsg)
+                }
+
+            })
+        }
+    }
+    private fun callPrepare(
+        ad: Any?,
+        adListener: AdListenerFlow?
+    ) {
+        loge("加载完成或者已有缓存，通知加载情况")
+        adListener?.let {
+            if(ad!=null) {
+                if (ad is UnifiedNativeAd) {
+                    loge("google:通知完成")
+                    it.onAdPrepared(AdNameType.GOOGLE_ADMOB.type,ad)
+                } else if (ad is com.facebook.ads.RewardedVideoAd) {
+                    loge("facebook:通知完成")
+                    it.onAdPrepared(AdNameType.FACEBOOK.type,ad)
+                }
+            }
+        }
+    }
     /**
      * 横向切换
      */
     fun showAdFlowHorizontal(
-        @NonNull context: Context,
-        splashConfigStr: String?,
-        @NonNull adConstStr: String,
-        @NonNull adListener: AdListenerFlow
+        splashConfigStr: String?
     ){
-        if(TogetherAdSea.loadingAdTask[adConstStr]!=null){//已经在加载中  就不再请求了
-            return
-        }
         //取最高等级
-        val levelCount=Math.max(TogetherAdSea.idListGoogleMap[adConstStr]?.size?:0,TogetherAdSea.idListFacebookMap[adConstStr]?.size?:0)
+        val levelCount=Math.max(TogetherAdSea.idListGoogleMap[adConstStr]?.size?:0,TogetherAdSea.idListFacebookMap[adConstStr]?.size?:0)-1
         var level=0
         TogetherAdSea.loadingAdTask[adConstStr]=levelCount
         loge("total level:$levelCount level:$level start")
         //循环等级请求
         fun showAdFlowByLevel(){
 
-            showAdFlowVertical(context, splashConfigStr, adConstStr, object : AdListenerFlow{
-                override fun onStartRequest(channel: String) {adListener.onStartRequest(channel)}
-                override fun onAdClick(channel: String) {adListener.onAdClick(channel)}
+            showAdFlowVertical( splashConfigStr, object : AdListenerFlow{
+                override fun onAdShow(channel: String) {
+                    outListener?.onAdShow(channel)
+                }
+
+                override fun onStartRequest(channel: String) {outListener?.onStartRequest(channel)}
+                override fun onAdClick(channel: String) {outListener?.onAdClick(channel)}
 
                 override fun onAdFailed(failedMsg: String?) {
                     loge("TogetherAdSeaFlowHorizontal: level:$level failed:$failedMsg")
                     if(level>=levelCount){
                         //加载完成  移除
                         TogetherAdSea.loadingAdTask.remove(adConstStr)
-                        adListener.onAdFailed(failedMsg)
+                        outListener?.onAdFailed(failedMsg)
                     }else{
                         level++
                         showAdFlowByLevel()
@@ -67,7 +142,7 @@ object TogetherAdSeaFlow : AdBase {
                     loge("TogetherAdSeaFlowHorizontal: level:$level success:$channel")
                     //加载完成  移除
                     TogetherAdSea.loadingAdTask.remove(adConstStr)
-                    adListener.onAdPrepared(channel, ad)
+                    outListener?.onAdPrepared(channel, ad)
                 }
 
             },level)
@@ -80,9 +155,7 @@ object TogetherAdSeaFlow : AdBase {
      * 竖向切换
      */
     fun showAdFlowVertical(
-        @NonNull context: Context,
         splashConfigStr: String?,
-        @NonNull adConstStr: String,
         @NonNull adListener: AdListenerFlow,
         level:Int=-1
     ) {
@@ -94,17 +167,13 @@ object TogetherAdSeaFlow : AdBase {
         when (randomAdName) {
             AdNameType.GOOGLE_ADMOB -> showAdFlowGoogle(
                 level,
-                context.applicationContext,
                 splashConfigStr,
-                adConstStr,
                 0,
                 adListener
             )
             AdNameType.FACEBOOK -> showAdFlowFacebook(
                 level,
-                context.applicationContext,
                 splashConfigStr,
-                adConstStr,
                 0,
                 adListener
             )
@@ -126,9 +195,7 @@ object TogetherAdSeaFlow : AdBase {
      */
     private fun showAdFlowGoogle(
         level:Int,
-        @NonNull context: Context,
         splashConfigStr: String?,
-        @NonNull adConstStr: String,
         @NonNull requestIndex:Int,
         @NonNull adListener: AdListenerFlow
     ) {
@@ -147,7 +214,7 @@ object TogetherAdSeaFlow : AdBase {
         if (requestIndex >= idList?.size ?: 0) {
             //如果所有档位都请求失败了，就切换另外一种广告
             val newConfig = splashConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
-            showAdFlowVertical(context, newConfig, adConstStr, adListener,level)
+            showAdFlowVertical( newConfig, adListener,level)
             return
         }
         //检测结束 开始请求
@@ -160,17 +227,21 @@ object TogetherAdSeaFlow : AdBase {
         adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type)
         val adLoader = AdLoader.Builder(context, idList[requestIndex])
             .forUnifiedNativeAd { ad: UnifiedNativeAd ->
+                //成功才加载 莫得办法
+                //(TogetherAdSea.adCacheMap[adConstStr] as ArrayList<Any>).add(ad)
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, ad)
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(errorCode: Int) {
                     loge("${AdNameType.GOOGLE_ADMOB.type}: errorCode:$errorCode")
-                    showAdFlowGoogle(level,context, splashConfigStr, adConstStr, requestIndex+1, adListener)
+                    showAdFlowGoogle(level, splashConfigStr, requestIndex+1, adListener)
                 }
 
                 override fun onAdImpression() {
                     logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.exposure)}")
+                    //(TogetherAdSea.adCacheMap[adConstStr] as ArrayList<Any>).remove()
+                    adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type)
                 }
 
                 override fun onAdClicked() {
@@ -185,8 +256,9 @@ object TogetherAdSeaFlow : AdBase {
             )
             .build()
 
-        adLoader.loadAd(AdRequest.Builder().build())
-        adLoader
+        adLoader.loadAd(AdRequest.Builder().apply { if(TogetherAdSea.testDeviceID !=null)  addTestDevice(
+            TogetherAdSea.testDeviceID
+        )}.build())
 //        adLoader.loadAds(AdRequest.Builder().build(), 3)//最大5
     }
 
@@ -195,9 +267,7 @@ object TogetherAdSeaFlow : AdBase {
      */
     private fun showAdFlowFacebook(
         level:Int=-1,
-        @NonNull context: Context,
         splashConfigStr: String?,
-        @NonNull adConstStr: String,
         @NonNull requestIndex:Int,
         @NonNull adListener: AdListenerFlow
     ) {
@@ -216,7 +286,7 @@ object TogetherAdSeaFlow : AdBase {
         if (requestIndex >= idList?.size ?: 0) {
             //如果所有档位都请求失败了，就切换另外一种广告
             val newConfig = splashConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-            showAdFlowVertical(context, newConfig, adConstStr, adListener,level)
+            showAdFlowVertical( newConfig, adListener,level)
             return
         }
         //检测结束 开始请求
@@ -239,26 +309,38 @@ object TogetherAdSeaFlow : AdBase {
 
             override fun onError(ad: Ad?, adError: AdError?) {
                 loge("${AdNameType.FACEBOOK.type}: adError:${adError?.errorCode},${adError?.errorMessage}")
-                showAdFlowFacebook(level,context, splashConfigStr, adConstStr, requestIndex+1, adListener)
+                showAdFlowFacebook(level, splashConfigStr, requestIndex+1, adListener)
             }
 
-            override fun onAdLoaded(ad: Ad?) {
+            override fun onAdLoaded(ad: Ad) {
                 if (nativeAd != ad) {
                     loge("${AdNameType.FACEBOOK.type}: 广告返回错误 nativeAd != ad")
-                    showAdFlowFacebook(level,context, splashConfigStr, adConstStr, requestIndex+1, adListener)
+                    showAdFlowFacebook(level, splashConfigStr, requestIndex+1, adListener)
                     return
                 }
+                (TogetherAdSea.adCacheMap[adConstStr] as ArrayList<Any>).add(ad)
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type, ad)
             }
 
-            override fun onLoggingImpression(ad: Ad?) {
+            override fun onLoggingImpression(ad: Ad) {
+                (TogetherAdSea.adCacheMap[adConstStr] as ArrayList<Any>).remove(ad)
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.exposure)}")
+                adListener.onAdShow(AdNameType.FACEBOOK.type)
             }
         })
         nativeAd.loadAd()
     }
-
+    /**
+     * 用来清除监听器  在activity退出的时候调用
+     * @return Unit
+     */
+    fun clearRewarListener(){
+        multipleAdListenerFlowMap.remove(adConstStr)
+    }
+    fun getloadedList():List<Any>{
+        return (TogetherAdSea.adCacheMap[adConstStr] as ArrayList<Any>)
+    }
     /**
      * 监听器
      */
@@ -271,6 +353,8 @@ object TogetherAdSeaFlow : AdBase {
         fun onAdFailed(failedMsg: String?)
 
         fun onAdPrepared(channel: String, ad: Any)
+
+        fun onAdShow(channel: String)
     }
 
 }

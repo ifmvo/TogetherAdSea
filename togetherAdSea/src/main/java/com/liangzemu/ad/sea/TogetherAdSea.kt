@@ -40,7 +40,7 @@ object TogetherAdSea {
     /**
      * 缓存广告
      */
-    val adCacheMap=HashMap<String,Any>()//HashMap<adConstStr,AD>()
+    internal val adCacheMap=HashMap<String,Any>()//HashMap<adConstStr,AD>()
 
     /**
      * 超时时间
