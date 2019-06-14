@@ -96,7 +96,6 @@ class TogetherAdSeaRewardTemp(val adConstStr: String) : AdBase {
                 }
 
                 override fun onAdPrepared(channel: String) {
-                    //outListener?.onAdPrepared(channel)
                     setFinalListenerAndPrepare(TogetherAdSea.adCacheMap[adConstStr], outListener)
                 }
             })
@@ -152,8 +151,6 @@ class TogetherAdSeaRewardTemp(val adConstStr: String) : AdBase {
 
                 override fun onAdPrepared(channel: String) {
                     loge("TogetherAdSeaRewardVertical: level:$level success:$channel")
-                    //加载完成  移除
-                    TogetherAdSea.loadingAdTask.remove(adConstStr)
                     setFinalListenerAndPrepare(TogetherAdSea.adCacheMap[adConstStr], outListener)
 
                 }
@@ -260,7 +257,6 @@ class TogetherAdSeaRewardTemp(val adConstStr: String) : AdBase {
         val mRewardedVideoAdGoogle = MobileAds.getRewardedVideoAdInstance(context)
         mRewardedVideoAdGoogle.rewardedVideoAdListener = object : MultipleRewarListener() {
             override fun onRewardedVideoCompleted() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onStartRequest(channel: String) {}
@@ -286,6 +282,7 @@ class TogetherAdSeaRewardTemp(val adConstStr: String) : AdBase {
             }
 
             override fun onAdPrepared(channel: String) {
+                TogetherAdSea.loadingAdTask.remove(adConstStr)
                 adListener.onAdPrepared(channel)
             }
         }
@@ -339,7 +336,7 @@ class TogetherAdSeaRewardTemp(val adConstStr: String) : AdBase {
             }
 
             override fun onAdFailed(failedMsg: String?) {
-                TogetherAdSea.adCacheMap.remove(adConstStr)
+                destoryAd()
                 loge("${AdNameType.FACEBOOK.type}: indexFacebook:$indexFacebook, errorMsg:$failedMsg")
                 val newIndexFacebook = indexFacebook + 1
                 requestAdRewardFacebook(level, rewardConfigStr, newIndexFacebook, adListener)
@@ -355,6 +352,7 @@ class TogetherAdSeaRewardTemp(val adConstStr: String) : AdBase {
             }
 
             override fun onAdPrepared(channel: String) {
+                TogetherAdSea.loadingAdTask.remove(adConstStr)
                 logd("$channel: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(channel)
             }
