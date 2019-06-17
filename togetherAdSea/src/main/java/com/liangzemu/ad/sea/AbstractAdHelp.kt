@@ -40,7 +40,7 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
                 loge("已经有缓存了")
                 bindListener(adFromCache.key)
                 //回调加载完成
-                onAdPrepared("adCache",adFromCache,adFromCache.realAd.toString())
+                onAdPrepared("adCache",adFromCache)
                 return
             }
         }
@@ -78,9 +78,9 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
                     iAdListener.onAdClose(channel, key,other)
                 }
 
-                override fun onAdPrepared(channel: String,adWrapper: AdWrapper,key:String) {
+                override fun onAdPrepared(channel: String,adWrapper: AdWrapper) {
                     loge("AbstractAdHelp: level:$level success:$channel")
-                    iAdListener.onAdPrepared(channel,adWrapper,key)
+                    iAdListener.onAdPrepared(channel,adWrapper)
                 }
 
                 override fun onStartRequest(channel: String,key:String) {
@@ -244,14 +244,14 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
         listenerMap[key]?.get()?.onAdClose(channel,key,other)
     }
 
-    override fun onAdPrepared(channel: String,adWrapper: AdWrapper,key:String) {
+    override fun onAdPrepared(channel: String,adWrapper: AdWrapper) {
         //移出加载中
         loadingAdType.remove(adConstStr)
         //绑定监听器
-        bindListener(key)
+        bindListener(adWrapper.key)
         //加入缓存
         addtoAdCache(adWrapper)
         //回调
-        listenerMap[key]?.get()?.onAdPrepared(channel,adWrapper,key)
+        listenerMap[adWrapper.key]?.get()?.onAdPrepared(channel,adWrapper)
     }
 }

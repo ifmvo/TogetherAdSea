@@ -18,6 +18,6 @@ interface IAdListener {
     fun onAdClose(channel: String, key:String,other:Any)
 
     //准备好了
-    fun onAdPrepared(channel: String,adWrapper: AdWrapper,key:String)
+    fun onAdPrepared(channel: String,adWrapper: AdWrapper)
 
 }
