@@ -11,6 +11,7 @@ import com.liangzemu.ad.sea.helper.TogetherAdSeaBanner
 import com.liangzemu.ad.sea.helper.TogetherAdSeaInter
 import com.liangzemu.ad.sea.helper.TogetherAdSeaPause
 import com.liangzemu.ad.sea.helper.TogetherAdSeaRewardTemp
+import com.liangzemu.ad.sea.other.AdRandomUtil
 import com.liangzemu.ad.sea.other.Direction
 import kotlinx.android.synthetic.main.activity_detail.*
 
@@ -34,6 +35,11 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_detail)
+
+        btnTestRandom.setOnClickListener {
+            Log.e("ifmvo", "随机结果：${AdRandomUtil.getRandomAdName(Config.rewardAdConfig())}")
+        }
+
         btnRequestInter.setOnClickListener {
             requestInter()
         }

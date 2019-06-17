@@ -11,6 +11,15 @@
             android:layout_height="wrap_content">
 
         <!--
+            测试随机工具
+        -->
+        <Button
+                android:id="@+id/btnTestRandom"
+                android:layout_width="match_parent"
+                android:text="测试随机工具"
+                android:layout_height="wrap_content"/>
+
+        <!--
             插屏
         -->
         <LinearLayout
