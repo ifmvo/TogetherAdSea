@@ -12,6 +12,9 @@ import com.liangzemu.ad.sea.helper.TogetherAdSeaInter
 import com.liangzemu.ad.sea.helper.TogetherAdSeaPause
 import com.liangzemu.ad.sea.helper.TogetherAdSeaRewardTemp
 import com.liangzemu.ad.sea.other.AdRandomUtil
+import com.liangzemu.ad.sea.AdWrapper
+import com.liangzemu.ad.sea.IAdListener
+import com.liangzemu.ad.sea.helper.*
 import com.liangzemu.ad.sea.other.Direction
 import kotlinx.android.synthetic.main.activity_detail.*
 
@@ -24,7 +27,7 @@ class DetailActivity : AppCompatActivity() {
 
     private val tag = "DetailActivity"
     val togetherAdSeaReward by lazy { TogetherAdSeaRewardTemp(TogetherAdConst.AD_REWARD) }
-
+    val rewardHelper = RewardHelper(TogetherAdConst.AD_REWARD)
     object Detail {
         fun action(context: Context) {
             context.startActivity(Intent(context, DetailActivity::class.java))
@@ -54,16 +57,20 @@ class DetailActivity : AppCompatActivity() {
 
         btnRequestReward.setOnClickListener {
             requestReward()
-            requestReward1()
+            //requestReward1()
         }
 
         btnShowReward.setOnClickListener {
-            togetherAdSeaReward.showAdReward()
+            //togetherAdSeaReward.showAdReward()
+            startActivity(Intent().apply {
+                this.setClass(this@DetailActivity,MainActivity::class.java)
+            })
+            this.finish()
         }
 
-        requestFlow()
+        //requestFlow()
 
-        requestBanner()
+        //requestBanner()
     }
 
     private fun requestFlow() {
@@ -177,35 +184,31 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun requestReward() {
-        togetherAdSeaReward.requestAdReward(
-            Config.rewardAdConfig(),
-            Direction.HORIZONTAL,
-            object : TogetherAdSeaRewardTemp.MultipleRewarListener() {
-                override fun onAdClose(channel: String, isReward: Boolean) {
-                    Log.e(tag, "onAdClose:$channel $isReward")
-                }
+        rewardHelper.requestAd(Config.rewardAdConfig(),object :IAdListener{
+            override fun onStartRequest(channel: String, key: String) {
+            }
 
-                override fun onStartRequest(channel: String) {
-                    Log.e(tag, "onStartRequest:$channel")
-                }
+            override fun onAdClick(channel: String, key: String) {
+                Log.i("requestReward","onAdClick$key")
+            }
 
-                override fun onAdClick(channel: String) {
-                    Log.e(tag, "onAdClick:$channel")
-                }
+            override fun onAdFailed(failedMsg: String?, key: String) {
+                Log.i("requestReward","onAdFailed$key")
+            }
 
-                override fun onAdFailed(failedMsg: String?) {
-                    Log.e(tag, "onAdFailed:$failedMsg")
-                }
+            override fun onAdShow(channel: String, key: String) {
+                Log.i("requestReward","onAdShow$key")
+            }
 
-                override fun onAdShow(channel: String) {
-                    Log.e(tag, "onAdShow:$channel")
-                }
+            override fun onAdClose(channel: String, key: String, other: Any) {
+                Log.i("requestReward","onAdClose$key")
+            }
 
+            override fun onAdPrepared(channel: String, adWrapper: AdWrapper, key: String) {
+                Log.i("requestReward","onAdPrepared$key")
+            }
 
-                override fun onAdPrepared(channel: String) {
-                    Log.e(tag, "onAdPrepared:$channel")
-                }
-            })
+        },onlyOnce = true)
     }
 
     private fun requestReward1() {
@@ -238,5 +241,10 @@ class DetailActivity : AppCompatActivity() {
                     Log.e(tag, "onAdPrepared1:$channel")
                 }
             })
+    }
+
+    override fun onDestroy() {
+        rewardHelper.onDestory()
+        super.onDestroy()
     }
 }
