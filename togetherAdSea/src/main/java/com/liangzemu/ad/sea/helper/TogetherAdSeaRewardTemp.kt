@@ -267,7 +267,6 @@ class TogetherAdSeaRewardTemp(val adConstStr: String) : AdBase {
 
             override fun onAdFailed(failedMsg: String?) {
                 destoryAd()
-                TogetherAdSea.adCacheMap.remove(adConstStr)
                 loge("${AdNameType.FACEBOOK.type}: indexGoogle:$indexGoogle, errorCode:$failedMsg")
                 val newIndexGoogle = indexGoogle + 1
                 requestAdRewardGoogle(level, rewardConfigStr, newIndexGoogle, adListener)
@@ -282,12 +281,12 @@ class TogetherAdSeaRewardTemp(val adConstStr: String) : AdBase {
             }
 
             override fun onAdPrepared(channel: String) {
+                TogetherAdSea.adCacheMap[adConstStr] = mRewardedVideoAdGoogle
                 TogetherAdSea.loadingAdTask.remove(adConstStr)
                 adListener.onAdPrepared(channel)
             }
         }
-        //先存起来，加载失败就移除
-        TogetherAdSea.adCacheMap[adConstStr] = mRewardedVideoAdGoogle
+
         mRewardedVideoAdGoogle.loadAd(idList[indexGoogle], AdRequest.Builder().apply {
             if (TogetherAdSea.testDeviceID != null) addTestDevice(
                 TogetherAdSea.testDeviceID
@@ -352,6 +351,7 @@ class TogetherAdSeaRewardTemp(val adConstStr: String) : AdBase {
             }
 
             override fun onAdPrepared(channel: String) {
+                TogetherAdSea.adCacheMap[adConstStr] = mInterFacebook
                 TogetherAdSea.loadingAdTask.remove(adConstStr)
                 logd("$channel: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(channel)
@@ -360,7 +360,6 @@ class TogetherAdSeaRewardTemp(val adConstStr: String) : AdBase {
             override fun onRewardedVideoCompleted() {
             }
         })
-        TogetherAdSea.adCacheMap[adConstStr] = mInterFacebook
         mInterFacebook.loadAd()
 
     }

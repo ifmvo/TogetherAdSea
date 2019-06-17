@@ -274,12 +274,12 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
             }
 
             override fun onAdPrepared(channel: String) {
+                TogetherAdSea.adCacheMap[adConstStr] = mRewardedVideoAdGoogle
                 TogetherAdSea.loadingAdTask.remove(adConstStr)
                 adListener.onAdPrepared(channel)
             }
         }
-        //先存起来，加载失败就移除
-        TogetherAdSea.adCacheMap[adConstStr] = mRewardedVideoAdGoogle
+
         mRewardedVideoAdGoogle.loadAd(idList[indexGoogle], AdRequest.Builder().apply {
             if (TogetherAdSea.testDeviceID != null) addTestDevice(
                 TogetherAdSea.testDeviceID
@@ -344,11 +344,11 @@ class TogetherAdSeaReward(val adConstStr: String) : AdBase {
 
             override fun onAdPrepared(channel: String) {
                 TogetherAdSea.loadingAdTask.remove(adConstStr)
+                TogetherAdSea.adCacheMap[adConstStr] = mRewardedVideoAdFacebook
                 logd("$channel: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(channel)
             }
         })
-        TogetherAdSea.adCacheMap[adConstStr] = mRewardedVideoAdFacebook
         mRewardedVideoAdFacebook.loadAd()
 
     }
