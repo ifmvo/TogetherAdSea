@@ -20,6 +20,15 @@ import com.liangzemu.ad.sea.other.loge
  * Created by Matthew_Chen on 2019-06-05.
  */
 class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
+    /**
+     * 比例随机完 开始请求广告
+     * @param type AdNameType
+     * @param level Int
+     * @param configStr String?
+     * @param requestIndex Int
+     * @param adListener IAdListener
+     * @return Unit
+     */
     override fun dispatchAdRequest(type:AdNameType,level: Int, configStr: String?, requestIndex: Int, adListener: IAdListener) {
         when(type){
             AdNameType.FACEBOOK->{
@@ -30,6 +39,15 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
             }
         }
     }
+
+    /**
+     * 请求谷歌广告
+     * @param level Int
+     * @param rewardConfigStr String?
+     * @param indexGoogle Int
+     * @param adListener IAdListener
+     * @return Unit
+     */
     private fun requestAdRewardGoogle(
         level: Int,
         rewardConfigStr: String?,
@@ -113,6 +131,14 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
         }.build())
     }
 
+    /**
+     * 请求facebook广告
+     * @param level Int
+     * @param rewardConfigStr String?
+     * @param indexFacebook Int
+     * @param adListener IAdListener
+     * @return Unit
+     */
     private fun requestAdRewardFacebook(
         level: Int,
         rewardConfigStr: String?,
@@ -189,6 +215,13 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
 
     }
 
+    /**
+     * 关闭后销毁广告
+     * @param channel String
+     * @param key String
+     * @param other Any
+     * @return Unit
+     */
     override fun onAdClose(channel: String, key: String, other: Any) {
         super.onAdClose(channel, key, other)
         removeAd(key,true)
