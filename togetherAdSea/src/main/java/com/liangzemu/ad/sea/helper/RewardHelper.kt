@@ -188,4 +188,9 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
         mRewardedVideoAdFacebook.loadAd()
 
     }
+
+    override fun onAdClose(channel: String, key: String, other: Any) {
+        super.onAdClose(channel, key, other)
+        removeAd(key,true)
+    }
 }

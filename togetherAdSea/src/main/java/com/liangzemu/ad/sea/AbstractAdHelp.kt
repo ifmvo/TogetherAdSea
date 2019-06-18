@@ -7,6 +7,7 @@ import com.liangzemu.ad.sea.other.AdRandomUtil
 import com.liangzemu.ad.sea.other.Direction
 import com.liangzemu.ad.sea.other.loge
 import java.lang.ref.WeakReference
+import java.util.function.Predicate
 
 /**
  * 广告开始请求时监听器与广告实体(or loader)对应存储
@@ -185,7 +186,22 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
         listenerMap.remove(adWrapper.key)
         adWrapper.destory()
     }
+    fun removeAd(key: String,destroy:Boolean=false){
 
+        listenerMap[key]?.get()?.let {
+            useListenerList.remove(it)
+        }
+        adCacheMap[adConstStr]?.find {
+            it.key==key
+        }?.apply {
+            if(destroy){
+                destory()
+            }
+            adCacheMap[adConstStr]?.remove(this)
+        }
+        listenerMap.remove(key)
+
+    }
     /**
      * 退出Activity时调用
      * @receiver AdWrapper

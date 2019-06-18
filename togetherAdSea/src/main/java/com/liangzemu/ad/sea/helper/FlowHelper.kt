@@ -179,6 +179,11 @@ class FlowHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
         })
         nativeAd.loadAd()
     }
+
+    override fun onAdShow(channel: String, key: String) {
+        super.onAdShow(channel, key)
+        removeAd(key,true)
+    }
 }
 
 

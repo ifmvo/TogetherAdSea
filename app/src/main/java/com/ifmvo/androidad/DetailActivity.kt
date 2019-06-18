@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.ads.RewardedVideoAd
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
 import com.liangzemu.ad.sea.helper.TogetherAdSeaBanner
@@ -28,6 +29,7 @@ class DetailActivity : AppCompatActivity() {
     private val tag = "DetailActivity"
     val togetherAdSeaReward by lazy { TogetherAdSeaRewardTemp(TogetherAdConst.AD_REWARD) }
     val rewardHelper = RewardHelper(TogetherAdConst.AD_REWARD)
+    var adWrapper:AdWrapper?=null
     object Detail {
         fun action(context: Context) {
             context.startActivity(Intent(context, DetailActivity::class.java))
@@ -62,10 +64,19 @@ class DetailActivity : AppCompatActivity() {
 
         btnShowReward.setOnClickListener {
             //togetherAdSeaReward.showAdReward()
-            startActivity(Intent().apply {
+            if(adWrapper==null)
+                return@setOnClickListener
+            val ad = adWrapper!!.realAd
+
+            when(ad){
+                is RewardedVideoAd->ad.show()
+                is com.google.android.gms.ads.reward.RewardedVideoAd->ad.show()
+            }
+
+           /* startActivity(Intent().apply {
                 this.setClass(this@DetailActivity,MainActivity::class.java)
             })
-            this.finish()
+            this.finish()*/
         }
         btnRequestFlow.setOnClickListener {
             requestFlow()
@@ -96,7 +107,8 @@ class DetailActivity : AppCompatActivity() {
                 Log.i("requestFlow","onAdClose$key")
             }
 
-            override fun onAdPrepared(channel: String, adWrapper: AdWrapper) {
+            override fun onAdPrepared(channel: String, ad: AdWrapper) {
+                adWrapper=ad
                 Log.i("requestFlow","onAdPrepared")
             }
 
@@ -201,10 +213,11 @@ class DetailActivity : AppCompatActivity() {
             }
 
             override fun onAdClose(channel: String, key: String, other: Any) {
-                Log.i("requestReward","onAdClose$key")
+                Log.i("requestReward","onAdClose $key $other")
             }
 
-            override fun onAdPrepared(channel: String, adWrapper: AdWrapper) {
+            override fun onAdPrepared(channel: String, ad: AdWrapper) {
+                adWrapper=ad
                 Log.i("requestReward","onAdPrepared")
             }
 
