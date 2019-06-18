@@ -1,10 +1,11 @@
 package com.liangzemu.ad.sea
 
+import android.os.CountDownTimer
 import android.os.MessageQueue
 import androidx.annotation.NonNull
-import com.liangzemu.ad.sea.other.AdNameType
-import com.liangzemu.ad.sea.other.AdRandomUtil
-import com.liangzemu.ad.sea.other.Direction
+import com.liangzemu.ad.sea.TogetherAdSea.context
+import com.liangzemu.ad.sea.TogetherAdSea.timeoutSecond
+import com.liangzemu.ad.sea.other.*
 import com.liangzemu.ad.sea.other.loge
 import java.lang.ref.WeakReference
 import java.util.function.Predicate
@@ -233,8 +234,23 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
          * 使用过的监听器集合  是为了避免弱引用被清理
          */
         internal val useListenerList=ArrayList<IAdListener>()
+        /**
+         * 超时key
+         */
+        internal val timeOutSet=HashSet<String>()//HashSet<Key>
     }
 
+    /**
+     * 添加超时的key
+     * @param key String
+     * @return Unit
+     */
+    internal fun addTimeOut(key:String){
+        timeOutSet.add(key)
+    }
+    internal fun isTimeOut(key:String):Boolean{
+        return timeOutSet.contains(key)
+    }
     /**
      *  ======================== 这堆监听器回调是为了方便子类扩展 =======================
      *  key 一般是 ADhash or loaderhash 区别在于能不能再加载前拿到ad
@@ -251,6 +267,8 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
 
     override fun onAdFailed(failedMsg: String?,key:String) {
         loadingAdType.remove(adConstStr)
+        //移出超时
+        timeOutSet.remove(key)
         //绑定监听器
         bindListener(key)
         listenerMap[key]?.get()?.onAdFailed(failedMsg,key)
@@ -268,11 +286,31 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
     override fun onAdPrepared(channel: String,adWrapper: AdWrapper) {
         //移出加载中
         loadingAdType.remove(adConstStr)
+        //移出超时
+        timeOutSet.remove(adWrapper.key)
         //绑定监听器
         bindListener(adWrapper.key)
         //加入缓存
         addtoAdCache(adWrapper)
         //回调
         listenerMap[adWrapper.key]?.get()?.onAdPrepared(channel,adWrapper)
+    }
+
+    /**
+     * 创建超时倒计时
+     * @param callback ()->Unit
+     * @return CountDownTimer
+     */
+    protected fun creatTimer(callback:()->Unit):CountDownTimer{
+        return object : CountDownTimer(timeoutSecond, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                logd(" 倒计时: $millisUntilFinished")
+            }
+
+            override fun onFinish() {
+                callback()
+                logd("倒计时: ${context.getString(R.string.dismiss)}")
+            }
+        }
     }
 }

@@ -70,16 +70,32 @@ class FlowHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
             return
         }
         val builder = AdLoader.Builder(context, idList[requestIndex])
+
+        adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type,builder.toString())
+        val timeOutTimer = creatTimer {
+            addTimeOut(builder.toString())
+
+            loge("${AdNameType.GOOGLE_ADMOB.type}: 超时")
+            showAdFlowGoogle(level, splashConfigStr, requestIndex + 1, adListener)
+        }
+        timeOutTimer.start()
+
         val adLoader =builder
             .forUnifiedNativeAd { ad: UnifiedNativeAd ->
                 //成功才加载 莫得办法
                 //(TogetherAdSea.adCacheMap[adConstStr] as ArrayList<Any>).add(ad)
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
+                timeOutTimer.cancel()
                 adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(ad,builder.toString()))
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(errorCode: Int) {
                     loge("${AdNameType.GOOGLE_ADMOB.type}: errorCode:$errorCode")
+                    if(isTimeOut(builder.toString())){
+                        loge("$builder 之前已经过时了")
+                        return
+                    }
+                    timeOutTimer.cancel()
                     showAdFlowGoogle(level, splashConfigStr, requestIndex + 1, adListener)
                 }
 
@@ -101,7 +117,7 @@ class FlowHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
             )
             .build()
 
-        adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type,adLoader.toString())
+
 
         adLoader.loadAd(AdRequest.Builder().apply {
             if (TogetherAdSea.testDeviceID != null) addTestDevice(
@@ -148,6 +164,17 @@ class FlowHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
 
         val nativeAd = NativeAd(context, idList[requestIndex])
         adListener.onStartRequest(AdNameType.FACEBOOK.type,nativeAd.toString())
+        /**
+         * 开始超时计时
+         */
+        val timeOutTimer = creatTimer {
+            addTimeOut(nativeAd.toString())
+
+            loge("${AdNameType.FACEBOOK.type}: indexFacebook:$requestIndex, 超时了")
+            showAdFlowFacebook(level, splashConfigStr, requestIndex + 1, adListener)
+        }
+        timeOutTimer.start()
+
         nativeAd.setAdListener(object : NativeAdListener {
             override fun onAdClicked(ad: Ad) {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.clicked)}")
@@ -159,6 +186,14 @@ class FlowHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
 
             override fun onError(ad: Ad, adError: AdError?) {
                 loge("${AdNameType.FACEBOOK.type}: adError:${adError?.errorCode},${adError?.errorMessage}")
+                /**
+                 * 判断是否已经超时过了
+                 */
+                if(isTimeOut(ad.toString())){
+                    loge("$ad 之前已经过时了")
+                    return
+                }
+                timeOutTimer.cancel()
                 showAdFlowFacebook(level, splashConfigStr, requestIndex + 1, adListener)
             }
 
@@ -169,6 +204,7 @@ class FlowHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
                     return
                 }
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
+                timeOutTimer.cancel()
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(ad,ad.toString()))
             }
 

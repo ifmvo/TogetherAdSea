@@ -82,6 +82,15 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
         //添加监听器
         adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type,mRewardedVideoAdGoogle.toString())
 
+        val timeOutTimer = creatTimer {
+            addTimeOut(mRewardedVideoAdGoogle.toString())
+
+            loge("${AdNameType.GOOGLE_ADMOB.type}: indexGoogle:$indexGoogle, 超时")
+            val newIndexGoogle = indexGoogle + 1
+            requestAdRewardGoogle(level, rewardConfigStr, newIndexGoogle, adListener)
+            //removeListener(mRewardedVideoAdGoogle.toString())
+        }
+        timeOutTimer.start()
         mRewardedVideoAdGoogle.rewardedVideoAdListener = object :RewardedVideoAdListener {
             var rewarded=false
             override fun onRewardedVideoAdClosed() {
@@ -107,6 +116,7 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
 
             override fun onRewardedVideoCompleted() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.complete)}")
+                timeOutTimer.cancel()
                 rewarded = true
             }
 
@@ -119,9 +129,15 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
             override fun onRewardedVideoAdFailedToLoad(p0: Int) {
 
                 loge("${AdNameType.GOOGLE_ADMOB.type}: indexGoogle:$indexGoogle, errorCode:$p0")
+                if(isTimeOut(mRewardedVideoAdGoogle.toString())){
+                    loge("$mRewardedVideoAdGoogle 之前已经过时了")
+                    return
+                }
+                timeOutTimer.cancel()
+
                 val newIndexGoogle = indexGoogle + 1
                 requestAdRewardGoogle(level, rewardConfigStr, newIndexGoogle, adListener)
-                removeListener(mRewardedVideoAdGoogle.toString())
+                //removeListener(mRewardedVideoAdGoogle.toString())
             }
         }
         mRewardedVideoAdGoogle.loadAd(idList[indexGoogle], AdRequest.Builder().apply {
@@ -172,6 +188,19 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
         val mRewardedVideoAdFacebook = com.facebook.ads.RewardedVideoAd(context, idList[indexFacebook])
 
         adListener.onStartRequest(AdNameType.FACEBOOK.type,mRewardedVideoAdFacebook.toString())
+        /**
+         * 开始超时计时
+         */
+        val timeOutTimer = creatTimer {
+            addTimeOut(mRewardedVideoAdFacebook.toString())
+
+            loge("${AdNameType.FACEBOOK.type}: indexFacebook:$indexFacebook, 超时了")
+            val newIndexFacebook = indexFacebook + 1
+            requestAdRewardFacebook(level, rewardConfigStr, newIndexFacebook, adListener)
+
+            //removeListener(mRewardedVideoAdFacebook.toString())
+        }
+        timeOutTimer.start()
 
         mRewardedVideoAdFacebook.setAdListener(object : com.facebook.ads.RewardedVideoAdListener{
             var isRewarded=false
@@ -193,14 +222,24 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
             override fun onError(p0: Ad, adError: AdError?) {
 
                 loge("${AdNameType.FACEBOOK.type}: indexFacebook:$indexFacebook, errorCode:${adError?.errorCode} ${adError?.errorMessage}")
+                /**
+                 * 判断是否已经超时过了
+                 */
+                if(isTimeOut(p0.toString())){
+                    loge("$p0 之前已经过时了")
+                    return
+                }
+                timeOutTimer.cancel()
+
                 val newIndexFacebook = indexFacebook + 1
                 requestAdRewardFacebook(level, rewardConfigStr, newIndexFacebook, adListener)
-
-                removeListener(mRewardedVideoAdFacebook.toString())
-
+                //removeListener(mRewardedVideoAdFacebook.toString())
             }
 
             override fun onAdLoaded(p0: Ad) {
+                //取消超时
+                timeOutTimer.cancel()
+
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type,AdWrapper(p0))
             }

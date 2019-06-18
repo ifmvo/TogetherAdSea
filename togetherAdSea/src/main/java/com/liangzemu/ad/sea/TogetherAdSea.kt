@@ -39,6 +39,10 @@ object TogetherAdSea {
      */
     lateinit var context: Application
     /**
+     * 超时时间
+     */
+     var timeoutSecond: Long=8000
+    /**
      * 缓存广告
      */
     internal val adCacheMap = HashMap<String, Any>()//HashMap<adConstStr,AD>()
