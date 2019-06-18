@@ -34,15 +34,15 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
                 loge("正在加载中")
                 return
             }
-            //没有正在加载  查看是否有缓存
-            val adFromCache = getAdFromCache()
-            adFromCache?.let {
-                loge("已经有缓存了")
-                bindListener(adFromCache.key)
-                //回调加载完成
-                onAdPrepared("adCache",adFromCache)
-                return
-            }
+        }
+        //查看是否有缓存
+        val adFromCache = getAdFromCache()
+        adFromCache?.let {
+            loge("已经有缓存了")
+            bindListener(adFromCache.key)
+            //回调加载完成
+            onAdPrepared("adCache",adFromCache)
+            return
         }
         loge("开始请求")
         unUseListenerList.add(userListener)
@@ -163,10 +163,13 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
             return
         val listener = unUseListenerList.removeAt(0)
 
-        unUseListenerList.add(listener)
+        useListenerList.add(listener)
         listenerMap[key] = WeakReference(listener)
     }
-    fun removeListener(key:String){
+    internal fun removeListener(key:String){
+        listenerMap[key]?.get()?.let {
+            useListenerList.remove(it)
+        }
         listenerMap.remove(key)
     }
     /**
@@ -176,9 +179,11 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
      */
     fun destoryAd(adWrapper: AdWrapper){
         adCacheMap[adConstStr]?.remove(adWrapper)
+        listenerMap[adWrapper.key]?.get()?.let {
+            useListenerList.remove(it)
+        }
         listenerMap.remove(adWrapper.key)
         adWrapper.destory()
-
     }
 
     /**

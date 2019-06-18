@@ -75,7 +75,21 @@
                     android:layout_height="wrap_content"/>
 
         </LinearLayout>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+            <Button
+                    android:id="@+id/btnRequestFlow"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:text="request原生"
+                    android:layout_height="wrap_content"/>
+
+
+
+        </LinearLayout>
     </LinearLayout>
 
     <!--

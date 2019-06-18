@@ -67,41 +67,41 @@ class DetailActivity : AppCompatActivity() {
             })
             this.finish()
         }
-
+        btnRequestFlow.setOnClickListener {
+            requestFlow()
+        }
         //requestFlow()
 
         //requestBanner()
     }
 
     private fun requestFlow() {
-//        TogetherAdSeaFlowPro.showAdFlowHorizontal(
-//            this,
-//            Config.flowAdConfig(),
-//            TogetherAdConst.AD_FLOW,
-//            object : TogetherAdSeaFlowPro.AdListenerFlow {
-//                override fun onAdShow(channel: String) {
-//                }
-//
-//                override fun onStartRequest(channel: String) {
-//                }
-//
-//                override fun onAdClick(channel: String) {
-//                }
-//
-//                override fun onAdFailed(failedMsg: String?) {
-//                }
-//
-//                override fun onAdPrepared(channel: String, ad: Any) {
-//                    when (ad) {
-//                        is Ad -> {
-//                            Log.e("ifmvo", "TogetherAdSeaFlowPro:facebook")
-//                        }
-//                        is UnifiedNativeAd -> {
-//                            Log.e("ifmvo", "TogetherAdSeaFlowPro:google")
-//                        }
-//                    }
-//                }
-//            })
+        FlowHelper(TogetherAdConst.AD_FLOW).requestAd(Config.flowAdConfig(),object :IAdListener{
+            override fun onStartRequest(channel: String, key: String) {
+            }
+
+            override fun onAdClick(channel: String, key: String) {
+                Log.i("requestFlow","onAdClick$key")
+            }
+
+            override fun onAdFailed(failedMsg: String?, key: String) {
+                Log.i("requestFlow","onAdFailed$key")
+            }
+
+            override fun onAdShow(channel: String, key: String) {
+                Log.i("requestFlow","onAdShow$key")
+            }
+
+            override fun onAdClose(channel: String, key: String, other: Any) {
+                Log.i("requestFlow","onAdClose$key")
+            }
+
+            override fun onAdPrepared(channel: String, adWrapper: AdWrapper) {
+                Log.i("requestFlow","onAdPrepared")
+            }
+
+
+        })
     }
 
     private fun requestBanner() {
@@ -204,8 +204,8 @@ class DetailActivity : AppCompatActivity() {
                 Log.i("requestReward","onAdClose$key")
             }
 
-            override fun onAdPrepared(channel: String, adWrapper: AdWrapper, key: String) {
-                Log.i("requestReward","onAdPrepared$key")
+            override fun onAdPrepared(channel: String, adWrapper: AdWrapper) {
+                Log.i("requestReward","onAdPrepared")
             }
 
         },onlyOnce = true)

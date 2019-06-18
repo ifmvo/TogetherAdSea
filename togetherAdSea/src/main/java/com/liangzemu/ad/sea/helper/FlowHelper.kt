@@ -168,13 +168,11 @@ class FlowHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
                     showAdFlowFacebook(level, splashConfigStr, requestIndex + 1, adListener)
                     return
                 }
-                (TogetherAdSea.adCacheMap[adConstStr] as ArrayList<Any>).add(ad)
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(ad,ad.toString()))
             }
 
             override fun onLoggingImpression(ad: Ad) {
-                (TogetherAdSea.adCacheMap[adConstStr] as ArrayList<Any>).remove(ad)
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.exposure)}")
                 adListener.onAdShow(AdNameType.FACEBOOK.type,ad.toString())
             }

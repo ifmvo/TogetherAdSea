@@ -78,7 +78,7 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
 
             override fun onRewardedVideoAdLoaded() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
-                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type,AdWrapper(mRewardedVideoAdGoogle),mRewardedVideoAdGoogle.toString())
+                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type,AdWrapper(mRewardedVideoAdGoogle))
             }
 
             override fun onRewardedVideoAdOpened() {
@@ -176,7 +176,7 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
 
             override fun onAdLoaded(p0: Ad) {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
-                adListener.onAdPrepared(AdNameType.FACEBOOK.type,AdWrapper(p0),p0.toString())
+                adListener.onAdPrepared(AdNameType.FACEBOOK.type,AdWrapper(p0))
             }
 
             override fun onLoggingImpression(p0: Ad) {
