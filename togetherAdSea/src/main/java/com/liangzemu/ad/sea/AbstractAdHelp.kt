@@ -302,7 +302,7 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
     protected fun creatTimer(callback:()->Unit):CountDownTimer{
         return object : CountDownTimer(timeoutMillsecond, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                logd(" 倒计时: $millisUntilFinished")
+                logd("倒计时: $millisUntilFinished")
             }
 
             override fun onFinish() {
