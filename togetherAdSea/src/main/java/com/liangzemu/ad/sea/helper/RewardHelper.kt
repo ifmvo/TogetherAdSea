@@ -1,11 +1,13 @@
 package com.liangzemu.ad.sea.helper
 
+import android.os.CountDownTimer
 import androidx.annotation.NonNull
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
+import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.liangzemu.ad.sea.*
 import com.liangzemu.ad.sea.TogetherAdSea.context
@@ -19,104 +21,56 @@ import com.liangzemu.ad.sea.other.loge
  *
  * Created by Matthew_Chen on 2019-06-05.
  */
-class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
-    /**
-     * 比例随机完 开始请求广告
-     * @param type AdNameType
-     * @param level Int
-     * @param configStr String?
-     * @param requestIndex Int
-     * @param adListener IAdListener
-     * @return Unit
-     */
-    override fun dispatchAdRequest(type:AdNameType,level: Int, configStr: String?, requestIndex: Int, adListener: IAdListener) {
-        when(type){
-            AdNameType.FACEBOOK->{
-                requestAdRewardFacebook(level,configStr,requestIndex,adListener)
-            }
+class RewardHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
+    override fun initAD(id:String,adNameType: AdNameType): Pair<Any,String> {
+        return when(adNameType){
             AdNameType.GOOGLE_ADMOB->{
-                requestAdRewardGoogle(level,configStr,requestIndex,adListener)
+                val ad = MobileAds.getRewardedVideoAdInstance(context)
+                Pair(ad,ad.toString())
+            }
+            AdNameType.FACEBOOK->{
+                val ad = com.facebook.ads.RewardedVideoAd(context, id)
+                Pair(ad,ad.toString())
+            }
+            else ->{
+                throw IllegalArgumentException("没有此广告类型:${adNameType.type}")
             }
         }
     }
-
-    /**
-     * 请求谷歌广告
-     * @param level Int
-     * @param rewardConfigStr String?
-     * @param indexGoogle Int
-     * @param adListener IAdListener
-     * @return Unit
-     */
-    private fun requestAdRewardGoogle(
-        level: Int,
-        rewardConfigStr: String?,
-        indexGoogle: Int,
-        @NonNull adListener: IAdListener
+    override fun setGoogleAdListenerAndStart(
+        id:String,
+        adOrBuilder: Any,
+        adListener: IAdListener,
+        timer: CountDownTimer,
+        errorCallback:(String?)->Unit
     ) {
-        val idList = if (level != -1) {
-            TogetherAdSea.idListGoogleMap[adConstStr]?.filterIndexed { index, _ ->
-                level == index
-            }
-        } else {
-            TogetherAdSea.idListGoogleMap[adConstStr]
-        }
-        //分档位请求完毕  都没广告
-        if (indexGoogle >= idList?.size ?: 0) {
-            //如果所有档位都请求失败了，就切换另外一种广告
-            val newRewardConfig = rewardConfigStr?.replace(AdNameType.GOOGLE_ADMOB.type, AdNameType.NO.type)
-            requestAdVertical(newRewardConfig, adListener,level)
-            return
-        }
-        if (idList.isNullOrEmpty()) {
-            //如果在 Map 里面获取不到该广告位的 idList 意味着初始化的时候没有设置这个广告位
-            loge("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.ad_id_no)}")
-            adListener.onAdFailed(context.getString(R.string.ad_id_no),"ALL")
-            return
-        }
-
-        logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.start_request)}")
-
-
-        val mRewardedVideoAdGoogle = MobileAds.getRewardedVideoAdInstance(context)
-        //添加监听器
-        adListener.onStartRequest(AdNameType.GOOGLE_ADMOB.type,mRewardedVideoAdGoogle.toString())
-
-        val timeOutTimer = creatTimer {
-            addTimeOut(mRewardedVideoAdGoogle.toString())
-
-            loge("${AdNameType.GOOGLE_ADMOB.type}: indexGoogle:$indexGoogle, 超时")
-            val newIndexGoogle = indexGoogle + 1
-            requestAdRewardGoogle(level, rewardConfigStr, newIndexGoogle, adListener)
-            //removeListener(mRewardedVideoAdGoogle.toString())
-        }
-        timeOutTimer.start()
-        mRewardedVideoAdGoogle.rewardedVideoAdListener = object :RewardedVideoAdListener {
+        adOrBuilder as RewardedVideoAd
+        adOrBuilder.rewardedVideoAdListener = object : RewardedVideoAdListener {
             var rewarded=false
             override fun onRewardedVideoAdClosed() {
-                adListener.onAdClose(AdNameType.GOOGLE_ADMOB.type,mRewardedVideoAdGoogle.toString(),rewarded)
+                adListener.onAdClose(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString(),rewarded)
             }
 
             override fun onRewardedVideoAdLeftApplication() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.clicked)}")
-                adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type,mRewardedVideoAdGoogle.toString())
+                adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString())
 
             }
 
             override fun onRewardedVideoAdLoaded() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
-                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type,AdWrapper(mRewardedVideoAdGoogle))
+                timer.cancel()
+                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type,AdWrapper(adOrBuilder))
             }
 
             override fun onRewardedVideoAdOpened() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.show)}")
-                adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type,mRewardedVideoAdGoogle.toString())
+                adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString())
 
             }
 
             override fun onRewardedVideoCompleted() {
                 logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.complete)}")
-                timeOutTimer.cancel()
                 rewarded = true
             }
 
@@ -127,86 +81,23 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
             }
 
             override fun onRewardedVideoAdFailedToLoad(p0: Int) {
-
-                loge("${AdNameType.GOOGLE_ADMOB.type}: indexGoogle:$indexGoogle, errorCode:$p0")
-                if(isTimeOut(mRewardedVideoAdGoogle.toString())){
-                    loge("$mRewardedVideoAdGoogle 之前已经过时了")
-                    return
-                }
-                timeOutTimer.cancel()
-
-                val newIndexGoogle = indexGoogle + 1
-                requestAdRewardGoogle(level, rewardConfigStr, newIndexGoogle, adListener)
-                //removeListener(mRewardedVideoAdGoogle.toString())
+                errorCallback(p0.toString())
             }
         }
-        mRewardedVideoAdGoogle.loadAd(idList[indexGoogle], AdRequest.Builder().apply {
-            if (TogetherAdSea.testDeviceID != null) addTestDevice(
-                TogetherAdSea.testDeviceID
-            )
-        }.build())
+        adOrBuilder.loadAd(id, getGoogleAdRequest())
     }
-
-    /**
-     * 请求facebook广告
-     * @param level Int
-     * @param rewardConfigStr String?
-     * @param indexFacebook Int
-     * @param adListener IAdListener
-     * @return Unit
-     */
-    private fun requestAdRewardFacebook(
-        level: Int,
-        rewardConfigStr: String?,
-        indexFacebook: Int,
-        @NonNull adListener: IAdListener
+    override fun setFaceBookAdListenerAndStart(
+        adOrBuilder: Any,
+        adListener: IAdListener,
+        timer: CountDownTimer,
+        errorCallback: (String?) -> Unit
     ) {
-
-        val idList = if (level != -1) {
-            TogetherAdSea.idListFacebookMap[adConstStr]?.filterIndexed { index, _ ->
-                level == index
-            }
-        } else {
-            TogetherAdSea.idListFacebookMap[adConstStr]
-        }
-
-        if (indexFacebook >= idList?.size ?: 0) {
-            //如果所有档位都请求失败了，就切换另外一种广告
-            val newRewardConfig = rewardConfigStr?.replace(AdNameType.FACEBOOK.type, AdNameType.NO.type)
-            requestAdVertical(newRewardConfig, adListener,level)
-            return
-        }
-
-        if (idList.isNullOrEmpty()) {
-            //如果在 Map 里面获取不到该广告位的 idList 意味着初始化的时候没有设置这个广告位
-            loge("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.ad_id_no)}")
-            adListener.onAdFailed(context.getString(R.string.ad_id_no),"ALL")
-            return
-        }
-
-        logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.start_request)}")
-        val mRewardedVideoAdFacebook = com.facebook.ads.RewardedVideoAd(context, idList[indexFacebook])
-
-        adListener.onStartRequest(AdNameType.FACEBOOK.type,mRewardedVideoAdFacebook.toString())
-        /**
-         * 开始超时计时
-         */
-        val timeOutTimer = creatTimer {
-            addTimeOut(mRewardedVideoAdFacebook.toString())
-
-            loge("${AdNameType.FACEBOOK.type}: indexFacebook:$indexFacebook, 超时了")
-            val newIndexFacebook = indexFacebook + 1
-            requestAdRewardFacebook(level, rewardConfigStr, newIndexFacebook, adListener)
-
-            //removeListener(mRewardedVideoAdFacebook.toString())
-        }
-        timeOutTimer.start()
-
-        mRewardedVideoAdFacebook.setAdListener(object : com.facebook.ads.RewardedVideoAdListener{
+        adOrBuilder as com.facebook.ads.RewardedVideoAd
+        adOrBuilder.setAdListener(object : com.facebook.ads.RewardedVideoAdListener{
             var isRewarded=false
             override fun onRewardedVideoClosed() {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.dismiss)}")
-                adListener.onAdClose(AdNameType.FACEBOOK.type,mRewardedVideoAdFacebook.toString(), isRewarded)
+                adListener.onAdClose(AdNameType.FACEBOOK.type,adOrBuilder.toString(), isRewarded)
             }
 
             override fun onAdClicked(p0: Ad) {
@@ -220,25 +111,12 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
             }
 
             override fun onError(p0: Ad, adError: AdError?) {
-
-                loge("${AdNameType.FACEBOOK.type}: indexFacebook:$indexFacebook, errorCode:${adError?.errorCode} ${adError?.errorMessage}")
-                /**
-                 * 判断是否已经超时过了
-                 */
-                if(isTimeOut(p0.toString())){
-                    loge("$p0 之前已经过时了")
-                    return
-                }
-                timeOutTimer.cancel()
-
-                val newIndexFacebook = indexFacebook + 1
-                requestAdRewardFacebook(level, rewardConfigStr, newIndexFacebook, adListener)
-                //removeListener(mRewardedVideoAdFacebook.toString())
+                errorCallback(adError?.errorMessage)
             }
 
             override fun onAdLoaded(p0: Ad) {
                 //取消超时
-                timeOutTimer.cancel()
+                timer.cancel()
 
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type,AdWrapper(p0))
@@ -249,11 +127,8 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
                 adListener.onAdShow(AdNameType.FACEBOOK.type,p0.toString())
             }
         })
-        TogetherAdSea.adCacheMap[adConstStr] = mRewardedVideoAdFacebook
-        mRewardedVideoAdFacebook.loadAd()
-
+        adOrBuilder.loadAd()
     }
-
     /**
      * 关闭后销毁广告
      * @param channel String
