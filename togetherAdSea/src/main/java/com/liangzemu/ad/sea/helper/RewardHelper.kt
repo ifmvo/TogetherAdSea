@@ -262,7 +262,7 @@ class RewardHelper(adConstStr: String) : AbstractAdHelp(adConstStr) {
      * @return Unit
      */
     override fun onAdClose(channel: String, key: String, other: Any) {
-        super.onAdClose(channel, key, other)
         removeAd(key,true)
+        super.onAdClose(channel, key, other)
     }
 }

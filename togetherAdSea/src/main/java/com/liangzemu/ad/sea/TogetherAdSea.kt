@@ -41,7 +41,7 @@ object TogetherAdSea {
     /**
      * 超时时间
      */
-     var timeoutSecond: Long=8000
+     var timeoutMillsecond: Long=1000
     /**
      * 缓存广告
      */

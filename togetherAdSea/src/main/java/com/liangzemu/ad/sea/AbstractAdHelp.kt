@@ -1,14 +1,11 @@
 package com.liangzemu.ad.sea
 
 import android.os.CountDownTimer
-import android.os.MessageQueue
 import androidx.annotation.NonNull
 import com.liangzemu.ad.sea.TogetherAdSea.context
-import com.liangzemu.ad.sea.TogetherAdSea.timeoutSecond
+import com.liangzemu.ad.sea.TogetherAdSea.timeoutMillsecond
 import com.liangzemu.ad.sea.other.*
-import com.liangzemu.ad.sea.other.loge
 import java.lang.ref.WeakReference
-import java.util.function.Predicate
 
 /**
  * 广告开始请求时监听器与广告实体(or loader)对应存储
@@ -41,6 +38,7 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
         val adFromCache = getAdFromCache()
         adFromCache?.let {
             loge("已经有缓存了")
+            unUseListenerList.add(0,userListener)
             bindListener(adFromCache.key)
             //回调加载完成
             onAdPrepared("adCache",adFromCache)
@@ -302,7 +300,7 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
      * @return CountDownTimer
      */
     protected fun creatTimer(callback:()->Unit):CountDownTimer{
-        return object : CountDownTimer(timeoutSecond, 1000) {
+        return object : CountDownTimer(timeoutMillsecond, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 logd(" 倒计时: $millisUntilFinished")
             }
