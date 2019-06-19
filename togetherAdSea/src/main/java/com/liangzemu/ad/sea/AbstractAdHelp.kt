@@ -41,7 +41,7 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
             unUseListenerList.add(0,userListener)
             bindListener(adFromCache.key)
             //回调加载完成
-            onAdPrepared("adCache",adFromCache)
+            listenerMap[adFromCache.key]?.get()?.onAdPrepared("adCache",adFromCache)
             return
         }
         loge("开始请求")
@@ -191,13 +191,13 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
             useListenerList.remove(it)
         }
         adCacheMap[adConstStr]?.find {
-            it.key==key
+            it.key == key
         }?.apply {
-            if(destroy){
-                destory()
-            }
+                if (destroy) {
+                    destory()
+                }
             adCacheMap[adConstStr]?.remove(this)
-        }
+            }
         listenerMap.remove(key)
 
     }
