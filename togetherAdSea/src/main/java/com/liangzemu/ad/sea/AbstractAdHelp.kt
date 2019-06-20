@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference
  * @property adConstStr String
  * @constructor
  */
-abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
+abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow:Boolean):AdBase,IAdListener {
     val levelHorizontal:Int = Math.max(
         TogetherAdSea.idListGoogleMap[adConstStr]?.size ?: 0,
         TogetherAdSea.idListFacebookMap[adConstStr]?.size ?: 0
@@ -44,7 +44,7 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
             listenerMap[adFromCache.key]?.get()?.onAdPrepared("adCache",adFromCache)
             return
         }
-        loge("开始请求")
+        loge("$adConstStr 开始请求")
         unUseListenerList.add(userListener)
         loadingAdType.add(adConstStr)
         if (direction == Direction.HORIZONTAL) {
@@ -185,21 +185,19 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
         listenerMap.remove(adWrapper.key)
         adWrapper.destory()
     }
-    fun removeAd(key: String,destroy:Boolean=false){
 
-        listenerMap[key]?.get()?.let {
-            useListenerList.remove(it)
-        }
-        adCacheMap[adConstStr]?.find {
+
+    /**
+     * 移除缓存
+     * @param key String
+     * @return Unit
+     */
+    fun removeAdFromCache(key: String):AdWrapper?{
+        return adCacheMap[adConstStr]?.find {
             it.key == key
         }?.apply {
-                if (destroy) {
-                    destory()
-                }
             adCacheMap[adConstStr]?.remove(this)
-            }
-        listenerMap.remove(key)
-
+        }
     }
     /**
      * 退出Activity时调用
@@ -274,7 +272,12 @@ abstract class AbstractAdHelp(val adConstStr: String):AdBase,IAdListener {
     }
 
     override fun onAdShow(channel: String,key:String) {
+        val adFromCache = removeAdFromCache(key)
         listenerMap[key]?.get()?.onAdShow(channel,key)
+        removeListener(key)
+        if(adFromCache!=null&&destroyAfterShow){
+            adFromCache.destory()
+        }
     }
 
     override fun onAdClose(channel: String,key:String,other:Any) {

@@ -23,7 +23,7 @@ import com.liangzemu.ad.sea.other.*
  * Created by Matthew_Chen on 2019-04-22.
  */
 
-class FlowHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
+class FlowHelper(adConstStr: String,destroyAfterShow:Boolean=true) : BaseAdHelp(adConstStr,destroyAfterShow) {
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
         return when(adNameType){
             AdNameType.GOOGLE_ADMOB->{
@@ -111,6 +111,7 @@ class FlowHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
         })
         adOrBuilder.loadAd()
     }
+
 }
 
 

@@ -129,15 +129,4 @@ class RewardHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
         })
         adOrBuilder.loadAd()
     }
-    /**
-     * 关闭后销毁广告
-     * @param channel String
-     * @param key String
-     * @param other Any
-     * @return Unit
-     */
-    override fun onAdClose(channel: String, key: String, other: Any) {
-        super.onAdClose(channel, key, other)
-        removeAd(key,true)
-    }
 }

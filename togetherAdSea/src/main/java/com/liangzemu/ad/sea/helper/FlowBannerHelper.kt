@@ -75,4 +75,6 @@ class FlowBannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
         })
         adOrBuilder.loadAd()
     }
+
+
 }
