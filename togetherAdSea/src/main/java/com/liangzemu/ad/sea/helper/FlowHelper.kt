@@ -24,6 +24,7 @@ import com.liangzemu.ad.sea.other.*
  */
 
 class FlowHelper(adConstStr: String,destroyAfterShow:Boolean=true) : BaseAdHelp(adConstStr,destroyAfterShow) {
+    @Throws(IllegalArgumentException::class)
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
         return when(adNameType){
             AdNameType.GOOGLE_ADMOB->{

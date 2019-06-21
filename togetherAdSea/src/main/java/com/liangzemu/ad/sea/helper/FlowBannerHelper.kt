@@ -19,7 +19,7 @@ import com.liangzemu.ad.sea.other.loge
  *
  * Created by Matthew_Chen on 2019-04-22.
  */
-class FlowBannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
+class FlowBannerHelper(adConstStr: String,destroyAfterShow:Boolean=true) : BaseAdHelp(adConstStr,destroyAfterShow) {
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
         return when(adNameType){
             AdNameType.FACEBOOK->{

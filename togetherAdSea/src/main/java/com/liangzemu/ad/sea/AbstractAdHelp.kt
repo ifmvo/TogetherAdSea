@@ -29,7 +29,7 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow:Boole
         if(onlyOnce){
             //正在加载中
             if(loadingAdType.contains(adConstStr)){
-                unUseListenerList.add(0,userListener)
+                addListener(userListener,true)
                 loge("正在加载中")
                 return
             }
@@ -38,14 +38,14 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow:Boole
         val adFromCache = getAdFromCache()
         adFromCache?.let {
             loge("已经有缓存了")
-            unUseListenerList.add(0,userListener)
+            addListener(userListener,true)
             bindListener(adFromCache.key)
             //回调加载完成
             listenerMap[adFromCache.key]?.get()?.onAdPrepared("adCache",adFromCache)
             return
         }
         loge("$adConstStr 开始请求")
-        unUseListenerList.add(userListener)
+        addListener(userListener)
         loadingAdType.add(adConstStr)
         if (direction == Direction.HORIZONTAL) {
             requestAdHorizontal(splashConfigStr,this)
@@ -159,12 +159,22 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow:Boole
      * @return Unit
      */
     internal fun bindListener(key:String){
-        if(unUseListenerList.isNullOrEmpty())
+        if(unUseListenerMap[adConstStr].isNullOrEmpty())
             return
-        val listener = unUseListenerList.removeAt(0)
+        val listener = unUseListenerMap[adConstStr]?.removeAt(0)?:return
 
         useListenerList.add(listener)
         listenerMap[key] = WeakReference(listener)
+    }
+    internal fun addListener(listener: IAdListener,insertFirst:Boolean=false){
+        if(unUseListenerMap[adConstStr].isNullOrEmpty()){
+            unUseListenerMap[adConstStr]= ArrayList()
+        }
+
+            if(insertFirst)
+                unUseListenerMap[adConstStr]!!.add(0,listener)
+            else
+                unUseListenerMap[adConstStr]!!.add(listener)
     }
     internal fun removeListener(key:String){
         listenerMap[key]?.get()?.let {
@@ -205,7 +215,10 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow:Boole
      * @return Unit
      */
     fun onDestory(){
-        unUseListenerList.clear()
+        /**
+         * 多页面同时请求同类型，并且其中一方先调用这个方法时  可能会导致另一个页面的广告无法回调
+         */
+        unUseListenerMap.remove(adConstStr)
         useListenerList.clear()
     }
 
@@ -219,13 +232,15 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow:Boole
          * 正在加载的广告类型 主要用于某些时候每次只能加载一个的时候   防止重复加载
          */
         internal val loadingAdType=HashSet<String>()
-
+        /**
+         * 已连接的广告和监听器
+         */
         internal val listenerMap=HashMap<String,WeakReference<IAdListener>>() //HashMap<ADhash or loaderhash，监听器的弱引用>
         //TODO 改成队列或者链表
         /**
          * 没有使用过的监听器集合
          */
-        internal val unUseListenerList=ArrayList<IAdListener>()
+        internal val unUseListenerMap=HashMap<String,ArrayList<IAdListener>>()//HashMap<adConstStr，list<监听器>>
         /**
          * 使用过的监听器集合  是为了避免弱引用被清理
          */
