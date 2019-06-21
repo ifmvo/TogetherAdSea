@@ -113,6 +113,14 @@ class FlowHelper(adConstStr: String,destroyAfterShow:Boolean=true) : BaseAdHelp(
         adOrBuilder.loadAd()
     }
 
+    override fun onAdShow(channel: String, key: String) {
+        val adFromCache = removeAdFromCache(key)
+        super.onAdShow(channel, key)
+        removeListener(key)
+        if(adFromCache!=null&&destroyAfterShow){
+            adFromCache.destory()
+        }
+    }
 }
 
 

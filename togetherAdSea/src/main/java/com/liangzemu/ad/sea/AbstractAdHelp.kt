@@ -287,12 +287,7 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow:Boole
     }
 
     override fun onAdShow(channel: String,key:String) {
-        val adFromCache = removeAdFromCache(key)
         listenerMap[key]?.get()?.onAdShow(channel,key)
-        removeListener(key)
-        if(adFromCache!=null&&destroyAfterShow){
-            adFromCache.destory()
-        }
     }
 
     override fun onAdClose(channel: String,key:String,other:Any) {
