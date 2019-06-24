@@ -129,4 +129,13 @@ class RewardHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
         })
         adOrBuilder.loadAd()
     }
+
+    override fun onAdClose(channel: String, key: String, other: Any) {
+        val adFromCache = removeAdFromCache(key)
+        super.onAdClose(channel, key, other)
+        removeListener(key)
+        if(adFromCache!=null&&destroyAfterShow){
+            adFromCache.destory()
+        }
+    }
 }
