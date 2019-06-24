@@ -20,6 +20,7 @@ import com.liangzemu.ad.sea.other.loge
  *
  * Created by Matthew_Chen on 2019-04-22.
  */
+@Deprecated("old", replaceWith = ReplaceWith("FlowBannerHelper"), level = DeprecationLevel.ERROR)
 class TogetherAdSeaFlowBanner(private val adConstStr: String) : AdBase {
     init {
         val any = TogetherAdSea.adCacheMap[adConstStr]

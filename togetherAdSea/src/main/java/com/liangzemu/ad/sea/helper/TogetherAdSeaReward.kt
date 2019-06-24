@@ -20,6 +20,7 @@ import com.liangzemu.ad.sea.other.*
  *
  * Created by Matthew_Chen on 2019-06-05.
  */
+@Deprecated("old", replaceWith = ReplaceWith("RewardHelper"), level = DeprecationLevel.ERROR)
 class TogetherAdSeaReward(val adConstStr: String) : AdBase {
     companion object {
         /**

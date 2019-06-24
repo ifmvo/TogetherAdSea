@@ -32,6 +32,7 @@ import com.liangzemu.ad.sea.other.loge
  * 
  * Created by Matthew_Chen on 2019-04-22.
  */
+@Deprecated("useless", replaceWith = ReplaceWith("FlowHelper"), level = DeprecationLevel.ERROR)
 object TogetherAdSeaSplash : AdBase {
 
     fun showAdFull(

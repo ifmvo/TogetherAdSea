@@ -24,16 +24,7 @@ import com.liangzemu.ad.sea.other.loge
  * 
  * Created by Matthew_Chen on 2019-06-14.
  */
-/*
- * (●ﾟωﾟ●) 原生广告
- *
- * Created by Matthew_Chen on 2019-04-22.
- */
-/*
- * (●ﾟωﾟ●) 开屏广告
- *
- * Created by Matthew_Chen on 2019-04-22.
- */
+@Deprecated("old", replaceWith = ReplaceWith("FlowHelper"), level = DeprecationLevel.ERROR)
 object TogetherAdSeaFlow : AdBase {
 
     fun showAdFlow(

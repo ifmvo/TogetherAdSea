@@ -22,6 +22,7 @@ import com.liangzemu.ad.sea.other.loge
  * 
  * Created by Matthew_Chen on 2019-04-22.
  */
+@Deprecated("old", replaceWith = ReplaceWith("BannerHelper"), level = DeprecationLevel.ERROR)
 object TogetherAdSeaBannerView : AdBase {
 
     fun showAdBanner(

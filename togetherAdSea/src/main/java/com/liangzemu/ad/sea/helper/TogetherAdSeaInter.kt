@@ -35,14 +35,14 @@ object TogetherAdSeaInter : AdBase {
 
         val randomAdName = AdRandomUtil.getRandomAdName(interConfigStr)
         when (randomAdName) {
-            AdNameType.GOOGLE_ADMOB -> TogetherAdSeaInter.requestAdInterGoogle(
+            AdNameType.GOOGLE_ADMOB -> requestAdInterGoogle(
                 context.applicationContext,
                 interConfigStr,
                 adConstStr,
                 0,
                 adListener
             )
-            AdNameType.FACEBOOK -> TogetherAdSeaInter.requestAdInterFacebook(
+            AdNameType.FACEBOOK -> requestAdInterFacebook(
                 context.applicationContext,
                 interConfigStr,
                 adConstStr,

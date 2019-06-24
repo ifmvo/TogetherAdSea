@@ -22,7 +22,7 @@ import com.liangzemu.ad.sea.other.*
  *
  * Created by Matthew_Chen on 2019-04-22.
  */
-
+@Deprecated("old", replaceWith = ReplaceWith("FlowHelper"), level = DeprecationLevel.ERROR)
 class TogetherAdSeaFlowPro(val adConstStr: String) : AdBase {
 
     init {
