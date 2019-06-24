@@ -27,7 +27,7 @@ class BannerHelper(adConstStr: String, destroyAfterShow: Boolean = true) : BaseA
             }
             AdNameType.FACEBOOK -> {
                 val adView = com.facebook.ads.AdView(
-                    context, TogetherAdSea.idMapFacebook[adConstStr],
+                    context, id,
                     com.facebook.ads.AdSize.BANNER_HEIGHT_50
                 )
                 Pair(adView, adView.toString())
@@ -47,7 +47,7 @@ class BannerHelper(adConstStr: String, destroyAfterShow: Boolean = true) : BaseA
     ) {
         adOrBuilder as AdView
         adOrBuilder.adSize = AdSize.SMART_BANNER
-        adOrBuilder.adUnitId = TogetherAdSea.idMapGoogle[adConstStr]
+        adOrBuilder.adUnitId = id
         val adRequest = AdRequest.Builder()
             .apply { if (TogetherAdSea.testDeviceID != null) addTestDevice(TogetherAdSea.testDeviceID) }.build()
         adOrBuilder.loadAd(adRequest)
@@ -95,7 +95,7 @@ class BannerHelper(adConstStr: String, destroyAfterShow: Boolean = true) : BaseA
             override fun onAdLoaded(ad: Ad) {
                 logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
                 timer.cancel()
-                adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(ad, ad.toString()))
+                adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(adOrBuilder, adOrBuilder.toString()))
             }
 
             override fun onLoggingImpression(ad: Ad?) {

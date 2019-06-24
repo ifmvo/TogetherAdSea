@@ -20,22 +20,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        //Google 广告的测试 ID
-        Map<String, String> googleIdMap = new HashMap<>();
-//        googleIdMap.put(TogetherAdConst.AD_SPLASH, "ca-app-pub-3940256099942544/2247696110");
-        googleIdMap.put(TogetherAdConst.AD_BANNER, "ca-app-pub-3940256099942544/6300978111");
-       // googleIdMap.put(TogetherAdConst.AD_FLOW, "ca-app-pub-3940256099942544/2247696110");
-//        googleIdMap.put(TogetherAdConst.AD_INTER, "ca-app-pub-3940256099942544/1033173712");
-        TogetherAdSea.INSTANCE.initGoogleAd(this, "ca-app-pub-3940256099942544~3347511713", googleIdMap);
-
-        Map<String, String> facebookIdMap = new HashMap<>();
-//        facebookIdMap.put(TogetherAdConst.AD_SPLASH, "2418474145048681_2419052008324228");
-        facebookIdMap.put(TogetherAdConst.AD_BANNER, "2418474145048681_2419053121657450");
-        //facebookIdMap.put(TogetherAdConst.AD_FLOW, "2418474145048681_2419055058323923");
-//        facebookIdMap.put(TogetherAdConst.AD_INTER, "2418474145048681_2423241911238571");
-        TogetherAdSea.INSTANCE.initFacebookAd(this, facebookIdMap);
-
-
         /*
          * 初始化 Google 广告
          */
@@ -65,10 +49,13 @@ public class App extends Application {
         //googleFlowList.add("ca-app-pub-3940256099942544/2247696110");
         googleFlowList.add("ca-app-pub-3940256099942544/5224354917");
         googleFlowList.add("ca-app-pub-3940256099942544/2247696110");
-
         googleIdListMap.put(TogetherAdConst.AD_FLOW, googleFlowList);
 
-        /**
+        //横幅Banner
+        List<String> googleBannerList = new ArrayList<>();
+        googleBannerList.add("ca-app-pub-3940256099942544/6300978111");
+        googleIdListMap.put(TogetherAdConst.AD_BANNER, googleBannerList);
+        /*
          * "AD84300E9B7D7E2DC6479CFB2F31E5C7"
          */
         TogetherAdSea.INSTANCE.initAdGoogle(this, "ca-app-pub-6810306854458967~4172564328", googleIdListMap,"AD84300E9B7D7E2DC6479CFB2F31E5C7");
@@ -106,6 +93,11 @@ public class App extends Application {
         facebookFlowList.add("308281803417604_312311299681321");
         facebookFlowList.add("2418474145048681_2419055058323923");
         facebookIdListMap.put(TogetherAdConst.AD_FLOW, facebookFlowList);
+
+        //横幅Banner
+        List<String> facebookBannerList = new ArrayList<>();
+        facebookBannerList.add("308281803417604_308289343416850");
+        facebookIdListMap.put(TogetherAdConst.AD_BANNER, facebookBannerList);
 
         TogetherAdSea.INSTANCE.initAdFacebook(this, facebookIdListMap,true);
     }
