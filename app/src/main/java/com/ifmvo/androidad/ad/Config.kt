@@ -9,14 +9,14 @@ object Config {
 
 //    fun splashAdConfig() = "google_admob:1,facebook:0"
 
-    fun bannerAdConfig() = "google_admob:0,facebook:1"
+    fun bannerAdConfig() = "google_admob:1,facebook:0"
 
-    fun flowAdConfig() = "google_admob:1,facebook:2"
+    fun flowAdConfig() = "google_admob:1,facebook:0"
 
     fun interAdConfig() = "google_admob:1,facebook:0"
 
     fun pauseAdConfig() = "google_admob:1,facebook:0"
 
-    fun rewardAdConfig() = "google_admob:1,facebook:1"
+    fun rewardAdConfig() = "google_admob:1,facebook:0"
 
 }

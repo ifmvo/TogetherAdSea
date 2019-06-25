@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.ads.RewardedVideoAd
+import com.google.android.gms.ads.InterstitialAd
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
 import com.liangzemu.ad.sea.AdWrapper
@@ -26,7 +27,10 @@ class DetailActivity : AppCompatActivity() {
     //    val togetherAdSeaReward by lazy { TogetherAdSeaRewardTemp(TogetherAdConst.AD_REWARD) }
     private val rewardHelper = RewardHelper(TogetherAdConst.AD_REWARD)
     private val bannerHelper by lazy { BannerHelper(TogetherAdConst.AD_BANNER) }
+    private val interHelper by lazy { InterstitialHelper(TogetherAdConst.AD_INTER) }
+
     private var adWrapper: AdWrapper? = null
+    private var adWrapperInter: AdWrapper? = null
 
     object Detail {
         fun action(context: Context) {
@@ -48,7 +52,14 @@ class DetailActivity : AppCompatActivity() {
         }
 
         btnShowInter.setOnClickListener {
-            TogetherAdSeaInter.showAdInter()
+            if (adWrapperInter == null) {
+                return@setOnClickListener
+            }
+
+            when (val interAd = adWrapperInter!!.realAd) {
+                is InterstitialAd -> interAd.show()
+                is com.facebook.ads.InterstitialAd -> interAd.show()
+            }
         }
 
         btnRequestPause.setOnClickListener {
@@ -157,36 +168,34 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun requestInter() {
-        TogetherAdSeaInter.requestAdInter(
-            this,
-            Config.interAdConfig(),
-            TogetherAdConst.AD_INTER,
-            object : TogetherAdSeaInter.AdListenerInter {
-                override fun onAdPrepared(channel: String) {
-                    Log.e(tag, "onAdPrepared:$channel")
-                }
 
-                override fun onAdClose(channel: String) {
-                    Log.e(tag, "onAdClose:$channel")
-                }
+        interHelper.requestAd(Config.interAdConfig(), object : IAdListener {
+            override fun onStartRequest(channel: String, key: String) {
+                Log.e("ifmvo", "onStartRequest: channel:$channel")
+            }
 
-                override fun onStartRequest(channel: String) {
-                    Log.e(tag, "onStartRequest:$channel")
-                }
+            override fun onAdClick(channel: String, key: String) {
+                Log.e("ifmvo", "onAdClick: channel:$channel")
+            }
 
-                override fun onAdClick(channel: String) {
-                    Log.e(tag, "onAdClick:$channel")
-                }
+            override fun onAdFailed(failedMsg: String?, key: String) {
+                Log.e("ifmvo", "onAdFailed: failedMsg:$failedMsg")
+            }
 
-                override fun onAdFailed(failedMsg: String?) {
-                    Log.e(tag, "onAdFailed:$failedMsg")
-                }
+            override fun onAdShow(channel: String, key: String) {
+                Log.e("ifmvo", "onAdShow: channel:$channel")
+            }
 
-                override fun onAdShow(channel: String) {
-                    Log.e(tag, "onAdPrepared:$channel")
-                }
+            override fun onAdClose(channel: String, key: String, other: Any) {
+                Log.e("ifmvo", "onAdClose: channel:$channel")
+                interHelper.removeAdFromCache(key)
+            }
 
-            })
+            override fun onAdPrepared(channel: String, adWrapper: AdWrapper) {
+                Log.e("ifmvo", "onAdPrepared: channel:$channel")
+                adWrapperInter = adWrapper
+            }
+        })
     }
 
     private fun requestPause() {

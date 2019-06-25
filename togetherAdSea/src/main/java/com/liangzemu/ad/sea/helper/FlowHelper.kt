@@ -1,20 +1,21 @@
 package com.liangzemu.ad.sea.helper
 
 import android.os.CountDownTimer
-import androidx.annotation.NonNull
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
 import com.facebook.ads.NativeAd
 import com.facebook.ads.NativeAdListener
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.formats.UnifiedNativeAd
-import com.liangzemu.ad.sea.*
+import com.liangzemu.ad.sea.AdWrapper
+import com.liangzemu.ad.sea.BaseAdHelp
+import com.liangzemu.ad.sea.IAdListener
+import com.liangzemu.ad.sea.R
 import com.liangzemu.ad.sea.TogetherAdSea.context
-import com.liangzemu.ad.sea.other.*
+import com.liangzemu.ad.sea.other.AdNameType
+import com.liangzemu.ad.sea.other.logd
 
 
 /**
@@ -52,7 +53,7 @@ class FlowHelper(adConstStr: String,destroyAfterShow:Boolean=true) : BaseAdHelp(
         adOrBuilder.forUnifiedNativeAd { ad: UnifiedNativeAd ->
             logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
             timer.cancel()
-            adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(ad,adOrBuilder.toString()))
+            adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(ad))
         }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(errorCode: Int) {
