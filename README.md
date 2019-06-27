@@ -162,7 +162,8 @@ TogetherAdSeaBanner.showAdBanner(this, Config.bannerAdConfig(), TogetherAdConst.
 ## 查看日志
 只需要在 Logcat 中过滤 ``TogetherAdSeaInfo``
 
-## Google 广告的错误码
+## Google Admob 和 Facebook 总结
+### Google
 ```
 public static final int ERROR_CODE_INTERNAL_ERROR
 Something happened internally; for instance, an invalid response was received from the ad server.
@@ -180,3 +181,18 @@ public static final int ERROR_CODE_NO_FILL
 The ad request was successful, but no ad was returned due to lack of ad inventory.
 Constant Value: 3
 ```
+
+### Facebook
+
+1. 可以缓存原生广告供稍后展示吗？
+可以，广告元数据可以缓存，并且可以重复利用最多 1 小时。如果您计划在 3 小时之后使用元数据，请通过调用来加载新广告。1 小时之后，如果用户仍未点击广告，则必须请求新广告。
+
+2. 原生广告对图片尺寸和文本长度有何限制？
+标题： 最多 30 个字符
+封面图片： 1200x627 像素
+图标： 128 像素，正方形
+社交元素： 30 个字符
+按钮（行动号召）标题：少于 20 个字符
+正文文本： 90 个字符
+评分量表： 5
+最低/最高评分： 1 分/5 分
