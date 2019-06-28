@@ -44,7 +44,7 @@ ext {
     libraryDescription ='AdSea for support'
     siteUrl ='https://github.com/ifmvo/TogetherAdSea/tree/support'
     gitUrl ='https://github.com/ifmvo/TogetherAdSea.git'
-    libraryVersion ='2.0.1.1'
+    libraryVersion ='2.0.1.2'
     developerId ='daveboy'
     developerName ='daveboy'
     developerEmail ='1130198893@qq.com'
