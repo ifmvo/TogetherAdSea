@@ -58,7 +58,7 @@ object RewardAdHelper {
 
         isResultA = false
 
-        rewardHelperA.requestAd(Config.adConfig(), object : IAdListener {
+        rewardHelperA.requestAd(Config.rewardAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
 //                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
             }
@@ -95,7 +95,7 @@ object RewardAdHelper {
         }
 
         isResultD = false
-        rewardHelperD.requestAd(Config.adConfig(), object : IAdListener {
+        rewardHelperD.requestAd(Config.rewardAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
 //                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
             }

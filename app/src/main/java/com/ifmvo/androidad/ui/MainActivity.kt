@@ -68,7 +68,6 @@ class MainActivity : ListActivity() {
                     RewardAdHelper.showAd()
                     RewardAdHelper.requestAd()
                 }
-
             }
         }
     }

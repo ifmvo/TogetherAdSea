@@ -66,7 +66,7 @@ object SplashAdHelper {
         }.start()
 
         isResultA = false
-        interHelperA.requestAd(Config.adConfig(), object : IAdListener {
+        interHelperA.requestAd(Config.interstitialAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
 //                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
             }
@@ -103,7 +103,7 @@ object SplashAdHelper {
         }
 
         isResultD = false
-        interHelperD.requestAd(Config.adConfig(), object : IAdListener {
+        interHelperD.requestAd(Config.interstitialAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
 //                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
             }

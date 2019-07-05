@@ -20,7 +20,7 @@ object RecyclerViewAdHelper {
     fun requestAd(number: Int) {
         val startTime = System.currentTimeMillis()
         repeat(number) {
-            flowHelper.requestAd(Config.adConfig(), object : IAdListener {
+            flowHelper.requestAd(Config.nativeAdConfig(), object : IAdListener {
                 override fun onAdClick(channel: String, key: String) {
 //                    UmengEvent.eventAdClick(channel, UmengEvent.AD_DOWNLOADED_LOCATION)
                 }
