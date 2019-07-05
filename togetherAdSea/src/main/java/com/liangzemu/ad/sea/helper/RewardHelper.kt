@@ -58,7 +58,7 @@ class RewardHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
             }
 
             override fun onRewardedVideoAdLoaded() {
-                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
+                logd("${AdNameType.GOOGLE_ADMOB.type} $adConstStr: ${context.getString(R.string.prepared)}")
                 timer.cancel()
                 adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type,AdWrapper(adOrBuilder))
             }
@@ -118,7 +118,7 @@ class RewardHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
                 //取消超时
                 timer.cancel()
 
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
+                logd("${AdNameType.FACEBOOK.type} $adConstStr: ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type,AdWrapper(p0))
             }
 

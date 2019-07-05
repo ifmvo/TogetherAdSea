@@ -51,7 +51,7 @@ class FlowHelper(adConstStr: String,destroyAfterShow:Boolean=true,val googleAdPo
     ) {
         adOrBuilder as AdLoader.Builder
         adOrBuilder.forUnifiedNativeAd { ad: UnifiedNativeAd ->
-            logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
+            logd("${AdNameType.GOOGLE_ADMOB.type} $adConstStr: ${context.getString(R.string.prepared)}")
             timer.cancel()
             adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(ad))
         }
@@ -101,7 +101,7 @@ class FlowHelper(adConstStr: String,destroyAfterShow:Boolean=true,val googleAdPo
             }
 
             override fun onAdLoaded(ad: Ad) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
+                logd("${AdNameType.FACEBOOK.type} $adConstStr: ${context.getString(R.string.prepared)}")
                 timer.cancel()
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(ad,ad.toString()))
             }

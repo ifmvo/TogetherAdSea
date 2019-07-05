@@ -63,13 +63,13 @@ class FlowBannerHelper(adConstStr: String,destroyAfterShow:Boolean=true) : BaseA
             }
 
             override fun onAdLoaded(ad: Ad) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
+                logd("${AdNameType.FACEBOOK.type} $adConstStr: ${context.getString(R.string.prepared)}")
                 timer.cancel()
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(ad,ad.toString()))
             }
 
             override fun onLoggingImpression(ad: Ad) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.exposure)}")
+                logd("${AdNameType.FACEBOOK.type} : ${context.getString(R.string.exposure)}")
                 adListener.onAdShow(AdNameType.FACEBOOK.type,ad.toString())
             }
         })
