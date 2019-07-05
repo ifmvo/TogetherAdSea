@@ -26,7 +26,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 
-    api 'com.google.android.gms:play-services-ads:17.2.1'
+    api 'com.google.android.gms:play-services-ads:18.0.0'
 
     api 'com.facebook.android:audience-network-sdk:5.3.0'
     implementation 'androidx.appcompat:appcompat:1.0.2'

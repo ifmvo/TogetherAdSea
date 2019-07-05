@@ -1,11 +1,3 @@
-1.单例->class
-2.抽离复用 上层只留具体的请求方式
-3.参数链式
-4.listener置空
-5.缓存广告
-
-
-
 ![TogetherAdSea](app/src/main/res/mipmap-xxhdpi/ic_logo.png)
 
 # TogetherAdSea 
@@ -78,6 +70,44 @@ object Config {
 ### 第 4 步
 Application 中初始化广告，初始化所有广告位对应广告的 ``位ID``
 ```
+Map<String, List<String>> googleIdListMap = new HashMap<>();
+
+//插页广告
+List<String> googleInterList = new ArrayList<>();
+googleInterList.add("ca-app-pub-6810306854458967/3276250160");
+googleInterList.add("ca-app-pub-6810306854458967/5710841812");
+googleIdListMap.put(TogetherAdConst.AD_INTER, googleInterList);
+
+//播放暂停
+List<String> googlePauseList = new ArrayList<>();
+googlePauseList.add("ca-app-pub-3940256099942544/6300978111");
+googlePauseList.add("ca-app-pub-3940256099942544/6300978111");
+googleIdListMap.put(TogetherAdConst.AD_PAUSE, googlePauseList);
+
+//激励
+List<String> googleRewardList = new ArrayList<>();
+googleRewardList.add("ca-app-pub-3940256099942544/5224354917");
+googleRewardList.add("ca-app-pub-3940256099942544/5224354917");
+googleIdListMap.put(TogetherAdConst.AD_REWARD, googleRewardList);
+
+//
+List<String> googleFlowList = new ArrayList<>();
+googleFlowList.add("ca-app-pub-3940256099942544/2247696110");
+googleFlowList.add("ca-app-pub-3940256099942544/5224354917");
+googleFlowList.add("ca-app-pub-3940256099942544/2247696110");
+googleIdListMap.put(TogetherAdConst.AD_FLOW, googleFlowList);
+
+//横幅Banner
+List<String> googleBannerList = new ArrayList<>();
+googleBannerList.add("ca-app-pub-3940256099942544/6300978111");
+googleIdListMap.put(TogetherAdConst.AD_BANNER, googleBannerList);
+/*
+ * "AD84300E9B7D7E2DC6479CFB2F31E5C7"
+ */
+TogetherAdSea.INSTANCE.initAdGoogle(this, "ca-app-pub-6810306854458967~4172564328", googleIdListMap, "AD84300E9B7D7E2DC6479CFB2F31E5C7");
+
+
+
 Map<String, String> googleIdMap = new HashMap<>();
 googleIdMap.put(TogetherAdConst.AD_SPLASH, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 googleIdMap.put(TogetherAdConst.AD_BANNER, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");

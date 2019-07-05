@@ -28,5 +28,5 @@ dependencies {
 //    implementation 'com.github.ifmvo:TogetherAdSea:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.2'
 
-
+    implementation 'com.github.ifmvo:QuickList:1.0.2'
 }

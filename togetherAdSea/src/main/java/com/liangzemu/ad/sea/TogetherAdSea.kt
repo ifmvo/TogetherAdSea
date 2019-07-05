@@ -13,9 +13,9 @@ import com.google.android.gms.ads.MobileAds
  */
 object TogetherAdSea {
 
-    var idListGoogleMap = mutableMapOf<String, MutableList<String>>()
+    var idListGoogleMap = mapOf<String, List<String>>()
 
-    var idListFacebookMap = mutableMapOf<String, MutableList<String>>()
+    var idListFacebookMap = mapOf<String, List<String>>()
     /**
      * google测试id
      */
@@ -42,7 +42,7 @@ object TogetherAdSea {
      * 初始化 Google 广告
      */
     fun initAdGoogle(
-        @NonNull context: Application, @NonNull googleAdAppId: String, googleIdMap: MutableMap<String, MutableList<String>>,
+        @NonNull context: Application, @NonNull googleAdAppId: String, googleIdMap: Map<String, List<String>>,
         testDeviceID: String? = null
     ) {
         this.context = context
@@ -55,7 +55,7 @@ object TogetherAdSea {
      * 初始化 Facebook 广告
      */
     fun initAdFacebook(
-        @NonNull context: Application, @NonNull facebookIdMap: MutableMap<String, MutableList<String>>, testMode: Boolean = false
+        @NonNull context: Application, @NonNull facebookIdMap: Map<String, List<String>>, testMode: Boolean = false
     ) {
         this.context = context
         idListFacebookMap = facebookIdMap
