@@ -1,15 +1,16 @@
 ![TogetherAdSea](app/src/main/res/mipmap-xxhdpi/ic_logo.png)
 
-# TogetherAdSea 让广告收益最大化
+# 让广告收益最大化
 
-TogetherAdSea 是将``多个海外广告提供商``的 SDK 聚合在一起进行``封装``、``扩展``的 Android 库。  
+TogetherAdSea 是将``多个海外广告提供商``的 SDK 聚合在一起进行``封装``、``扩展``的 Android 库。 
 
-1. 可配置比例
-2. 支持多个档位
-3. 多个档位可以选择 横向切换 和 竖向切换
-4. 自动缓存功能
-5. 广告超时处理
-6. 提供海外广告踩坑指南
+- 目前支持 Google AdMob、 Facebook 广告
+- 可配置比例
+- 支持多个档位
+- 多个档位可以选择 横向切换 和 竖向切换
+- 自动缓存功能
+- 广告超时处理
+- 提供海外广告踩坑指南
 
 ### 第 0 步
 ```
