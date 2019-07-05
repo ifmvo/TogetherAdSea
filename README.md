@@ -119,10 +119,33 @@ fun getGAdIdList(): Map<String, List<String>> {
         ......
     )
 }
+
+/**
+ * 谷歌广告应用ID
+ */
+fun getGoogleAdId(): String {
+    return "ca-app-pub-3940256099942544~3347511713"
+}
+
+/**
+ * 初始化 Google AdMob 广告
+ * testDeviceID： 测试设备ID 
+ * Logcat 中查看：Ads: Use AdRequest.Builder.addTestDevice("69758C95501DD877201C4F23EEC6E3FD") to get test ads on this device.
+ */
+TogetherAdSea.initAdGoogle(this, AdIdFactory.getGoogleAdId(), AdIdFactory.getGAdIdList(), "AD84300E9B7D7E2DC6479CFB2F31E5C7")
+
+/**
+ * 初始化 Facebook 广告
+ * testMode: 是否开启测试模式
+ */
+TogetherAdSea.initAdFacebook(this, AdIdFactory.getFbAdIdList(), BuildConfig.DEBUG)
+
 ```
 
 ### 第 5 步
-请求广告参照 Demo
+请求广告参照 Demo  
+
+|类名|用途|
 |:-----------:| :-------------:|
 | BannerHelper | 横幅广告  |
 | FlowHelper | 原生广告 |

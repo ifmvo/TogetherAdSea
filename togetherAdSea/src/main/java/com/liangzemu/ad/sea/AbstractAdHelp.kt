@@ -27,8 +27,6 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow: Bool
         direction: Direction = Direction.HORIZONTAL,
         onlyOnce: Boolean = false
     ) {
-        val startTime = System.currentTimeMillis()
-
         if (onlyOnce) {
             //正在加载中
             if (loadingAdType.contains(adConstStr)) {
@@ -55,7 +53,6 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow: Bool
         } else {
             requestAdVertical(configStr, this)
         }
-        loge("ifmvo: ${System.currentTimeMillis() - startTime}")
     }
 
     /**
