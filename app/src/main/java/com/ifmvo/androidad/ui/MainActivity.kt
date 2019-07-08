@@ -53,6 +53,7 @@ class MainActivity : ListActivity() {
                 ReadmeActivity.action(this)
             }
             1 -> {
+                BannerActivity.action(this)
             }
             2 -> {
                 RecyclerViewActivity.action(this)

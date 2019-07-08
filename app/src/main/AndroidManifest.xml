@@ -34,7 +34,7 @@
 
         <activity android:name=".ui.MainActivity"/>
 
-        <activity android:name=".ui.DetailActivity"/>
+        <activity android:name=".ui.BannerActivity"/>
 
         <activity android:name=".ui.RecyclerViewActivity"/>
         <activity android:name=".ui.ReadmeActivity"/>
