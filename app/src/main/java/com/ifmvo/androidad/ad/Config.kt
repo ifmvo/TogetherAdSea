@@ -7,14 +7,14 @@ package com.ifmvo.androidad.ad
  */
 object Config {
 
-    fun bannerAdConfig() = "google_admob:1,facebook:1"
+    fun bannerAdConfig() = "google_admob:1,facebook:0"
 
-    fun nativeAdConfig() = "google_admob:1,facebook:1"
+    fun nativeAdConfig() = "google_admob:1,facebook:0"
 
-    fun interstitialAdConfig() = "google_admob:1,facebook:1"
+    fun interstitialAdConfig() = "google_admob:1,facebook:0"
 
-    fun rewardAdConfig() = "google_admob:1,facebook:1"
+    fun rewardAdConfig() = "google_admob:1,facebook:0"
 
-    fun flowBannerConfig() = "google_admob:1,facebook:1"
+    fun flowBannerConfig() = "google_admob:1,facebook:0"
 
 }

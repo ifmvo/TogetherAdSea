@@ -1,5 +1,7 @@
 package com.liangzemu.ad.sea.other
 
+import com.liangzemu.ad.sea.TogetherAdSea
+
 /*
  * (●ﾟωﾟ●)
  *
@@ -56,6 +58,14 @@ object AdRandomUtil {
 
         if (list.size == 0) {
             return AdNameType.NO
+        }
+
+        /**
+         * 如果是中介模式，就不去随机List 里面的
+         * 直接返回 Google
+         */
+        if (TogetherAdSea.isMediationMode) {
+            return AdNameType.GOOGLE_ADMOB
         }
 
         val adNameType = list[(getRandomInt(list.size)) - 1]

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import com.google.android.ads.mediationtestsuite.MediationTestSuite
 import com.ifmvo.androidad.adExtend.RewardAdHelper
 import com.ifmvo.androidad.adExtend.SplashAdHelper
 
@@ -39,7 +40,8 @@ class MainActivity : ListActivity() {
             "原生广告 （ RecyclerView 版 ）",
             "插页广告",
             "激励广告",
-            "原生横幅 （ 只支持 Facebook ）"
+            "原生横幅 （ 只支持 Facebook ）",
+            "中介测试套件"
         )
 
         listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr)
@@ -69,6 +71,9 @@ class MainActivity : ListActivity() {
                     RewardAdHelper.showAd()
                     RewardAdHelper.requestAd()
                 }
+            }
+            5 -> {
+                MediationTestSuite.launch(this)
             }
         }
     }

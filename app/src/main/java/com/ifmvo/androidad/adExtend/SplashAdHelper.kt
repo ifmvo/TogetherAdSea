@@ -29,13 +29,13 @@ object SplashAdHelper {
 
     private val interHelperA by lazy {
         InterstitialHelper(
-            TogetherAdConst.splash_interstitial_a,
+            TogetherAdConst.interstitial,
             destroyAfterShow = false
         )
     }
     private val interHelperD by lazy {
         InterstitialHelper(
-            TogetherAdConst.splash_interstitial_a,
+            TogetherAdConst.interstitial,
             destroyAfterShow = false
         )
     }

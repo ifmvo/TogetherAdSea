@@ -28,8 +28,8 @@ object RewardAdHelper {
 
     private const val tag = "RewardAdHelper"
 
-    private val rewardHelperA by lazy { RewardHelper(TogetherAdConst.reward_a) }
-    private val rewardHelperD by lazy { RewardHelper(TogetherAdConst.reward_d) }
+    private val rewardHelperA by lazy { RewardHelper(TogetherAdConst.reward) }
+    private val rewardHelperD by lazy { RewardHelper(TogetherAdConst.reward) }
 
     private var adWrapperA: AdWrapper? = null
     private var adWrapperD: AdWrapper? = null
