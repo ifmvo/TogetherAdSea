@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import com.google.android.ads.mediationtestsuite.MediationTestSuite
+import com.ifmvo.androidad.ad.logd
 import com.ifmvo.androidad.adExtend.RewardAdHelper
 import com.ifmvo.androidad.adExtend.SplashAdHelper
 
@@ -17,6 +17,8 @@ import com.ifmvo.androidad.adExtend.SplashAdHelper
  * Created by Matthew_Chen on 2019-07-04.
  */
 class MainActivity : ListActivity() {
+
+    private val tag = "MainActivity"
 
     companion object {
         fun action(context: Context) {
@@ -32,20 +34,20 @@ class MainActivity : ListActivity() {
         //再请求一个留着下次用
         SplashAdHelper.requestAd(30)
 
-        RewardAdHelper.requestAd(30)
+        cacheReward()
 
         val arr = arrayListOf(
             "踩坑指南",
             "常用横幅 （ 细长条版 ）",
             "原生广告 （ RecyclerView 版 ）",
             "插页广告",
-            "激励广告",
-            "原生横幅 （ 只支持 Facebook ）",
-            "中介测试套件"
+            "激励广告"
         )
 
         listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr)
     }
+
+    private fun cacheReward() = RewardAdHelper.requestAd(overTimeSecond = 30, onClosed = mOnClosed)
 
 
     override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
@@ -67,14 +69,21 @@ class MainActivity : ListActivity() {
                 }
             }
             4 -> {
-                RewardAdHelper.requestAd(overTimeSecond = 6) {
-                    RewardAdHelper.showAd()
-                    RewardAdHelper.requestAd()
-                }
-            }
-            5 -> {
-                MediationTestSuite.launch(this)
+                RewardAdHelper.requestAd(overTimeSecond = 6,
+                    onSuccess = {
+                        logd(tag, "onSuccess")
+                        RewardAdHelper.showAd()
+                    }, onFailed = {
+                        logd(tag, "onFailed")
+
+                    }, onClosed = mOnClosed
+                )
             }
         }
+    }
+
+    private val mOnClosed: (isReward: Boolean) -> Unit = {
+        logd(tag, "onClosed: $it")
+        cacheReward()
     }
 }

@@ -1,5 +1,7 @@
 package com.ifmvo.androidad.ad
 
+import com.ifmvo.androidad.BuildConfig
+
 /*
  * (●ﾟωﾟ●) 所有的广告位 ID
  * 
@@ -28,25 +30,25 @@ object AdIdFactory {
             ),
             TogetherAdConst.flow_banner to mutableListOf(
                 "", ""
+            ),
+            TogetherAdConst.splash_interstitial_a to mutableListOf(
+                "308281803417604_308290183416766"
+            ),
+            TogetherAdConst.splash_interstitial_d to mutableListOf(
+                "308281803417604_308289750083476"
+            ),
+            TogetherAdConst.reward_a to mutableListOf(
+                "308281803417604_312311299681321"
+            ),
+            TogetherAdConst.reward_d to mutableListOf(
+                "308281803417604_312311643014620"
+            ),
+            TogetherAdConst.banner_pause to mutableListOf(
+                "308281803417604_308289240083527", "308281803417604_308289343416850"
+            ),
+            TogetherAdConst.reward_temp to mutableListOf(
+                "308281803417604_308290183416766", "308281803417604_308289750083476"
             )
-//            TogetherAdConst.splash_interstitial_a to mutableListOf(
-//                "308281803417604_308290183416766"
-//            ),
-//            TogetherAdConst.splash_interstitial_d to mutableListOf(
-//                "308281803417604_308289750083476"
-//            ),
-//            TogetherAdConst.reward_a to mutableListOf(
-//                "308281803417604_312311299681321"
-//            ),
-//            TogetherAdConst.reward_d to mutableListOf(
-//                "308281803417604_312311643014620"
-//            ),
-//            TogetherAdConst.banner_pause to mutableListOf(
-//                "308281803417604_308289240083527", "308281803417604_308289343416850"
-//            ),
-//            TogetherAdConst.reward_temp to mutableListOf(
-//                "308281803417604_308290183416766", "308281803417604_308289750083476"
-//            )
         )
     }
 
@@ -59,28 +61,32 @@ object AdIdFactory {
     fun getGAdIdList(): Map<String, List<String>> {
         return mapOf(
             TogetherAdConst.banner to mutableListOf(
-//                "ca-app-pub-3940256099942544/6300978111",
-//                "ca-app-pub-3940256099942544/6300978111"
-                "ca-app-pub-6810306854458967/4293424184",
-                "ca-app-pub-6810306854458967/4293424184"
+                if (BuildConfig.DEBUG) {
+                    "ca-app-pub-3940256099942544/6300978111"
+                } else {
+                    "ca-app-pub-6810306854458967/4293424184"
+                }
             ),
             TogetherAdConst.native to mutableListOf(
-//                "ca-app-pub-3940256099942544/2247696110",
-//                "ca-app-pub-3940256099942544/2247696110"
-                "ca-app-pub-6810306854458967/1959615321",
-                "ca-app-pub-6810306854458967/1959615321"
+                if (BuildConfig.DEBUG) {
+                    "ca-app-pub-3940256099942544/2247696110"
+                } else {
+                    "ca-app-pub-6810306854458967/1959615321"
+                }
             ),
             TogetherAdConst.interstitial to mutableListOf(
-//                "ca-app-pub-3940256099942544/1033173712",
-//                "ca-app-pub-3940256099942544/1033173712"
-                "ca-app-pub-6810306854458967/5020855915",
-                "ca-app-pub-6810306854458967/3292841273"
+                if (BuildConfig.DEBUG) {
+                    "ca-app-pub-3940256099942544/1033173712"
+                } else {
+                    "ca-app-pub-6810306854458967/3292841273"
+                }
             ),
             TogetherAdConst.reward to mutableListOf(
-//                "ca-app-pub-3940256099942544/5224354917",
-//                "ca-app-pub-3940256099942544/5224354917"
-                "ca-app-pub-6810306854458967/9713117264",
-                "ca-app-pub-6810306854458967/5760950880"
+                if (BuildConfig.DEBUG) {
+                    "ca-app-pub-3940256099942544/5224354917"
+                } else {
+                    "ca-app-pub-6810306854458967/5760950880"
+                }
             ),
             TogetherAdConst.flow_banner to mutableListOf(
                 "",
@@ -114,7 +120,9 @@ object AdIdFactory {
      * 谷歌广告应用ID
      */
     fun getGoogleAdId(): String {
-//        return "ca-app-pub-3940256099942544~3347511713"
-        return "ca-app-pub-6810306854458967~4172564328"
+        return if (BuildConfig.DEBUG)
+            "ca-app-pub-3940256099942544~3347511713"
+        else
+            "ca-app-pub-6810306854458967~4172564328"
     }
 }

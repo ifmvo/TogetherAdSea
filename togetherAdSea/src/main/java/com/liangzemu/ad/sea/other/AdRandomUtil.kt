@@ -36,21 +36,23 @@ object AdRandomUtil {
                 val splitKeyValue = itemStr.split(":")
                 if (splitKeyValue.size == 2) {
                     val keyStr = splitKeyValue[0]//google
-                    val valueStr = splitKeyValue[1]//2
+                    var valueStr = splitKeyValue[1]//2
                     if (keyStr.isNotEmpty() && valueStr.isNotEmpty()) {
                         //加到 list 里面 2 个 "google"
+                        //当中介模式时只管 Google , 其他的都忽略
+                        if (TogetherAdSea.isMediationMode && keyStr != AdNameType.GOOGLE_ADMOB.type) {
+                            valueStr = "0"
+                        }
+
                         repeat(valueStr.toInt()) {
-                            //当中介模式时只管 Google , 其他的都忽略
-                            if (TogetherAdSea.isMediationMode && keyStr == AdNameType.GOOGLE_ADMOB.type) {
-                                when (keyStr) {
-                                    AdNameType.GOOGLE_ADMOB.type -> {
-                                        list.add(AdNameType.GOOGLE_ADMOB)
-                                    }
-                                    AdNameType.FACEBOOK.type -> {
-                                        list.add(AdNameType.FACEBOOK)
-                                    }
-                                    else -> {
-                                    }
+                            when (keyStr) {
+                                AdNameType.GOOGLE_ADMOB.type -> {
+                                    list.add(AdNameType.GOOGLE_ADMOB)
+                                }
+                                AdNameType.FACEBOOK.type -> {
+                                    list.add(AdNameType.FACEBOOK)
+                                }
+                                else -> {
                                 }
                             }
                         }

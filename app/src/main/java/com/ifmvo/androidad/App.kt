@@ -22,7 +22,7 @@ class App : Application() {
          */
         TogetherAdSea.initAdGoogle(
             this, AdIdFactory.getGoogleAdId(), AdIdFactory.getGAdIdList(),
-            testDeviceID = "AD84300E9B7D7E2DC6479CFB2F31E5C7"
+            testDeviceID = "69758C95501DD877201C4F23EEC6E3FD"
         )
 
 //        MediationTestSuite.addTestDevice("AD84300E9B7D7E2DC6479CFB2F31E5C7")  // An example device ID
@@ -34,7 +34,7 @@ class App : Application() {
         TogetherAdSea.initAdFacebook(this, AdIdFactory.getFbAdIdList(), BuildConfig.DEBUG)
 
 
-        TogetherAdSea.isMediationMode = true
+//        TogetherAdSea.isMediationMode = true
     }
 
 }
