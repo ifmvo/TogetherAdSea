@@ -160,3 +160,13 @@ TogetherAdSea.initAdFacebook(this, AdIdFactory.getFbAdIdList(), BuildConfig.DEBU
 
 ## 查看日志
 只需要在 Logcat 中过滤 ``TogetherAdSeaInfo``
+
+## 版本日志
+v1.3.2
+添加了中介模式的开关 TogetherAdSea.isMediationMode = true/false
+
+v1.3.1
+实现目前需求的一个稳定版
+
+
+ 
