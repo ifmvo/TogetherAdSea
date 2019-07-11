@@ -40,14 +40,17 @@ object AdRandomUtil {
                     if (keyStr.isNotEmpty() && valueStr.isNotEmpty()) {
                         //加到 list 里面 2 个 "google"
                         repeat(valueStr.toInt()) {
-                            when (keyStr) {
-                                AdNameType.GOOGLE_ADMOB.type -> {
-                                    list.add(AdNameType.GOOGLE_ADMOB)
-                                }
-                                AdNameType.FACEBOOK.type -> {
-                                    list.add(AdNameType.FACEBOOK)
-                                }
-                                else -> {
+                            //当中介模式时只管 Google , 其他的都忽略
+                            if (TogetherAdSea.isMediationMode && keyStr == AdNameType.GOOGLE_ADMOB.type) {
+                                when (keyStr) {
+                                    AdNameType.GOOGLE_ADMOB.type -> {
+                                        list.add(AdNameType.GOOGLE_ADMOB)
+                                    }
+                                    AdNameType.FACEBOOK.type -> {
+                                        list.add(AdNameType.FACEBOOK)
+                                    }
+                                    else -> {
+                                    }
                                 }
                             }
                         }
@@ -58,14 +61,6 @@ object AdRandomUtil {
 
         if (list.size == 0) {
             return AdNameType.NO
-        }
-
-        /**
-         * 如果是中介模式，就不去随机List 里面的
-         * 直接返回 Google
-         */
-        if (TogetherAdSea.isMediationMode) {
-            return AdNameType.GOOGLE_ADMOB
         }
 
         val adNameType = list[(getRandomInt(list.size)) - 1]
