@@ -53,7 +53,7 @@ class FlowHelper(adConstStr: String,destroyAfterShow:Boolean=true,val googleAdPo
         adOrBuilder.forUnifiedNativeAd { ad: UnifiedNativeAd ->
             logd("${AdNameType.GOOGLE_ADMOB.type} $adConstStr: ${context.getString(R.string.prepared)}")
             timer.cancel()
-            adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(ad))
+            adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(ad,adOrBuilder.toString()))
         }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(errorCode: Int) {
