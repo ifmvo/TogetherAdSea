@@ -162,6 +162,9 @@ TogetherAdSea.initAdFacebook(this, AdIdFactory.getFbAdIdList(), BuildConfig.DEBU
 只需要在 Logcat 中过滤 ``TogetherAdSeaInfo``
 
 ## 版本日志
+v1.3.5
+添加了 RewardTempHelper
+
 v1.3.4
 添加了中介模式的开关 TogetherAdSea.isMediationMode = true/false
 

@@ -11,7 +11,7 @@ import com.liangzemu.ad.sea.helper.BannerHelper
  * 
  * Created by Matthew_Chen on 2019-06-24.
  */
-object BannerAdHelper {
+object BannerAdManager {
 
     private val bannerHelper by lazy { BannerHelper(TogetherAdConst.banner) }
     private var cacheAd: AdWrapper? = null

@@ -1,17 +1,17 @@
 package com.ifmvo.androidad.adExtend
 
 import android.os.CountDownTimer
-import com.google.android.gms.ads.reward.RewardedVideoAd
+import com.google.android.gms.ads.InterstitialAd
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
 import com.ifmvo.androidad.ad.logd
 import com.ifmvo.androidad.ad.loge
 import com.liangzemu.ad.sea.AdWrapper
 import com.liangzemu.ad.sea.IAdListener
-import com.liangzemu.ad.sea.helper.RewardTempHelper
+import com.liangzemu.ad.sea.helper.InterstitialHelper
 
 /* 
- * (●ﾟωﾟ●) 激励广告的管理
+ * (●ﾟωﾟ●) 开屏广告的管理
  *
  * 逻辑：
  * A、D 两个档位的广告同时请求；
@@ -23,69 +23,68 @@ import com.liangzemu.ad.sea.helper.RewardTempHelper
  * 
  * Created by Matthew_Chen on 2019-06-25.
  */
-object RewardAdHelper {
+object SplashAdManager {
 
-    private const val tag = "RewardAdHelper"
+    private const val tag = "SplashAdManager"
 
-    private val rewardHelperA by lazy { RewardTempHelper(TogetherAdConst.reward) }
-    private val rewardHelperD by lazy { RewardTempHelper(TogetherAdConst.reward) }
+    private val interHelperA by lazy {
+        InterstitialHelper(
+            TogetherAdConst.interstitial,
+            destroyAfterShow = false
+        )
+    }
+    private val interHelperD by lazy {
+        InterstitialHelper(
+            TogetherAdConst.interstitial,
+            destroyAfterShow = false
+        )
+    }
 
     private var adWrapperA: AdWrapper? = null
     private var adWrapperD: AdWrapper? = null
 
-    private var isFailedA = false
-    private var isFailedD = false
-
-    private var timer: CountDownTimer? = null
+    private var isResultA = false
+    private var isResultD = false
 
     /**
      * 请求插页广告
      * overTimeSecond：超时时间，单位：秒
      */
-    fun requestAd(
-        overTimeSecond: Int = 30,
-        onSuccess: () -> Unit = {}, onFailed: () -> Unit = {}, onClosed: (isReward: Boolean) -> Unit = {}
-    ) {
-
-        rewardHelperA.onDestory()
-        rewardHelperD.onDestory()
-
-        logd(tag, "requestAd")
+    fun requestAd(overTimeSecond: Int = 30, onResult: () -> Unit = {}) {
+        logd("SplashAdManager", "requestAd")
         //如果 A 档有缓存就直接返回 A 档展示
         if (adWrapperA != null) {
-            onSuccess()
+            onResult()
             return
         }
 
-        timer?.cancel()
-        timer = createTimer(overTimeSecond) {
-            rewardHelperA.onDestory()
-            rewardHelperD.onDestory()
+        val timer = createTimer(overTimeSecond) {
+            interHelperA.onDestory()
+            interHelperD.onDestory()
             loge(tag, "超时了")
-            onFailed()
+            onResult()
         }.start()
 
-        isFailedA = false
-        rewardHelperA.requestAd(Config.rewardAdConfig(), object : IAdListener {
+        isResultA = false
+        interHelperA.requestAd(Config.interstitialAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
 //                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
             }
 
             override fun onAdClose(channel: String, key: String, other: Any) {
-                onClosed(other as Boolean)
             }
 
             override fun onAdFailed(failedMsg: String?, key: String) {
-                isFailedA = true
-                loge(tag, "onAdFailed: A: $failedMsg")
-                handleError(onFailed)
+                isResultA = true
+                loge(tag, "onAdFailed: A")
+                handleError(onResult, timer)
             }
 
             override fun onAdPrepared(channel: String, adWrapper: AdWrapper) {
                 adWrapperA = adWrapper
-                timer?.cancel()
+                timer.cancel()
                 logd(tag, "onAdPrepared: A")
-                onSuccess()
+                onResult()
             }
 
             override fun onAdShow(channel: String, key: String) {
@@ -99,24 +98,23 @@ object RewardAdHelper {
 
         //如果 D 档有缓存，就不用重新请求 D 档了，等待 A 请求回来，或超时再返回 D 档
         if (adWrapperD != null) {
-            isFailedD = true
+            isResultD = true
             return
         }
 
-        isFailedD = false
-        rewardHelperD.requestAd(Config.rewardAdConfig(), object : IAdListener {
+        isResultD = false
+        interHelperD.requestAd(Config.interstitialAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
 //                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
             }
 
             override fun onAdClose(channel: String, key: String, other: Any) {
-                onClosed(other as Boolean)
             }
 
             override fun onAdFailed(failedMsg: String?, key: String) {
-                isFailedD = true
-                loge(tag, "onAdFailed: D: $failedMsg")
-                handleError(onFailed)
+                isResultD = true
+                loge(tag, "onAdFailed: D")
+                handleError(onResult, timer)
             }
 
             override fun onAdPrepared(channel: String, adWrapper: AdWrapper) {
@@ -135,40 +133,40 @@ object RewardAdHelper {
     }
 
     fun showAd() {
-        logd(tag, "showAd")
+        logd("SplashAdManager", "showAd")
         if (adWrapperA != null) {
-            logd(tag, "showAd A")
+            logd("SplashAdManager", "showAd A")
             when (val ad = adWrapperA!!.realAd) {
-                is RewardedVideoAd -> {
+                is InterstitialAd -> {
                     ad.show()
                 }
                 is com.facebook.ads.InterstitialAd -> {
                     ad.show()
                 }
             }
-            rewardHelperA.removeAdFromCache(adWrapperA!!.key)
+            interHelperA.removeAdFromCache(adWrapperA!!.key)
             adWrapperA = null
 
         } else {
             if (adWrapperD != null) {
-                logd(tag, "showAd D")
+                logd("SplashAdManager", "showAd D")
                 when (val ad = adWrapperD!!.realAd) {
-                    is RewardedVideoAd -> {
+                    is InterstitialAd -> {
                         ad.show()
                     }
                     is com.facebook.ads.InterstitialAd -> {
                         ad.show()
                     }
                 }
-                rewardHelperD.removeAdFromCache(adWrapperD!!.key)
+                interHelperD.removeAdFromCache(adWrapperD!!.key)
                 adWrapperD = null
             }
         }
     }
 
-    private fun handleError(onFailed: () -> Unit) {
-        if (isFailedA && isFailedD) {
-            timer?.cancel()
+    private fun handleError(onFailed: () -> Unit, timer: CountDownTimer) {
+        if (isResultA && isResultD) {
+            timer.cancel()
             onFailed()
         }
     }

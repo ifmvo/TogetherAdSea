@@ -107,4 +107,6 @@ class BannerHelper(adConstStr: String, destroyAfterShow: Boolean = true) : BaseA
 
         adOrBuilder.loadAd()
     }
+
+
 }

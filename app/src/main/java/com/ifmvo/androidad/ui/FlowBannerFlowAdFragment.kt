@@ -1,42 +1,45 @@
 package com.ifmvo.androidad.ui
 
 import android.view.View
+import android.view.View.INVISIBLE
 import android.widget.*
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.facebook.ads.*
+import com.facebook.ads.AdIconView
+import com.facebook.ads.AdOptionsView
+import com.facebook.ads.NativeAdLayout
+import com.facebook.ads.NativeBannerAd
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import com.ifmvo.androidad.R
-import com.ifmvo.androidad.adExtend.RecyclerViewAdHelper
+import com.ifmvo.androidad.adExtend.FlowBannerFlowAdManager
 import com.ifmvo.quicklist.BaseRecyclerViewFragment
 
-
 /*
- * (●ﾟωﾟ●) 原生 列表中展示
+ * (●ﾟωﾟ●) Google 原生 && Facebook 原生横幅 列表中展示
  * 
  * Created by Matthew_Chen on 2019-07-05.
  */
-class RecyclerViewFragment : BaseRecyclerViewFragment<MutitypeBean, BaseViewHolder>() {
+class FlowBannerFlowAdFragment : BaseRecyclerViewFragment<MutitypeBean, BaseViewHolder>() {
 
     private var nextAdPosition = 0//默认第 0 个内容后面加一个 AD
     private var lastUseAdPosition = 0 //无法描述 😝
 
     private val contentList = mutableListOf(
-        MyContentBean(R.mipmap.ic_logo, "徐志摸林徽阴"),
-        MyContentBean(R.mipmap.ic_logo, "陈佩撕黄圣衣"),
-        MyContentBean(R.mipmap.ic_logo, "任贤骑张含孕"),
-        MyContentBean(R.mipmap.ic_logo, "徐志摸林徽阴"),
-        MyContentBean(R.mipmap.ic_logo, "陈佩撕黄圣衣"),
-        MyContentBean(R.mipmap.ic_logo, "任贤骑张含孕"),
-        MyContentBean(R.mipmap.ic_logo, "徐志摸林徽阴"),
-        MyContentBean(R.mipmap.ic_logo, "陈佩撕黄圣衣"),
-        MyContentBean(R.mipmap.ic_logo, "任贤骑张含孕")
+        MyContentBean(R.mipmap.ic_logo, "Google 原生 && Facebook 原生横幅"),
+        MyContentBean(R.mipmap.ic_logo, "Google 原生 && Facebook 原生横幅"),
+        MyContentBean(R.mipmap.ic_logo, "Google 原生 && Facebook 原生横幅"),
+        MyContentBean(R.mipmap.ic_logo, "Google 原生 && Facebook 原生横幅"),
+        MyContentBean(R.mipmap.ic_logo, "Google 原生 && Facebook 原生横幅"),
+        MyContentBean(R.mipmap.ic_logo, "Google 原生 && Facebook 原生横幅"),
+        MyContentBean(R.mipmap.ic_logo, "Google 原生 && Facebook 原生横幅"),
+        MyContentBean(R.mipmap.ic_logo, "Google 原生 && Facebook 原生横幅"),
+        MyContentBean(R.mipmap.ic_logo, "Google 原生 && Facebook 原生横幅")
     )
 
     override fun initBeforeGetData() {
-        RecyclerViewAdHelper.requestAd(3)
+        FlowBannerFlowAdManager.requestAd(3)
     }
 
     override fun getData(currentPage: Int, showLoading: Boolean) {
@@ -45,17 +48,12 @@ class RecyclerViewFragment : BaseRecyclerViewFragment<MutitypeBean, BaseViewHold
             nextAdPosition = 0
             lastUseAdPosition = 0
 
-            val adList = RecyclerViewAdHelper.getAdList()
-            RecyclerViewAdHelper.requestAd(3)
+            val adList = FlowBannerFlowAdManager.getAdList()
+            FlowBannerFlowAdManager.requestAd(3)
 
             val dataList = mutableListOf<MutitypeBean>()
             repeat(contentList.size) {
-                dataList.add(
-                    MutitypeBean(
-                        MutitypeBean.type_content,
-                        contentList[it]
-                    )
-                )
+                dataList.add(MutitypeBean(MutitypeBean.type_content, contentList[it]))
 
                 if (adList.isNotEmpty() && nextAdPosition == it) {
                     if (lastUseAdPosition > adList.size - 1) {
@@ -63,21 +61,11 @@ class RecyclerViewFragment : BaseRecyclerViewFragment<MutitypeBean, BaseViewHold
                     }
                     when (val any = adList[lastUseAdPosition].realAd) {
                         is UnifiedNativeAd -> {
-                            dataList.add(
-                                MutitypeBean(
-                                    MutitypeBean.type_google,
-                                    any
-                                )
-                            )
+                            dataList.add(MutitypeBean(MutitypeBean.type_google, any))
 
                         }
-                        is NativeAd -> {
-                            dataList.add(
-                                MutitypeBean(
-                                    MutitypeBean.type_facebook,
-                                    any
-                                )
-                            )
+                        is NativeBannerAd -> {
+                            dataList.add(MutitypeBean(MutitypeBean.type_facebook, any))
                         }
                     }
                     lastUseAdPosition += 1
@@ -117,14 +105,14 @@ class RecyclerViewFragment : BaseRecyclerViewFragment<MutitypeBean, BaseViewHold
         // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
         // check before trying to display them.
         if (nativeAd.body == null) {
-            adView.bodyView.visibility = View.INVISIBLE
+            adView.bodyView.visibility = INVISIBLE
         } else {
             adView.bodyView.visibility = View.VISIBLE
             (adView.bodyView as TextView).text = nativeAd.body
         }
 
         if (nativeAd.callToAction == null) {
-            adView.callToActionView.visibility = View.INVISIBLE
+            adView.callToActionView.visibility = INVISIBLE
         } else {
             adView.callToActionView.visibility = View.VISIBLE
             (adView.callToActionView as Button).text = nativeAd.callToAction
@@ -140,28 +128,28 @@ class RecyclerViewFragment : BaseRecyclerViewFragment<MutitypeBean, BaseViewHold
         }
 
         if (nativeAd.price == null) {
-            adView.priceView.visibility = View.INVISIBLE
+            adView.priceView.visibility = INVISIBLE
         } else {
             adView.priceView.visibility = View.VISIBLE
             (adView.priceView as TextView).text = nativeAd.price
         }
 
         if (nativeAd.store == null) {
-            adView.storeView.visibility = View.INVISIBLE
+            adView.storeView.visibility = INVISIBLE
         } else {
             adView.storeView.visibility = View.VISIBLE
             (adView.storeView as TextView).text = nativeAd.store
         }
 
         if (nativeAd.starRating == null) {
-            adView.starRatingView.visibility = View.INVISIBLE
+            adView.starRatingView.visibility = INVISIBLE
         } else {
             (adView.starRatingView as RatingBar).rating = nativeAd.starRating!!.toFloat()
             adView.starRatingView.visibility = View.VISIBLE
         }
 
         if (nativeAd.advertiser == null) {
-            adView.advertiserView.visibility = View.INVISIBLE
+            adView.advertiserView.visibility = INVISIBLE
         } else {
             (adView.advertiserView as TextView).text = nativeAd.advertiser
             adView.advertiserView.visibility = View.VISIBLE
@@ -173,69 +161,59 @@ class RecyclerViewFragment : BaseRecyclerViewFragment<MutitypeBean, BaseViewHold
         adView.setNativeAd(nativeAd)
     }
 
-    private fun convertFacebook(helper: BaseViewHolder, nativeAd: NativeAd) {
-        nativeAd.unregisterView()
+    private fun convertFacebook(helper: BaseViewHolder, nativeBannerAd: NativeBannerAd) {
+        // Unregister last ad
+        nativeBannerAd.unregisterView()
 
         // Add the Ad view into the ad container.
-        val nativeAdLayout = helper.getView<NativeAdLayout>(R.id.native_ad_container)
-        // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
+        val nativeAdLayout = helper.getView<NativeAdLayout>(R.id.native_banner_ad_container)
+//        val inflater = LayoutInflater.from(this@NativeBannerAdActivity)
+        // Inflate the Ad view.  The layout referenced is the one you created in the last step.
         val adView = helper.getView<LinearLayout>(R.id.ad_unit)
+//        nativeAdLayout.addView(adView)
 
-        // Add the AdOptionsView
-        val adChoicesContainer = helper.getView<LinearLayout>(R.id.ad_choices_container)
-        val adOptionsView = AdOptionsView(mContext, nativeAd, nativeAdLayout)
-        adChoicesContainer!!.removeAllViews()
+        // Add the AdChoices icon
+        val adChoicesContainer = helper.getView<RelativeLayout>(R.id.ad_choices_container)
+        val adOptionsView = AdOptionsView(mContext, nativeBannerAd, nativeAdLayout)
+        adChoicesContainer.removeAllViews()
         adChoicesContainer.addView(adOptionsView, 0)
 
         // Create native UI using the ad metadata.
-        val nativeAdIcon = helper.getView<AdIconView>(R.id.native_ad_icon)
         val nativeAdTitle = helper.getView<TextView>(R.id.native_ad_title)
-        val nativeAdMedia = helper.getView<MediaView>(R.id.native_ad_media)
         val nativeAdSocialContext = helper.getView<TextView>(R.id.native_ad_social_context)
-        val nativeAdBody = helper.getView<TextView>(R.id.native_ad_body)
         val sponsoredLabel = helper.getView<TextView>(R.id.native_ad_sponsored_label)
+        val nativeAdIconView = helper.getView<AdIconView>(R.id.native_icon_view)
         val nativeAdCallToAction = helper.getView<Button>(R.id.native_ad_call_to_action)
 
         // Set the Text.
-        nativeAdTitle.text = nativeAd.advertiserName
-        nativeAdBody.text = nativeAd.adBodyText
-        nativeAdSocialContext.text = nativeAd.adSocialContext
-        nativeAdCallToAction.visibility = if (nativeAd.hasCallToAction()) View.VISIBLE else View.INVISIBLE
-        nativeAdCallToAction.text = nativeAd.adCallToAction
-        sponsoredLabel.text = nativeAd.sponsoredTranslation
-
-        // Create a list of clickable views
-        val clickableViews = mutableListOf<View>()
-        clickableViews.add(nativeAdMedia)
-        clickableViews.add(nativeAdTitle)
-        clickableViews.add(nativeAdCallToAction)
+        nativeAdCallToAction.text = nativeBannerAd.adCallToAction
+        nativeAdCallToAction.visibility = if (nativeBannerAd.hasCallToAction()) View.VISIBLE else INVISIBLE
+        nativeAdTitle.text = nativeBannerAd.advertiserName
+        nativeAdSocialContext.text = nativeBannerAd.adSocialContext
+        sponsoredLabel.text = nativeBannerAd.sponsoredTranslation
 
         // Register the Title and CTA button to listen for clicks.
-        nativeAd.registerViewForInteraction(adView, nativeAdMedia, nativeAdIcon, clickableViews)
+        val clickableViews = mutableListOf<View>()
+        clickableViews.add(nativeAdTitle)
+        clickableViews.add(nativeAdCallToAction)
+        clickableViews.add(nativeAdIconView)
+        nativeBannerAd.registerViewForInteraction(adView, nativeAdIconView, clickableViews)
+
     }
 
     override fun getRecyclerViewAdapter(): BaseQuickAdapter<MutitypeBean, BaseViewHolder> {
         return object : BaseMultiItemQuickAdapter<MutitypeBean, BaseViewHolder>(null) {
 
             init {
-                addItemType(
-                    MutitypeBean.type_content,
-                    R.layout.list_item_content
-                )
-                addItemType(
-                    MutitypeBean.type_google,
-                    R.layout.list_item_google
-                )
-                addItemType(
-                    MutitypeBean.type_facebook,
-                    R.layout.list_item_facebook
-                )
+                addItemType(MutitypeBean.type_content, R.layout.list_item_content)
+                addItemType(MutitypeBean.type_google, R.layout.list_item_google)
+                addItemType(MutitypeBean.type_facebook, R.layout.list_item_facebook_flow_bannerflow)
             }
 
             override fun convert(helper: BaseViewHolder, item: MutitypeBean) {
                 when (item.itemType) {
                     MutitypeBean.type_facebook -> {
-                        convertFacebook(helper, item.adOrContentObject as NativeAd)
+                        convertFacebook(helper, item.adOrContentObject as NativeBannerAd)
                     }
                     MutitypeBean.type_google -> {
                         convertGoogle(helper, item.adOrContentObject as UnifiedNativeAd)

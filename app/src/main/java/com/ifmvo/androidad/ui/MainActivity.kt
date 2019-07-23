@@ -8,8 +8,8 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.ifmvo.androidad.ad.logd
-import com.ifmvo.androidad.adExtend.RewardAdHelper
-import com.ifmvo.androidad.adExtend.SplashAdHelper
+import com.ifmvo.androidad.adExtend.RewardAdManager
+import com.ifmvo.androidad.adExtend.SplashAdManager
 
 /*
  * (●ﾟωﾟ●)
@@ -30,9 +30,9 @@ class MainActivity : ListActivity() {
         super.onCreate(savedInstanceState)
 
         //展示开屏广告
-        SplashAdHelper.showAd()
+        SplashAdManager.showAd()
         //再请求一个留着下次用
-        SplashAdHelper.requestAd(30)
+        SplashAdManager.requestAd(30)
 
         cacheReward()
 
@@ -41,14 +41,14 @@ class MainActivity : ListActivity() {
             "常用横幅 （ 细长条版 ）",
             "原生广告 （ RecyclerView 版 ）",
             "插页广告",
-            "激励广告"
+            "激励广告",
+            "Facebook原生横幅+Google原生"
         )
 
         listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr)
     }
 
-    private fun cacheReward() = RewardAdHelper.requestAd(overTimeSecond = 30, onClosed = mOnClosed)
-
+    private fun cacheReward() = RewardAdManager.requestAd(overTimeSecond = 30, onClosed = mOnClosed)
 
     override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
         super.onListItemClick(l, v, position, id)
@@ -60,24 +60,27 @@ class MainActivity : ListActivity() {
                 BannerActivity.action(this)
             }
             2 -> {
-                RecyclerViewActivity.action(this)
+                FlowAdActivity.action(this)
             }
             3 -> {
-                SplashAdHelper.requestAd(overTimeSecond = 4) {
-                    SplashAdHelper.showAd()
-                    SplashAdHelper.requestAd()//保证展示了一个，就请求下一个的原则
+                SplashAdManager.requestAd(overTimeSecond = 4) {
+                    SplashAdManager.showAd()
+                    SplashAdManager.requestAd()//保证展示了一个，就请求下一个的原则
                 }
             }
             4 -> {
-                RewardAdHelper.requestAd(overTimeSecond = 6,
+                RewardAdManager.requestAd(overTimeSecond = 6,
                     onSuccess = {
                         logd(tag, "onSuccess")
-                        RewardAdHelper.showAd()
+                        RewardAdManager.showAd()
                     }, onFailed = {
                         logd(tag, "onFailed")
 
                     }, onClosed = mOnClosed
                 )
+            }
+            5 -> {
+                FlowBannerFlowAdActivity.action(this)
             }
         }
     }

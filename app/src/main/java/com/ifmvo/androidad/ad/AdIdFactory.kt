@@ -1,7 +1,5 @@
 package com.ifmvo.androidad.ad
 
-import com.ifmvo.androidad.BuildConfig
-
 /*
  * (●ﾟωﾟ●) 所有的广告位 ID
  * 
@@ -29,8 +27,9 @@ object AdIdFactory {
                 "308281803417604_312311299681321", "308281803417604_312311643014620"
             ),
             TogetherAdConst.flow_banner to mutableListOf(
-                "", ""
+                "470252103736499_470845783677131", "470252103736499_470849730343403"
             ),
+
             TogetherAdConst.splash_interstitial_a to mutableListOf(
                 "308281803417604_308290183416766"
             ),
@@ -61,36 +60,19 @@ object AdIdFactory {
     fun getGAdIdList(): Map<String, List<String>> {
         return mapOf(
             TogetherAdConst.banner to mutableListOf(
-                if (BuildConfig.DEBUG) {
-                    "ca-app-pub-3940256099942544/6300978111"
-                } else {
-                    "ca-app-pub-6810306854458967/4293424184"
-                }
+                "ca-app-pub-3940256099942544/6300978111"
             ),
             TogetherAdConst.native to mutableListOf(
-                if (BuildConfig.DEBUG) {
-                    "ca-app-pub-3940256099942544/2247696110"
-                } else {
-                    "ca-app-pub-6810306854458967/1959615321"
-                }
+                "ca-app-pub-3940256099942544/2247696110"
             ),
             TogetherAdConst.interstitial to mutableListOf(
-                if (BuildConfig.DEBUG) {
-                    "ca-app-pub-3940256099942544/1033173712"
-                } else {
-                    "ca-app-pub-6810306854458967/3292841273"
-                }
+                "ca-app-pub-3940256099942544/1033173712"
             ),
             TogetherAdConst.reward to mutableListOf(
-                if (BuildConfig.DEBUG) {
-                    "ca-app-pub-3940256099942544/5224354917"
-                } else {
-                    "ca-app-pub-6810306854458967/5760950880"
-                }
+                "ca-app-pub-3940256099942544/5224354917"
             ),
             TogetherAdConst.flow_banner to mutableListOf(
-                "",
-                ""
+                "ca-app-pub-3940256099942544/2247696110"
             ),
 
             TogetherAdConst.splash_interstitial_a to mutableListOf(
@@ -120,9 +102,6 @@ object AdIdFactory {
      * 谷歌广告应用ID
      */
     fun getGoogleAdId(): String {
-        return if (BuildConfig.DEBUG)
-            "ca-app-pub-3940256099942544~3347511713"
-        else
-            "ca-app-pub-6810306854458967~4172564328"
+        return "ca-app-pub-3940256099942544~3347511713"
     }
 }

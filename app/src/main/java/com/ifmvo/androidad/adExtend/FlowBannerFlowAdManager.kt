@@ -5,22 +5,22 @@ import com.ifmvo.androidad.ad.TogetherAdConst
 import com.ifmvo.androidad.ad.loge
 import com.liangzemu.ad.sea.AdWrapper
 import com.liangzemu.ad.sea.IAdListener
-import com.liangzemu.ad.sea.helper.FlowHelper
+import com.liangzemu.ad.sea.helper.FlowBannerFlowHelper
 
 /* 
- * (●ﾟωﾟ●) 下载完成列表
+ * (●ﾟωﾟ●) Google 原生 && Facebook 原生横幅 列表中展示
  * 
  * Created by Matthew_Chen on 2019-06-21.
  */
-object RecyclerViewAdHelper {
+object FlowBannerFlowAdManager {
 
-    private val flowHelper by lazy { FlowHelper(TogetherAdConst.native) }
+    private val flowHelper by lazy { FlowBannerFlowHelper(TogetherAdConst.flow_banner) }
     private val cacheList by lazy { mutableListOf<AdWrapper>() }
 
     fun requestAd(number: Int) {
         val startTime = System.currentTimeMillis()
         repeat(number) {
-            flowHelper.requestAd(Config.nativeAdConfig(), object : IAdListener {
+            flowHelper.requestAd(Config.flowBannerConfig(), object : IAdListener {
                 override fun onAdClick(channel: String, key: String) {
 //                    UmengEvent.eventAdClick(channel, UmengEvent.AD_DOWNLOADED_LOCATION)
                 }
