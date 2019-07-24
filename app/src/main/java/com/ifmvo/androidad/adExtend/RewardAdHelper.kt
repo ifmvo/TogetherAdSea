@@ -146,7 +146,7 @@ object RewardAdHelper {
                     ad.show()
                 }
             }
-            rewardHelperA.removeAdFromCache(adWrapperA!!.key)
+            rewardHelperA.removeAd(adWrapperA!!.key)
             adWrapperA = null
 
         } else {
@@ -160,7 +160,7 @@ object RewardAdHelper {
                         ad.show()
                     }
                 }
-                rewardHelperD.removeAdFromCache(adWrapperD!!.key)
+                rewardHelperD.removeAd(adWrapperD!!.key)
                 adWrapperD = null
             }
         }

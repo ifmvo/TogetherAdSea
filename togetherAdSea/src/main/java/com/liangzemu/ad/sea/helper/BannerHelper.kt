@@ -17,7 +17,7 @@ import com.liangzemu.ad.sea.other.logd
  * 
  * Created by Matthew_Chen on 2019-06-24.
  */
-class BannerHelper(adConstStr: String, destroyAfterShow: Boolean = true) : BaseAdHelp(adConstStr, destroyAfterShow) {
+class BannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
 
     @Throws(IllegalArgumentException::class)
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {

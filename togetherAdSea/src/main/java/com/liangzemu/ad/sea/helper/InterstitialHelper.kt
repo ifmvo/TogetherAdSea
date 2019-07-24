@@ -17,7 +17,7 @@ import com.liangzemu.ad.sea.other.logd
  * 
  * Created by Matthew_Chen on 2019-06-25.
  */
-class InterstitialHelper(adConstStr: String, destroyAfterShow: Boolean = true) : BaseAdHelp(adConstStr, destroyAfterShow) {
+class InterstitialHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
 
     @Throws(IllegalArgumentException::class)
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
@@ -54,6 +54,7 @@ class InterstitialHelper(adConstStr: String, destroyAfterShow: Boolean = true) :
         adOrBuilder.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 timer.cancel()
+                logd("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(adOrBuilder))
             }
 
@@ -66,10 +67,13 @@ class InterstitialHelper(adConstStr: String, destroyAfterShow: Boolean = true) :
             }
 
             override fun onAdClicked() {
+                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.clicked)}")
                 adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.toString())
             }
 
             override fun onAdImpression() {
+                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.show)}")
+
                 adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.toString())
             }
 
@@ -104,7 +108,7 @@ class InterstitialHelper(adConstStr: String, destroyAfterShow: Boolean = true) :
             }
 
             override fun onAdLoaded(p0: Ad) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
+                logd("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.prepared)}")
                 timer.cancel()
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(p0))
             }

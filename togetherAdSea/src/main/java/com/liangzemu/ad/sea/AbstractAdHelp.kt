@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference
  * @property adConstStr String
  * @constructor
  */
-abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow: Boolean) : AdBase, IAdListener {
+abstract class AbstractAdHelp(val adConstStr: String) : AdBase, IAdListener {
     val levelHorizontal: Int = Math.max(
         TogetherAdSea.idListGoogleMap[adConstStr]?.size ?: 0,
         TogetherAdSea.idListFacebookMap[adConstStr]?.size ?: 0
@@ -25,7 +25,8 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow: Bool
         configStr: String?,
         @NonNull userListener: IAdListener,
         direction: Direction = Direction.HORIZONTAL,
-        onlyOnce: Boolean = false
+        onlyOnce: Boolean = false,
+        caCheFilter:(AdWrapper)->Boolean={true}
     ) {
         if (onlyOnce) {
             //正在加载中
@@ -36,7 +37,7 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow: Bool
             }
         }
         //查看是否有缓存
-        val adFromCache = getAdFromCache()
+        val adFromCache = getAdFromCache(caCheFilter)
         adFromCache?.let {
             loge("已经有缓存了")
             addListener(userListener, true)
@@ -146,14 +147,13 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow: Bool
             list.add(adWrapper)
     }
 
-    fun getAdFromCache(): AdWrapper? {
+    fun getAdFromCache(predicate: (AdWrapper) -> Boolean): AdWrapper? {
         val list = adCacheMap[adConstStr]
         return if (list.isNullOrEmpty())
             null
         else
-            list[0]
+            list.find { predicate.invoke(it) }
     }
-
     /**
      * 从没有使用的监听器列表中取出一个  和传进来的key进行绑定
      * @param key String
@@ -206,7 +206,23 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow: Bool
      * @param key String
      * @return Unit
      */
-    fun removeAdFromCache(key: String): AdWrapper? {
+    internal fun removeAdFromCache(key: String): AdWrapper? {
+        return adCacheMap[adConstStr]?.find {
+            it.key == key
+        }?.apply {
+            adCacheMap[adConstStr]?.remove(this)
+        }
+    }
+    /**
+     * 移除缓存以及监听器
+     * @param key String
+     * @return Unit
+     */
+    fun removeAd(key: String): AdWrapper? {
+        listenerMap[key]?.get()?.let {
+            useListenerList.remove(it)
+        }
+        listenerMap.remove(key)
         return adCacheMap[adConstStr]?.find {
             it.key == key
         }?.apply {
@@ -214,6 +230,23 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow: Bool
         }
     }
 
+    /**
+     * 根据条件过滤清除广告
+     * @param predicate Function1<AdWrapper, Boolean>
+     * @return Unit
+     */
+    fun removeAd(predicate: (AdWrapper) -> Boolean){
+        adCacheMap[adConstStr]?.filter {
+            predicate.invoke(it)
+        }?.forEach {
+            removeAd(it.key)
+        }
+    }
+    fun getAdByKey(key:String):AdWrapper?{
+        return adCacheMap[adConstStr]?.find {
+            it.key==key
+        }
+    }
     /**
      * 退出Activity时调用
      * @receiver AdWrapper
@@ -301,6 +334,11 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow: Bool
     }
 
     override fun onAdShow(channel: String, key: String) {
+         adCacheMap[adConstStr]?.find {
+            it.key == key
+        }?.apply {
+            showedTime=System.currentTimeMillis() //标记为已展示
+        }
         listenerMap[key]?.get()?.onAdShow(channel, key)
     }
 

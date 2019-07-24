@@ -53,7 +53,7 @@ object RecyclerViewAdHelper {
         val tempList = mutableListOf<AdWrapper>()
         tempList.addAll(cacheList)
         for (adWrapper in cacheList) {
-            flowHelper.removeAdFromCache(adWrapper.key)
+            flowHelper.removeAd(adWrapper.key)
         }
         cacheList.clear()
         return tempList
