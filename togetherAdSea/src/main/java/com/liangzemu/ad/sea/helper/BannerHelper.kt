@@ -107,4 +107,6 @@ class BannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
 
         adOrBuilder.loadAd()
     }
+
+
 }

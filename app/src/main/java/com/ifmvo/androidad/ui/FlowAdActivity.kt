@@ -7,15 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ifmvo.androidad.R
 
 /* 
- * (●ﾟωﾟ●)
+ * (●ﾟωﾟ●) 原生 列表中展示
  * 
  * Created by Matthew_Chen on 2019-07-05.
  */
-class RecyclerViewActivity : AppCompatActivity() {
+class FlowAdActivity : AppCompatActivity() {
 
     companion object {
         fun action(context: Context) {
-            context.startActivity(Intent(context, RecyclerViewActivity::class.java))
+            context.startActivity(Intent(context, FlowAdActivity::class.java))
         }
     }
 
@@ -24,7 +24,7 @@ class RecyclerViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_list_common)
 
         val bt = supportFragmentManager.beginTransaction()
-        bt.replace(R.id.fgContainer, RecyclerViewFragment())
+        bt.replace(R.id.fgContainer, FlowAdFragment())
         bt.commit()
     }
 

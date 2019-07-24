@@ -161,7 +161,15 @@ TogetherAdSea.initAdFacebook(this, AdIdFactory.getFbAdIdList(), BuildConfig.DEBU
 ## 查看日志
 只需要在 Logcat 中过滤 ``TogetherAdSeaInfo``
 
+
+## 有疑问？
+![WeChat](img/Wechat.jpeg)
+vx 联系我
+
 ## 版本日志
+v1.3.5
+添加了 RewardTempHelper
+
 v1.3.4
 添加了中介模式的开关 TogetherAdSea.isMediationMode = true/false
 

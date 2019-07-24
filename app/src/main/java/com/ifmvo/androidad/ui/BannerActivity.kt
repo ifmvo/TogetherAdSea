@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.ifmvo.androidad.R
-import com.ifmvo.androidad.adExtend.BannerAdHelper
+import com.ifmvo.androidad.adExtend.BannerAdManager
 import kotlinx.android.synthetic.main.activity_banner.*
 
 /*
@@ -27,7 +27,7 @@ class BannerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_banner)
 
-        val bannerAdView = BannerAdHelper.getAd()
+        val bannerAdView = BannerAdManager.getAd()
 
         if (bannerAdView != null) {
             val adView = bannerAdView.realAd
@@ -38,7 +38,7 @@ class BannerActivity : AppCompatActivity() {
             flBannerContainer?.addView(adView)
         }
 
-        BannerAdHelper.requestAd()
+        BannerAdManager.requestAd()
 
     }
 }

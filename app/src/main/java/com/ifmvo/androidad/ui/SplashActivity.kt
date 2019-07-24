@@ -3,7 +3,7 @@ package com.ifmvo.androidad.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.ifmvo.androidad.R
-import com.ifmvo.androidad.adExtend.SplashAdHelper
+import com.ifmvo.androidad.adExtend.SplashAdManager
 
 /* 
  * (●ﾟωﾟ●)
@@ -17,7 +17,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         //在超时时间内请求广告有了结果（ 成功或失败 ）
-        SplashAdHelper.requestAd(overTimeSecond = 4) {
+        SplashAdManager.requestAd(overTimeSecond = 4) {
             MainActivity.action(this)
             finish()
         }

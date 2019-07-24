@@ -22,8 +22,7 @@
                 android:name="com.google.android.gms.ads.APPLICATION_ID"
                 android:value="ca-app-pub-3940256099942544~3347511713"/>
 
-        <activity
-                android:name=".ui.SplashActivity">
+        <activity android:name=".ui.SplashActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -37,8 +36,11 @@
 
         <activity android:name=".ui.BannerActivity"/>
 
-        <activity android:name=".ui.RecyclerViewActivity"/>
+        <activity android:name=".ui.FlowAdActivity"/>
+
         <activity android:name=".ui.ReadmeActivity"/>
+
+        <activity android:name=".ui.FlowBannerFlowAdActivity"/>
 
     </application>
 
