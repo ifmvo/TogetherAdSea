@@ -205,7 +205,7 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
      * @param key String
      * @return Unit
      */
-    internal fun removeAdFromCache(key: String): AdWrapper? {
+    fun removeAdFromCache(key: String): AdWrapper? {
         return adCacheMap[adConstStr]?.find {
             it.key == key
         }?.apply {
