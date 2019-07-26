@@ -17,7 +17,7 @@ import com.liangzemu.ad.sea.other.logd
  * 
  * Created by Matthew_Chen on 2019-06-25.
  */
-class InterstitialHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
+class InterstitialHelper(adConstStr: String,timeOutMillsecond:Long= TogetherAdSea.timeoutMillsecond) : BaseAdHelp(adConstStr,timeOutMillsecond) {
 
     @Throws(IllegalArgumentException::class)
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
@@ -121,12 +121,4 @@ class InterstitialHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
         adOrBuilder.loadAd()
     }
 
-    override fun onAdClose(channel: String, key: String, other: Any) {
-        val adFromCache = removeAdFromCache(key)
-        super.onAdClose(channel, key, other)
-        removeListener(key)
-        if(adFromCache!=null&&destroyAfterShow){
-            adFromCache.destory()
-        }
-    }
 }

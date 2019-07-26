@@ -26,7 +26,7 @@ import com.liangzemu.ad.sea.other.logd
  * Created by Matthew_Chen on 2019-04-22.
  */
 
-class FlowBannerFlowHelper(adConstStr: String, destroyAfterShow:Boolean=true, val googleAdPostion:Int=NativeAdOptions.ADCHOICES_TOP_RIGHT) : BaseAdHelp(adConstStr,destroyAfterShow) {
+class FlowBannerFlowHelper(adConstStr: String, destroyAfterShow:Boolean=true, val googleAdPostion:Int=NativeAdOptions.ADCHOICES_TOP_RIGHT) : BaseAdHelp(adConstStr) {
 
     @Throws(IllegalArgumentException::class)
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
@@ -117,14 +117,6 @@ class FlowBannerFlowHelper(adConstStr: String, destroyAfterShow:Boolean=true, va
         adOrBuilder.loadAd()
     }
 
-    override fun onAdShow(channel: String, key: String) {
-        val adFromCache = removeAdFromCache(key)
-        super.onAdShow(channel, key)
-        removeListener(key)
-        if(adFromCache!=null&&destroyAfterShow){
-            adFromCache.destory()
-        }
-    }
 }
 
 
