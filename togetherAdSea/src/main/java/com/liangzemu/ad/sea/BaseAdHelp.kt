@@ -7,7 +7,7 @@ import com.liangzemu.ad.sea.other.AdNameType
 import com.liangzemu.ad.sea.other.logd
 import com.liangzemu.ad.sea.other.loge
 
-abstract class BaseAdHelp(adConstStr: String):AbstractAdHelp(adConstStr) {
+abstract class BaseAdHelp(adConstStr: String,timeOutMillsecond:Long= TogetherAdSea.timeoutMillsecond):AbstractAdHelp(adConstStr,timeOutMillsecond) {
     /**
      * 比例随机完 开始请求广告
      * @param type AdNameType

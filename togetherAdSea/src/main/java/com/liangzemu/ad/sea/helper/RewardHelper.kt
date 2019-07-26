@@ -129,8 +129,4 @@ class RewardHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
         })
         adOrBuilder.loadAd()
     }
-
-    override fun onAdClose(channel: String, key: String, other: Any) {
-        super.onAdClose(channel, key, other)
-    }
 }

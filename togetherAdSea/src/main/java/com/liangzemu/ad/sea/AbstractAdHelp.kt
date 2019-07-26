@@ -3,7 +3,6 @@ package com.liangzemu.ad.sea
 import android.os.CountDownTimer
 import androidx.annotation.NonNull
 import com.liangzemu.ad.sea.TogetherAdSea.context
-import com.liangzemu.ad.sea.TogetherAdSea.timeoutMillsecond
 import com.liangzemu.ad.sea.other.*
 import java.lang.ref.WeakReference
 
@@ -15,7 +14,7 @@ import java.lang.ref.WeakReference
  * @property adConstStr String
  * @constructor
  */
-abstract class AbstractAdHelp(val adConstStr: String) : AdBase, IAdListener {
+abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long= TogetherAdSea.timeoutMillsecond) : AdBase, IAdListener {
     val levelHorizontal: Int = Math.max(
         TogetherAdSea.idListGoogleMap[adConstStr]?.size ?: 0,
         TogetherAdSea.idListFacebookMap[adConstStr]?.size ?: 0
@@ -81,7 +80,7 @@ abstract class AbstractAdHelp(val adConstStr: String) : AdBase, IAdListener {
                 }
 
                 override fun onAdPrepared(channel: String, adWrapper: AdWrapper) {
-                    loge("AbstractAdHelp: level:$level success:$channel")
+                    loge("AbstractAdHelp:$adConstStr level:$level success:$channel")
                     iAdListener.onAdPrepared(channel, adWrapper)
                 }
 
@@ -94,7 +93,7 @@ abstract class AbstractAdHelp(val adConstStr: String) : AdBase, IAdListener {
                 }
 
                 override fun onAdFailed(failedMsg: String?, key: String) {
-                    loge("AbstractAdHelp: level:$level failed:$failedMsg")
+                    loge("AbstractAdHelp:$adConstStr level:$level failed:$failedMsg")
                     if (level >= levelHorizontal) {
                         iAdListener.onAdFailed(failedMsg, key)
                     } else {
@@ -256,8 +255,10 @@ abstract class AbstractAdHelp(val adConstStr: String) : AdBase, IAdListener {
         /**
          * 多页面同时请求同类型，并且其中一方先调用这个方法时  可能会导致另一个页面的广告无法回调
          */
-        unUseListenerMap.remove(adConstStr)
-        useListenerList.clear()
+        val listeners = unUseListenerMap.remove(adConstStr)
+        listeners?.let {
+            useListenerList.removeAll(it)
+        }
     }
 
     internal abstract fun dispatchAdRequest(
@@ -365,7 +366,7 @@ abstract class AbstractAdHelp(val adConstStr: String) : AdBase, IAdListener {
      * @return CountDownTimer
      */
     protected fun creatTimer(callback: () -> Unit): CountDownTimer {
-        return object : CountDownTimer(timeoutMillsecond, 1000) {
+        return object : CountDownTimer(timeOutMillsecond, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 logd("倒计时: $millisUntilFinished")
             }
