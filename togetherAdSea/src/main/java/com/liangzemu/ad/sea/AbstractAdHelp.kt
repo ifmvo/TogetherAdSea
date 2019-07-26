@@ -283,7 +283,7 @@ abstract class AbstractAdHelp(val adConstStr: String, val destroyAfterShow: Bool
      */
     override fun onStartRequest(channel: String, key: String) {
         //这个是否有必要回调
-        //listenerMap[key]?.onStartRequest(channel,key)
+        listenerMap[key]?.get()?.onStartRequest(channel,key)
     }
 
     override fun onAdClick(channel: String, key: String) {
