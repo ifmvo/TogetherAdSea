@@ -30,14 +30,12 @@ object SplashAdManager {
 
     private val interHelperA by lazy {
         InterstitialHelper(
-            TogetherAdConst.interstitial,
-            destroyAfterShow = false
+            TogetherAdConst.interstitial
         )
     }
     private val interHelperD by lazy {
         InterstitialHelper(
-            TogetherAdConst.interstitial,
-            destroyAfterShow = false
+            TogetherAdConst.interstitial
         )
     }
 
@@ -145,7 +143,7 @@ object SplashAdManager {
                     ad.show()
                 }
             }
-            interHelperA.removeAdFromCache(adWrapperA!!.key)
+            interHelperA.removeAd(adWrapperA!!.key)
             adWrapperA = null
 
         } else {
@@ -159,7 +157,7 @@ object SplashAdManager {
                         ad.show()
                     }
                 }
-                interHelperD.removeAdFromCache(adWrapperD!!.key)
+                interHelperD.removeAd(adWrapperD!!.key)
                 adWrapperD = null
             }
         }

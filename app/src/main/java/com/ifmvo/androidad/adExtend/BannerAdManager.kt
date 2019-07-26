@@ -48,7 +48,7 @@ object BannerAdManager {
     fun getAd(): AdWrapper? {
         val tempAd = cacheAd
         if (cacheAd != null) {
-            bannerHelper.removeAdFromCache(cacheAd!!.key)
+            bannerHelper.removeAd(cacheAd!!.key)
         }
         cacheAd = null
         return tempAd

@@ -19,7 +19,7 @@ import com.liangzemu.ad.sea.other.loge
  *
  * Created by Matthew_Chen on 2019-04-22.
  */
-class FlowBannerHelper(adConstStr: String,destroyAfterShow:Boolean=true) : BaseAdHelp(adConstStr,destroyAfterShow) {
+class FlowBannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
         return when(adNameType){
             AdNameType.FACEBOOK->{
@@ -75,13 +75,4 @@ class FlowBannerHelper(adConstStr: String,destroyAfterShow:Boolean=true) : BaseA
         })
         adOrBuilder.loadAd()
     }
-    override fun onAdShow(channel: String, key: String) {
-        val adFromCache = removeAdFromCache(key)
-        super.onAdShow(channel, key)
-        removeListener(key)
-        if(adFromCache!=null&&destroyAfterShow){
-            adFromCache.destory()
-        }
-    }
-
 }
