@@ -107,7 +107,7 @@ object RewardAdManager {
 
         rewardHelperD.requestAd(Config.rewardAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
-                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdClick(channel, UmengEvent.AD_REWARD_LOCATION)
             }
 
             override fun onAdClose(channel: String, key: String, other: Any) {

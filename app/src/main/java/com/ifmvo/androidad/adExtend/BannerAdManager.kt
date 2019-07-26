@@ -1,5 +1,6 @@
 package com.ifmvo.androidad.adExtend
 
+import com.ifmvo.androidad.UmengEvent
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
 import com.liangzemu.ad.sea.AdWrapper
@@ -20,7 +21,7 @@ object BannerAdManager {
 
         bannerHelper.requestAd(Config.bannerAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
-//                UmengEvent.eventAdClick(channel, UmengEvent.AD_CHECK_LOCATION)
+                UmengEvent.eventAdClick(channel, UmengEvent.AD_CHECK_LOCATION)
             }
 
             override fun onAdClose(channel: String, key: String, other: Any) {
@@ -36,11 +37,11 @@ object BannerAdManager {
             }
 
             override fun onAdShow(channel: String, key: String) {
-//                UmengEvent.eventAdShow(channel, UmengEvent.AD_CHECK_LOCATION)
+                UmengEvent.eventAdShow(channel, UmengEvent.AD_CHECK_LOCATION)
             }
 
             override fun onStartRequest(channel: String, key: String) {
-//                UmengEvent.eventAdRequest(channel, UmengEvent.AD_CHECK_LOCATION)
+                UmengEvent.eventAdRequest(channel, UmengEvent.AD_CHECK_LOCATION)
             }
         }, onlyOnce = true)
     }
