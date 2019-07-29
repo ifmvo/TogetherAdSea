@@ -8,10 +8,7 @@ import com.facebook.ads.NativeAdListener
 import com.facebook.ads.NativeBannerAd
 import com.liangzemu.ad.sea.*
 import com.liangzemu.ad.sea.TogetherAdSea.context
-import com.liangzemu.ad.sea.other.AdNameType
-import com.liangzemu.ad.sea.other.AdRandomUtil
-import com.liangzemu.ad.sea.other.logd
-import com.liangzemu.ad.sea.other.loge
+import com.liangzemu.ad.sea.other.*
 
 
 /**
@@ -51,7 +48,7 @@ class FlowBannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
         adOrBuilder as NativeBannerAd
         adOrBuilder.setAdListener(object : NativeAdListener {
             override fun onAdClicked(ad: Ad) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.clicked)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.clicked)}")
                 adListener.onAdClick(AdNameType.FACEBOOK.type,ad.toString())
             }
 
@@ -63,13 +60,13 @@ class FlowBannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
             }
 
             override fun onAdLoaded(ad: Ad) {
-                logd("${AdNameType.FACEBOOK.type} $adConstStr: ${context.getString(R.string.prepared)}")
+                logi("${AdNameType.FACEBOOK.type} $adConstStr:$adConstStr ${context.getString(R.string.prepared)}")
                 timer.cancel()
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(ad,ad.toString()))
             }
 
             override fun onLoggingImpression(ad: Ad) {
-                logd("${AdNameType.FACEBOOK.type} : ${context.getString(R.string.exposure)}")
+                logi("${AdNameType.FACEBOOK.type} :$adConstStr ${context.getString(R.string.exposure)}")
                 adListener.onAdShow(AdNameType.FACEBOOK.type,ad.toString())
             }
         })

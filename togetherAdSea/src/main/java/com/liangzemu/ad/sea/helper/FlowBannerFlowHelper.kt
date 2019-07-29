@@ -16,6 +16,7 @@ import com.liangzemu.ad.sea.R
 import com.liangzemu.ad.sea.TogetherAdSea.context
 import com.liangzemu.ad.sea.other.AdNameType
 import com.liangzemu.ad.sea.other.logd
+import com.liangzemu.ad.sea.other.logi
 
 
 /**
@@ -54,7 +55,7 @@ class FlowBannerFlowHelper(adConstStr: String, destroyAfterShow:Boolean=true, va
     ) {
         adOrBuilder as AdLoader.Builder
         adOrBuilder.forUnifiedNativeAd { ad: UnifiedNativeAd ->
-            logd("${AdNameType.GOOGLE_ADMOB.type} $adConstStr: ${context.getString(R.string.prepared)}")
+            logi("${AdNameType.GOOGLE_ADMOB.type} $adConstStr: ${context.getString(R.string.prepared)}")
             timer.cancel()
             adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(ad))
         }
@@ -64,13 +65,13 @@ class FlowBannerFlowHelper(adConstStr: String, destroyAfterShow:Boolean=true, va
                 }
 
                 override fun onAdImpression() {
-                    logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.exposure)}")
+                    logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.exposure)}")
                     //(TogetherAdSea.adCacheMap[adConstStr] as ArrayList<Any>).remove()
                     adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString())
                 }
 
                 override fun onAdClicked() {
-                    logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.clicked)}")
+                    logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.clicked)}")
                     adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString())
                 }
             })
@@ -92,7 +93,7 @@ class FlowBannerFlowHelper(adConstStr: String, destroyAfterShow:Boolean=true, va
         adOrBuilder as NativeBannerAd
         adOrBuilder.setAdListener(object : NativeAdListener {
             override fun onAdClicked(ad: Ad) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.clicked)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.clicked)}")
                 adListener.onAdClick(AdNameType.FACEBOOK.type,ad.toString())
             }
 
@@ -104,13 +105,13 @@ class FlowBannerFlowHelper(adConstStr: String, destroyAfterShow:Boolean=true, va
             }
 
             override fun onAdLoaded(ad: Ad) {
-                logd("${AdNameType.FACEBOOK.type} $adConstStr: ${context.getString(R.string.prepared)}")
+                logi("${AdNameType.FACEBOOK.type} :$adConstStr ${context.getString(R.string.prepared)}")
                 timer.cancel()
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(ad,ad.toString()))
             }
 
             override fun onLoggingImpression(ad: Ad) {
-                logd("${AdNameType.FACEBOOK.type} : ${context.getString(R.string.exposure)}")
+                logi("${AdNameType.FACEBOOK.type} :$adConstStr ${context.getString(R.string.exposure)}")
                 adListener.onAdShow(AdNameType.FACEBOOK.type,ad.toString())
             }
         })

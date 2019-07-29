@@ -3,9 +3,9 @@ package com.liangzemu.ad.sea
 import android.os.CountDownTimer
 import androidx.annotation.NonNull
 import com.google.android.gms.ads.AdRequest
-import com.liangzemu.ad.sea.other.AdNameType
-import com.liangzemu.ad.sea.other.logd
+import com.liangzemu.ad.sea.other.*
 import com.liangzemu.ad.sea.other.loge
+import com.liangzemu.ad.sea.other.logw
 
 abstract class BaseAdHelp(adConstStr: String,timeOutMillsecond:Long= TogetherAdSea.timeoutMillsecond):AbstractAdHelp(adConstStr,timeOutMillsecond) {
     /**
@@ -94,7 +94,7 @@ abstract class BaseAdHelp(adConstStr: String,timeOutMillsecond:Long= TogetherAdS
         if(!checkResult)
             return
 
-        logd("${adNameType.type}: ${TogetherAdSea.context.getString(R.string.start_request)}")
+        logi("${adNameType.type}: ${TogetherAdSea.context.getString(R.string.start_request)}")
 
         val ad_id = getIDList(level, adNameType)!![index]
         /**
@@ -108,7 +108,7 @@ abstract class BaseAdHelp(adConstStr: String,timeOutMillsecond:Long= TogetherAdS
          */
         val timer = creatTimer {
             addTimeOut(pair.second)
-            loge("${adNameType.type}: indexGoogle:$index, 超时")
+            logw("${adNameType.type}: indexGoogle:$index, 超时")
             next(level, configStr, index + 1, adListener)
         }.apply {
             start()
@@ -120,7 +120,7 @@ abstract class BaseAdHelp(adConstStr: String,timeOutMillsecond:Long= TogetherAdS
             loge("${adNameType.type}: index:$index, errorCode:$it")
             //判断是否已经超时过了
             if(isTimeOut(pair.second)){
-                loge("${pair.second} 之前已经过时了")
+                logw("${pair.second} 之前已经过时了")
             }else {
                 timer.cancel()
                 next(level, configStr, index + 1, adListener)

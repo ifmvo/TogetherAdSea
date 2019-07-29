@@ -14,6 +14,7 @@ import com.liangzemu.ad.sea.TogetherAdSea.context
 import com.liangzemu.ad.sea.other.AdNameType
 import com.liangzemu.ad.sea.other.logd
 import com.liangzemu.ad.sea.other.loge
+import com.liangzemu.ad.sea.other.logi
 
 
 /**
@@ -48,29 +49,30 @@ class RewardHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
         adOrBuilder.rewardedVideoAdListener = object : RewardedVideoAdListener {
             var rewarded=false
             override fun onRewardedVideoAdClosed() {
+                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.dismiss)}")
                 adListener.onAdClose(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString(),rewarded)
             }
 
             override fun onRewardedVideoAdLeftApplication() {
-                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.clicked)}")
+                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.clicked)}")
                 adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString())
 
             }
 
             override fun onRewardedVideoAdLoaded() {
-                logd("${AdNameType.GOOGLE_ADMOB.type} $adConstStr: ${context.getString(R.string.prepared)}")
+                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.prepared)}")
                 timer.cancel()
                 adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type,AdWrapper(adOrBuilder))
             }
 
             override fun onRewardedVideoAdOpened() {
-                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.show)}")
+                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.show)}")
                 adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString())
 
             }
 
             override fun onRewardedVideoCompleted() {
-                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.complete)}")
+                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.complete)}")
                 rewarded = true
             }
 
@@ -96,17 +98,17 @@ class RewardHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
         adOrBuilder.setAdListener(object : com.facebook.ads.RewardedVideoAdListener{
             var isRewarded=false
             override fun onRewardedVideoClosed() {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.dismiss)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.dismiss)}")
                 adListener.onAdClose(AdNameType.FACEBOOK.type,adOrBuilder.toString(), isRewarded)
             }
 
             override fun onAdClicked(p0: Ad) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.clicked)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.clicked)}")
                 adListener.onAdClick(AdNameType.FACEBOOK.type,p0.toString())
             }
 
             override fun onRewardedVideoCompleted() {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.complete)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.complete)}")
                 isRewarded = true
             }
 
@@ -118,12 +120,12 @@ class RewardHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
                 //取消超时
                 timer.cancel()
 
-                logd("${AdNameType.FACEBOOK.type} $adConstStr: ${context.getString(R.string.prepared)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type,AdWrapper(p0))
             }
 
             override fun onLoggingImpression(p0: Ad) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.show)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.show)}")
                 adListener.onAdShow(AdNameType.FACEBOOK.type,p0.toString())
             }
         })

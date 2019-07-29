@@ -11,6 +11,7 @@ import com.liangzemu.ad.sea.*
 import com.liangzemu.ad.sea.TogetherAdSea.context
 import com.liangzemu.ad.sea.other.AdNameType
 import com.liangzemu.ad.sea.other.logd
+import com.liangzemu.ad.sea.other.logi
 
 /* 
  * (●ﾟωﾟ●) 横幅广告
@@ -54,7 +55,7 @@ class BannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
         adOrBuilder.loadAd(adRequest)
         adOrBuilder.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.prepared)}")
+                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.prepared)}")
                 timer.cancel()
                 adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(adOrBuilder))
             }
@@ -64,12 +65,12 @@ class BannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
             }
 
             override fun onAdClicked() {
-                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.clicked)}")
+                logi("${AdNameType.GOOGLE_ADMOB.type}: $adConstStr ${context.getString(R.string.clicked)}")
                 adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.toString())
             }
 
             override fun onAdImpression() {
-                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.exposure)}")
+                logi("${AdNameType.GOOGLE_ADMOB.type}: $adConstStr ${context.getString(R.string.exposure)}")
                 adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.toString())
             }
         }
@@ -85,7 +86,7 @@ class BannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
         adOrBuilder as com.facebook.ads.AdView
         adOrBuilder.setAdListener(object : com.facebook.ads.AdListener {
             override fun onAdClicked(ad: Ad?) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.clicked)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.clicked)}")
                 adListener.onAdClick(AdNameType.FACEBOOK.type, ad.toString())
             }
 
@@ -94,13 +95,13 @@ class BannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
             }
 
             override fun onAdLoaded(ad: Ad) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.prepared)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.prepared)}")
                 timer.cancel()
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(adOrBuilder))
             }
 
             override fun onLoggingImpression(ad: Ad?) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.exposure)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.exposure)}")
                 adListener.onAdShow(AdNameType.FACEBOOK.type, ad.toString())
             }
         })

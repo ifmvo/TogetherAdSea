@@ -11,6 +11,7 @@ import com.liangzemu.ad.sea.*
 import com.liangzemu.ad.sea.TogetherAdSea.context
 import com.liangzemu.ad.sea.other.AdNameType
 import com.liangzemu.ad.sea.other.logd
+import com.liangzemu.ad.sea.other.logi
 
 /* 
  * (●ﾟωﾟ●) 插页广告
@@ -54,11 +55,12 @@ class InterstitialHelper(adConstStr: String,timeOutMillsecond:Long= TogetherAdSe
         adOrBuilder.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 timer.cancel()
-                logd("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.prepared)}")
+                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.prepared)}")
                 adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(adOrBuilder))
             }
 
             override fun onAdClosed() {
+                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.dismiss)}")
                 adListener.onAdClose(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.toString(), adOrBuilder)
             }
 
@@ -67,12 +69,12 @@ class InterstitialHelper(adConstStr: String,timeOutMillsecond:Long= TogetherAdSe
             }
 
             override fun onAdClicked() {
-                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.clicked)}")
+                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.clicked)}")
                 adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.toString())
             }
 
             override fun onAdImpression() {
-                logd("${AdNameType.GOOGLE_ADMOB.type}: ${context.getString(R.string.show)}")
+                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.show)}")
 
                 adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.toString())
             }
@@ -94,12 +96,12 @@ class InterstitialHelper(adConstStr: String,timeOutMillsecond:Long= TogetherAdSe
             }
 
             override fun onAdClicked(p0: Ad) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.clicked)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.clicked)}")
                 adListener.onAdClick(AdNameType.FACEBOOK.type, p0.toString())
             }
 
             override fun onInterstitialDismissed(p0: Ad) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.dismiss)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.dismiss)}")
                 adListener.onAdClose(AdNameType.FACEBOOK.type, p0.toString(), p0)
             }
 
@@ -108,13 +110,13 @@ class InterstitialHelper(adConstStr: String,timeOutMillsecond:Long= TogetherAdSe
             }
 
             override fun onAdLoaded(p0: Ad) {
-                logd("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.prepared)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.prepared)}")
                 timer.cancel()
                 adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(p0))
             }
 
             override fun onLoggingImpression(p0: Ad?) {
-                logd("${AdNameType.FACEBOOK.type}: ${context.getString(R.string.show)}")
+                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.show)}")
                 adListener.onAdShow(AdNameType.FACEBOOK.type, p0.toString())
             }
         })
