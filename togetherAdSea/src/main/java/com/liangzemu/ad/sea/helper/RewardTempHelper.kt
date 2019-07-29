@@ -21,7 +21,7 @@ import com.liangzemu.ad.sea.other.logi
  * 
  * Created by Matthew_Chen on 2019-07-11.
  */
-class RewardTempHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
+class RewardTempHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSea.timeoutMillsecond,  owner:String=adConstStr) : BaseAdHelp(adConstStr,timeOutMillsecond,owner) {
 
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
         return when (adNameType) {

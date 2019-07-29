@@ -9,10 +9,7 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.formats.UnifiedNativeAd
-import com.liangzemu.ad.sea.AdWrapper
-import com.liangzemu.ad.sea.BaseAdHelp
-import com.liangzemu.ad.sea.IAdListener
-import com.liangzemu.ad.sea.R
+import com.liangzemu.ad.sea.*
 import com.liangzemu.ad.sea.TogetherAdSea.context
 import com.liangzemu.ad.sea.other.AdNameType
 import com.liangzemu.ad.sea.other.logd
@@ -25,7 +22,7 @@ import com.liangzemu.ad.sea.other.logi
  * Created by Matthew_Chen on 2019-04-22.
  */
 
-class FlowHelper(adConstStr: String, private val googleAdPostion:Int=NativeAdOptions.ADCHOICES_TOP_RIGHT) : BaseAdHelp(adConstStr) {
+class FlowHelper(adConstStr: String, private val googleAdPostion:Int=NativeAdOptions.ADCHOICES_TOP_RIGHT, timeOutMillsecond:Long= TogetherAdSea.timeoutMillsecond, owner:String=adConstStr) : BaseAdHelp(adConstStr,timeOutMillsecond,owner) {
     @Throws(IllegalArgumentException::class)
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
         return when(adNameType){

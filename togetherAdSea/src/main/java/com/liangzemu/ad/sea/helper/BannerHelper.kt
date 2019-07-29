@@ -18,7 +18,7 @@ import com.liangzemu.ad.sea.other.logi
  * 
  * Created by Matthew_Chen on 2019-06-24.
  */
-class BannerHelper(adConstStr: String) : BaseAdHelp(adConstStr) {
+class BannerHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSea.timeoutMillsecond,  owner:String=adConstStr) : BaseAdHelp(adConstStr,timeOutMillsecond,owner) {
 
     @Throws(IllegalArgumentException::class)
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
