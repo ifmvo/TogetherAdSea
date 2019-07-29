@@ -2,6 +2,7 @@ package com.ifmvo.androidad.adExtend
 
 import android.os.CountDownTimer
 import com.google.android.gms.ads.InterstitialAd
+import com.ifmvo.androidad.UmengEvent
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
 import com.ifmvo.androidad.ad.logd
@@ -41,8 +42,8 @@ object SplashAdManager {
     private var adWrapperA: AdWrapper? = null
     private var adWrapperD: AdWrapper? = null
 
-    private var isResultA = false
-    private var isResultD = false
+    private var isFailedA = false
+    private var isFailedD = false
 
     /**
      * 请求插页广告
@@ -50,6 +51,9 @@ object SplashAdManager {
      */
     fun requestAd(overTimeSecond: Int = 30, onResult: () -> Unit = {}) {
         logd("SplashAdManager", "requestAd")
+        isFailedA = false
+        isFailedD = false
+
         //如果 A 档有缓存就直接返回 A 档展示
         if (adWrapperA != null) {
             onResult()
@@ -63,17 +67,16 @@ object SplashAdManager {
             onResult()
         }.start()
 
-        isResultA = false
         interHelperA.requestAd(Config.interstitialAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
-//                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
             }
 
             override fun onAdClose(channel: String, key: String, other: Any) {
             }
 
             override fun onAdFailed(failedMsg: String?, key: String) {
-                isResultA = true
+                isFailedA = true
                 loge(tag, "onAdFailed: A")
                 handleError(onResult, timer)
             }
@@ -86,31 +89,29 @@ object SplashAdManager {
             }
 
             override fun onAdShow(channel: String, key: String) {
-//                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdShow(channel, UmengEvent.AD_SPLASH_LOCATION)
             }
 
             override fun onStartRequest(channel: String, key: String) {
-//                UmengEvent.eventAdRequest(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdRequest(channel, UmengEvent.AD_SPLASH_LOCATION)
             }
         }, onlyOnce = true)
 
         //如果 D 档有缓存，就不用重新请求 D 档了，等待 A 请求回来，或超时再返回 D 档
         if (adWrapperD != null) {
-            isResultD = true
             return
         }
 
-        isResultD = false
         interHelperD.requestAd(Config.interstitialAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
-//                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
             }
 
             override fun onAdClose(channel: String, key: String, other: Any) {
             }
 
             override fun onAdFailed(failedMsg: String?, key: String) {
-                isResultD = true
+                isFailedD = true
                 loge(tag, "onAdFailed: D")
                 handleError(onResult, timer)
             }
@@ -121,11 +122,11 @@ object SplashAdManager {
             }
 
             override fun onAdShow(channel: String, key: String) {
-//                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdShow(channel, UmengEvent.AD_SPLASH_LOCATION)
             }
 
             override fun onStartRequest(channel: String, key: String) {
-//                UmengEvent.eventAdRequest(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdRequest(channel, UmengEvent.AD_SPLASH_LOCATION)
             }
         }, onlyOnce = true)
     }
@@ -163,7 +164,7 @@ object SplashAdManager {
     }
 
     private fun handleError(onFailed: () -> Unit, timer: CountDownTimer) {
-        if (isResultA && isResultD) {
+        if (isFailedA && isFailedD) {
             timer.cancel()
             onFailed()
         }

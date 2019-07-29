@@ -2,12 +2,9 @@ package com.liangzemu.ad.sea
 
 import android.os.CountDownTimer
 import androidx.annotation.NonNull
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import com.liangzemu.ad.sea.TogetherAdSea.context
 import com.liangzemu.ad.sea.other.*
 import java.lang.ref.WeakReference
-import kotlin.math.max
 
 /**
  * 广告开始请求时监听器与广告实体(or loader)对应存储
@@ -18,14 +15,10 @@ import kotlin.math.max
  * @constructor
  */
 abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long= TogetherAdSea.timeoutMillsecond) : AdBase, IAdListener {
-    val levelHorizontal: Int = max(TogetherAdSea.idListGoogleMap[adConstStr]?.size ?: 0, TogetherAdSea.idListFacebookMap[adConstStr]?.size ?: 0) - 1
-    /**
-     * 本对象内部正在请求的广告个数
-     */
-    var loadingCount=0
-        set(value) {
-            field = max(value,0)
-        }
+    val levelHorizontal: Int = Math.max(
+        TogetherAdSea.idListGoogleMap[adConstStr]?.size ?: 0,
+        TogetherAdSea.idListFacebookMap[adConstStr]?.size ?: 0
+    ) - 1
 
     fun requestAd(
         configStr: String?,
@@ -38,7 +31,7 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
             //正在加载中
             if (loadingAdType.contains(adConstStr)) {
                 addListener(userListener, true)
-                logi("$adConstStr 正在加载中")
+                loge("正在加载中")
                 return
             }
         }
@@ -52,10 +45,9 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
             listenerMap[adFromCache.key]?.get()?.onAdPrepared("adCache", adFromCache)
             return
         }
-        logi("$adConstStr 开始请求")
+        loge("$adConstStr 开始请求")
         addListener(userListener)
         loadingAdType.add(adConstStr)
-        loadingCount++
         if (direction == Direction.HORIZONTAL) {
             requestAdHorizontal(configStr, this)
         } else {
@@ -74,9 +66,9 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
         //取最高等级
 
         var level = 0
-        logi("$adConstStr total level:$levelHorizontal level:$level start")
+        loge("total level:$levelHorizontal level:$level start")
         //循环等级请求
-        fun requestAdByLevel() {
+        fun requestAdRewardByLevel() {
             //这里虽然是竖向请求  但是因为有level的原因  每一个竖向只有一个  相当于就是横向了
             requestAdVertical(configStr, object : IAdListener {
                 override fun onAdShow(channel: String, key: String) {
@@ -87,12 +79,12 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
                     iAdListener.onAdClose(channel, key, other)
                 }
 
-                override fun onAdPrepared(channel: String, adWrapper: AdWrapper) {//每个整体请求的结束
-                    logi("AbstractAdHelp:$adConstStr level:$level success:$channel")
+                override fun onAdPrepared(channel: String, adWrapper: AdWrapper) {
+                    loge("AbstractAdHelp:$adConstStr level:$level success:$channel")
                     iAdListener.onAdPrepared(channel, adWrapper)
                 }
 
-                override fun onStartRequest(channel: String, key: String) {//每个请求的开始
+                override fun onStartRequest(channel: String, key: String) {
                     iAdListener.onStartRequest(channel, key)
                 }
 
@@ -100,13 +92,13 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
                     iAdListener.onAdClick(channel, key)
                 }
 
-                override fun onAdFailed(failedMsg: String?, key: String) {//每个请求的结束
+                override fun onAdFailed(failedMsg: String?, key: String) {
                     loge("AbstractAdHelp:$adConstStr level:$level failed:$failedMsg")
                     if (level >= levelHorizontal) {
                         iAdListener.onAdFailed(failedMsg, key)
                     } else {
                         level++
-                        requestAdByLevel()
+                        requestAdRewardByLevel()
                     }
 
                 }
@@ -115,7 +107,7 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
 
         }
         //开始请求
-        requestAdByLevel()
+        requestAdRewardByLevel()
     }
 
     /**
@@ -213,7 +205,7 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
      * @param key String
      * @return Unit
      */
-    internal fun removeAdFromCache(key: String): AdWrapper? {
+    fun removeAdFromCache(key: String): AdWrapper? {
         return adCacheMap[adConstStr]?.find {
             it.key == key
         }?.apply {
@@ -325,7 +317,6 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
      */
     override fun onStartRequest(channel: String, key: String) {
         //这个是否有必要回调
-
         listenerMap[key]?.get()?.onStartRequest(channel,key)
     }
 
@@ -335,7 +326,6 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
 
     override fun onAdFailed(failedMsg: String?, key: String) {
         loadingAdType.remove(adConstStr)
-        loadingCount--
         //移出超时
         timeOutSet.remove(key)
         //绑定监听器
@@ -360,7 +350,6 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
     override fun onAdPrepared(channel: String, adWrapper: AdWrapper) {
         //移出加载中
         loadingAdType.remove(adConstStr)
-        loadingCount--
         //移出超时
         timeOutSet.remove(adWrapper.key)
         //绑定监听器
@@ -379,12 +368,12 @@ abstract class AbstractAdHelp(val adConstStr: String,val timeOutMillsecond:Long=
     protected fun creatTimer(callback: () -> Unit): CountDownTimer {
         return object : CountDownTimer(timeOutMillsecond, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                logv("倒计时: $millisUntilFinished")
+                logd("倒计时: $millisUntilFinished")
             }
 
             override fun onFinish() {
                 callback()
-                logv("倒计时: ${context.getString(R.string.dismiss)}")
+                logd("倒计时: ${context.getString(R.string.dismiss)}")
             }
         }
     }

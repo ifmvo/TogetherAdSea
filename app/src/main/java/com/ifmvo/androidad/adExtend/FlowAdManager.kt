@@ -1,5 +1,6 @@
 package com.ifmvo.androidad.adExtend
 
+import com.ifmvo.androidad.UmengEvent
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
 import com.ifmvo.androidad.ad.loge
@@ -22,7 +23,7 @@ object FlowAdManager {
         repeat(number) {
             flowHelper.requestAd(Config.nativeAdConfig(), object : IAdListener {
                 override fun onAdClick(channel: String, key: String) {
-//                    UmengEvent.eventAdClick(channel, UmengEvent.AD_DOWNLOADED_LOCATION)
+                    UmengEvent.eventAdClick(channel, UmengEvent.AD_DOWNLOADED_LOCATION)
                 }
 
                 override fun onAdClose(channel: String, key: String, other: Any) {
@@ -38,11 +39,11 @@ object FlowAdManager {
                 }
 
                 override fun onAdShow(channel: String, key: String) {
-//                    UmengEvent.eventAdShow(channel, UmengEvent.AD_DOWNLOADED_LOCATION)
+                    UmengEvent.eventAdShow(channel, UmengEvent.AD_DOWNLOADED_LOCATION)
                 }
 
                 override fun onStartRequest(channel: String, key: String) {
-//                    UmengEvent.eventAdRequest(channel, UmengEvent.AD_DOWNLOADED_LOCATION)
+                    UmengEvent.eventAdRequest(channel, UmengEvent.AD_DOWNLOADED_LOCATION)
                 }
             }, onlyOnce = false)
         }

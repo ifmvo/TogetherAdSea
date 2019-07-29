@@ -2,6 +2,7 @@ package com.ifmvo.androidad.adExtend
 
 import android.os.CountDownTimer
 import com.google.android.gms.ads.reward.RewardedVideoAd
+import com.ifmvo.androidad.UmengEvent
 import com.ifmvo.androidad.ad.Config
 import com.ifmvo.androidad.ad.TogetherAdConst
 import com.ifmvo.androidad.ad.logd
@@ -50,6 +51,9 @@ object RewardAdManager {
         rewardHelperA.onDestory()
         rewardHelperD.onDestory()
 
+        isFailedA = false
+        isFailedD = false
+
         logd(tag, "requestAd")
         //如果 A 档有缓存就直接返回 A 档展示
         if (adWrapperA != null) {
@@ -65,10 +69,9 @@ object RewardAdManager {
             onFailed()
         }.start()
 
-        isFailedA = false
         rewardHelperA.requestAd(Config.rewardAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
-//                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdClick(channel, UmengEvent.AD_REWARD_LOCATION)
             }
 
             override fun onAdClose(channel: String, key: String, other: Any) {
@@ -89,24 +92,22 @@ object RewardAdManager {
             }
 
             override fun onAdShow(channel: String, key: String) {
-//                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdShow(channel, UmengEvent.AD_REWARD_LOCATION)
             }
 
             override fun onStartRequest(channel: String, key: String) {
-//                UmengEvent.eventAdRequest(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdRequest(channel, UmengEvent.AD_REWARD_LOCATION)
             }
         }, onlyOnce = true)
 
         //如果 D 档有缓存，就不用重新请求 D 档了，等待 A 请求回来，或超时再返回 D 档
         if (adWrapperD != null) {
-            isFailedD = true
             return
         }
 
-        isFailedD = false
         rewardHelperD.requestAd(Config.rewardAdConfig(), object : IAdListener {
             override fun onAdClick(channel: String, key: String) {
-//                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdClick(channel, UmengEvent.AD_REWARD_LOCATION)
             }
 
             override fun onAdClose(channel: String, key: String, other: Any) {
@@ -125,11 +126,11 @@ object RewardAdManager {
             }
 
             override fun onAdShow(channel: String, key: String) {
-//                UmengEvent.eventAdClick(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdShow(channel, UmengEvent.AD_REWARD_LOCATION)
             }
 
             override fun onStartRequest(channel: String, key: String) {
-//                UmengEvent.eventAdRequest(channel, UmengEvent.AD_SPLASH_LOCATION)
+                UmengEvent.eventAdRequest(channel, UmengEvent.AD_REWARD_LOCATION)
             }
         }, onlyOnce = true)
     }
