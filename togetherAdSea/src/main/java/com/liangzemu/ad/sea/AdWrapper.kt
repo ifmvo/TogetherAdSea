@@ -9,7 +9,7 @@ class AdWrapper(val realAd:Any,val key:String=realAd.toString()) {
     private var listener:IAdListener?=null
     private var listenerOwner:String?=null
 
-    fun setListener(listener:IAdListener,listenerOwner:String){
+    fun setListener(listener:IAdListener?,listenerOwner:String){
         this.listener=listener
         this.listenerOwner=listenerOwner
     }
@@ -22,7 +22,7 @@ class AdWrapper(val realAd:Any,val key:String=realAd.toString()) {
     fun getOwner():String?{
         return listenerOwner
     }
-    internal fun destory(){
+    fun destory(){
         when(realAd){
             is RewardedVideoAd->realAd.destroy(TogetherAdSea.context)
             is UnifiedNativeAd ->realAd.destroy()

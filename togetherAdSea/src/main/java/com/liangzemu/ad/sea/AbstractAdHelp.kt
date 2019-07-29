@@ -258,10 +258,14 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long
         return timeOutSet.contains(key)
     }
     private fun bindListener(key: String) {
-        if(unUseListenerList.isEmpty()){
-            return
+
+        getAdByKey(key)?.setListener(getUnuseListener(),owner)
+    }
+    private fun getUnuseListener():IAdListener? {
+         if(unUseListenerList.isEmpty()){
+             return null
         }
-        getAdByKey(key)?.setListener(unUseListenerList.removeAt(0),owner)
+        return unUseListenerList.removeAt(0)
     }
     /**
      *  ======================== 这堆监听器回调是为了方便子类扩展 =======================
@@ -283,8 +287,7 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long
         //移出超时
         timeOutSet.remove(key)
         //绑定监听器
-        bindListener(key)
-        getAdByKey(key)?.getListener()?.onAdFailed(failedMsg, key)
+        getUnuseListener()?.onAdFailed(failedMsg, key)
     }
 
 
