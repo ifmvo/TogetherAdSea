@@ -311,10 +311,11 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long
         loadingCount--
         //移出超时
         timeOutSet.remove(adWrapper.key)
-        //绑定监听器
-        bindListener(adWrapper.key)
+
         //加入缓存
         addtoAdCache(adWrapper)
+        //绑定监听器
+        bindListener(adWrapper.key)
         //回调
         adWrapper.getListener()?.onAdPrepared(channel, adWrapper)
     }
