@@ -4,7 +4,7 @@ import com.facebook.ads.NativeAd
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.google.android.gms.ads.reward.RewardedVideoAd
 
-class AdWrapper(val realAd:Any,val key:String=realAd.toString()) {
+class AdWrapper(val realAd:Any,val key:String=realAd.hashCode().toString()) {
     var showedTime=0L
     private var listener:IAdListener?=null
     private var listenerOwner:String?=null

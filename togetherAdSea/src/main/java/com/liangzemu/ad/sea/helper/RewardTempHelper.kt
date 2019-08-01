@@ -11,7 +11,6 @@ import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.liangzemu.ad.sea.*
 import com.liangzemu.ad.sea.other.AdNameType
-import com.liangzemu.ad.sea.other.logd
 import com.liangzemu.ad.sea.other.logi
 
 /* 
@@ -27,11 +26,11 @@ class RewardTempHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSe
         return when (adNameType) {
             AdNameType.GOOGLE_ADMOB -> {
                 val ad = MobileAds.getRewardedVideoAdInstance(TogetherAdSea.context)
-                Pair(ad, ad.toString())
+                Pair(ad, ad.hashCode().toString())
             }
             AdNameType.FACEBOOK -> {
                 val ad = InterstitialAd(TogetherAdSea.context, id)
-                Pair(ad, ad.toString())
+                Pair(ad, ad.hashCode().toString())
             }
             else -> {
                 throw IllegalArgumentException("没有此广告类型:${adNameType.type}")
@@ -51,12 +50,12 @@ class RewardTempHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSe
             var rewarded = false
             override fun onRewardedVideoAdClosed() {
                 logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.dismiss)}")
-                adListener.onAdClose(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.toString(), rewarded)
+                adListener.onAdClose(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.hashCode().toString(), rewarded)
             }
 
             override fun onRewardedVideoAdLeftApplication() {
                 logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.clicked)}")
-                adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.toString())
+                adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.hashCode().toString())
 
             }
 
@@ -68,7 +67,7 @@ class RewardTempHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSe
 
             override fun onRewardedVideoAdOpened() {
                 logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.show)}")
-                adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.toString())
+                adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type, adOrBuilder.hashCode().toString())
 
             }
 
@@ -84,7 +83,7 @@ class RewardTempHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSe
             }
 
             override fun onRewardedVideoAdFailedToLoad(p0: Int) {
-                errorCallback(p0.toString())
+                errorCallback(p0.hashCode().toString())
             }
         }
         adOrBuilder.loadAd(id, getGoogleAdRequest())
@@ -103,12 +102,12 @@ class RewardTempHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSe
 
             override fun onAdClicked(p0: Ad) {
                 logi("${AdNameType.FACEBOOK.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.clicked)}")
-                adListener.onAdClick(AdNameType.FACEBOOK.type, p0.toString())
+                adListener.onAdClick(AdNameType.FACEBOOK.type, p0.hashCode().toString())
             }
 
             override fun onInterstitialDismissed(p0: Ad?) {
                 logi("${AdNameType.FACEBOOK.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.dismiss)}")
-                adListener.onAdClose(AdNameType.FACEBOOK.type, adOrBuilder.toString(), true)
+                adListener.onAdClose(AdNameType.FACEBOOK.type, adOrBuilder.hashCode().toString(), true)
             }
 
             override fun onError(p0: Ad, adError: AdError?) {
@@ -125,7 +124,7 @@ class RewardTempHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSe
 
             override fun onLoggingImpression(p0: Ad) {
                 logi("${AdNameType.FACEBOOK.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.show)}")
-                adListener.onAdShow(AdNameType.FACEBOOK.type, p0.toString())
+                adListener.onAdShow(AdNameType.FACEBOOK.type, p0.hashCode().toString())
             }
         })
         adOrBuilder.loadAd()

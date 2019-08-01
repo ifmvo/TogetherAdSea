@@ -28,11 +28,11 @@ class FlowHelper(adConstStr: String, private val googleAdPostion:Int=NativeAdOpt
         return when(adNameType){
             AdNameType.GOOGLE_ADMOB->{
                 val ad = AdLoader.Builder(context, id)
-                Pair(ad,ad.toString())
+                Pair(ad,ad.hashCode().toString())
             }
             AdNameType.FACEBOOK->{
                 val ad = NativeAd(context, id)
-                Pair(ad,ad.toString())
+                Pair(ad,ad.hashCode().toString())
             }
             else ->{
                 throw IllegalArgumentException("没有此广告类型:${adNameType.type}")
@@ -51,22 +51,22 @@ class FlowHelper(adConstStr: String, private val googleAdPostion:Int=NativeAdOpt
         adOrBuilder.forUnifiedNativeAd { ad: UnifiedNativeAd ->
             logi("${AdNameType.GOOGLE_ADMOB.type} $adConstStr: ${context.getString(R.string.prepared)}")
             timer.cancel()
-            adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(ad,adOrBuilder.toString()))
+            adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(ad,adOrBuilder.hashCode().toString()))
         }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(errorCode: Int) {
-                    errorCallback(errorCode.toString())
+                    errorCallback(errorCode.hashCode().toString())
                 }
 
                 override fun onAdImpression() {
                     logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.exposure)}")
                     //(TogetherAdSea.adCacheMap[adConstStr] as ArrayList<Any>).remove()
-                    adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString())
+                    adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.hashCode().toString())
                 }
 
                 override fun onAdClicked() {
                     logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.clicked)}")
-                    adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString())
+                    adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.hashCode().toString())
                 }
             })
             .withNativeAdOptions(
@@ -88,7 +88,7 @@ class FlowHelper(adConstStr: String, private val googleAdPostion:Int=NativeAdOpt
         adOrBuilder.setAdListener(object : NativeAdListener {
             override fun onAdClicked(ad: Ad) {
                 logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.clicked)}")
-                adListener.onAdClick(AdNameType.FACEBOOK.type,ad.toString())
+                adListener.onAdClick(AdNameType.FACEBOOK.type,ad.hashCode().toString())
             }
 
             override fun onMediaDownloaded(ad: Ad?) {
@@ -101,12 +101,12 @@ class FlowHelper(adConstStr: String, private val googleAdPostion:Int=NativeAdOpt
             override fun onAdLoaded(ad: Ad) {
                 logi("${AdNameType.FACEBOOK.type} $adConstStr: ${context.getString(R.string.prepared)}")
                 timer.cancel()
-                adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(ad,ad.toString()))
+                adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(ad,ad.hashCode().toString()))
             }
 
             override fun onLoggingImpression(ad: Ad) {
                 logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.exposure)}")
-                adListener.onAdShow(AdNameType.FACEBOOK.type,ad.toString())
+                adListener.onAdShow(AdNameType.FACEBOOK.type,ad.hashCode().toString())
             }
         })
         adOrBuilder.loadAd()

@@ -1,10 +1,8 @@
 package com.liangzemu.ad.sea.helper
 
 import android.os.CountDownTimer
-import androidx.annotation.NonNull
 import com.facebook.ads.Ad
 import com.facebook.ads.AdError
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
@@ -12,8 +10,6 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.liangzemu.ad.sea.*
 import com.liangzemu.ad.sea.TogetherAdSea.context
 import com.liangzemu.ad.sea.other.AdNameType
-import com.liangzemu.ad.sea.other.logd
-import com.liangzemu.ad.sea.other.loge
 import com.liangzemu.ad.sea.other.logi
 
 
@@ -27,11 +23,11 @@ class RewardHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSea.ti
         return when(adNameType){
             AdNameType.GOOGLE_ADMOB->{
                 val ad = MobileAds.getRewardedVideoAdInstance(context)
-                Pair(ad,ad.toString())
+                Pair(ad,ad.hashCode().toString())
             }
             AdNameType.FACEBOOK->{
                 val ad = com.facebook.ads.RewardedVideoAd(context, id)
-                Pair(ad,ad.toString())
+                Pair(ad,ad.hashCode().toString())
             }
             else ->{
                 throw IllegalArgumentException("没有此广告类型:${adNameType.type}")
@@ -50,12 +46,12 @@ class RewardHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSea.ti
             var rewarded=false
             override fun onRewardedVideoAdClosed() {
                 logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.dismiss)}")
-                adListener.onAdClose(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString(),rewarded)
+                adListener.onAdClose(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.hashCode().toString(),rewarded)
             }
 
             override fun onRewardedVideoAdLeftApplication() {
                 logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.clicked)}")
-                adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString())
+                adListener.onAdClick(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.hashCode().toString())
 
             }
 
@@ -67,7 +63,7 @@ class RewardHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSea.ti
 
             override fun onRewardedVideoAdOpened() {
                 logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.show)}")
-                adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.toString())
+                adListener.onAdShow(AdNameType.GOOGLE_ADMOB.type,adOrBuilder.hashCode().toString())
 
             }
 
@@ -83,7 +79,7 @@ class RewardHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSea.ti
             }
 
             override fun onRewardedVideoAdFailedToLoad(p0: Int) {
-                errorCallback(p0.toString())
+                errorCallback(p0.hashCode().toString())
             }
         }
         adOrBuilder.loadAd(id, getGoogleAdRequest())
@@ -99,12 +95,12 @@ class RewardHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSea.ti
             var isRewarded=false
             override fun onRewardedVideoClosed() {
                 logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.dismiss)}")
-                adListener.onAdClose(AdNameType.FACEBOOK.type,adOrBuilder.toString(), isRewarded)
+                adListener.onAdClose(AdNameType.FACEBOOK.type,adOrBuilder.hashCode().toString(), isRewarded)
             }
 
             override fun onAdClicked(p0: Ad) {
                 logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.clicked)}")
-                adListener.onAdClick(AdNameType.FACEBOOK.type,p0.toString())
+                adListener.onAdClick(AdNameType.FACEBOOK.type,p0.hashCode().toString())
             }
 
             override fun onRewardedVideoCompleted() {
@@ -126,7 +122,7 @@ class RewardHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSea.ti
 
             override fun onLoggingImpression(p0: Ad) {
                 logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.show)}")
-                adListener.onAdShow(AdNameType.FACEBOOK.type,p0.toString())
+                adListener.onAdShow(AdNameType.FACEBOOK.type,p0.hashCode().toString())
             }
         })
         adOrBuilder.loadAd()

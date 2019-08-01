@@ -7,7 +7,7 @@ package com.ifmvo.androidad.ad
  */
 object Config {
 
-    val config = "google_admob:0,facebook:1"
+    val config = "google_admob:1,facebook:1"
 
     fun bannerAdConfig() = config
 

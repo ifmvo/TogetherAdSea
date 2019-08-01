@@ -38,11 +38,19 @@ object UmengEvent {
     }
 
     /**
+     * 广告请求到了
+     */
+    fun eventAdFills(name: String, location: String) {
+        printLog(Exception().stackTrace[0].methodName, "name:$name,location:$location")
+    }
+
+    /**
      * 广告请求
      */
     fun eventAdRequest(name: String, location: String) {
         printLog(Exception().stackTrace[0].methodName, "name:$name,location:$location")
     }
+
 
     private fun printLog(methodName: String, msg: String) {
         logd("UmengEvent", "$methodName:$msg")

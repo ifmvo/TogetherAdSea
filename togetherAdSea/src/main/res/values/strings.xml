@@ -18,5 +18,6 @@
     <string translatable="false" name="complete">完成了</string>
     <string translatable="false" name="clicked">点击了</string>
     <string translatable="false" name="dismiss">消失了</string>
+    <string translatable="false" name="failed">失败了</string>
     <string translatable="false" name="clicked_action">点击了跳过</string>
 </resources>

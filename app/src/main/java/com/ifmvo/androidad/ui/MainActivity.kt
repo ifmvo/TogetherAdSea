@@ -8,8 +8,8 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.ifmvo.androidad.ad.logd
-import com.ifmvo.androidad.adExtend.RewardAdManager
-import com.ifmvo.androidad.adExtend.SplashAdManager
+import com.ifmvo.androidad.adExtend.RewardAdManagerNew
+import com.ifmvo.androidad.adExtend.SplashAdManagerNew
 
 /*
  * (●ﾟωﾟ●)
@@ -30,9 +30,9 @@ class MainActivity : ListActivity() {
         super.onCreate(savedInstanceState)
 
         //展示开屏广告
-        SplashAdManager.showAd()
+        SplashAdManagerNew.showAd()
         //再请求一个留着下次用
-        SplashAdManager.requestAd(30)
+        SplashAdManagerNew.requestAd(overTimeSecond = 30)
 
         cacheReward()
 
@@ -48,7 +48,7 @@ class MainActivity : ListActivity() {
         listAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, arr)
     }
 
-    private fun cacheReward() = RewardAdManager.requestAd(overTimeSecond = 30, onClosed = mOnClosed)
+    private fun cacheReward() = RewardAdManagerNew.requestAd(overTimeSecond = 30)
 
     override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
         super.onListItemClick(l, v, position, id)
@@ -63,30 +63,31 @@ class MainActivity : ListActivity() {
                 FlowAdActivity.action(this)
             }
             3 -> {
-                SplashAdManager.requestAd(overTimeSecond = 4) {
-                    SplashAdManager.showAd()
-                    SplashAdManager.requestAd()//保证展示了一个，就请求下一个的原则
-                }
+                SplashAdManagerNew.requestAd(overTimeSecond = 4, onSuccess = {
+                    SplashAdManagerNew.showAd()
+                }, onFailed = {
+                    SplashAdManagerNew.requestAd()
+                }, onClosed = {
+                    SplashAdManagerNew.requestAd()
+                })
             }
             4 -> {
-                RewardAdManager.requestAd(overTimeSecond = 6,
+                RewardAdManagerNew.requestAd(overTimeSecond = 6,
                     onSuccess = {
                         logd(tag, "onSuccess")
-                        RewardAdManager.showAd()
+                        RewardAdManagerNew.showAd()
                     }, onFailed = {
                         logd(tag, "onFailed")
 
-                    }, onClosed = mOnClosed
+                    }, onClosed = {
+                        logd(tag, "onClosed: $it")
+                        cacheReward()
+                    }
                 )
             }
             5 -> {
                 FlowBannerFlowAdActivity.action(this)
             }
         }
-    }
-
-    private val mOnClosed: (isReward: Boolean) -> Unit = {
-        logd(tag, "onClosed: $it")
-        cacheReward()
     }
 }
