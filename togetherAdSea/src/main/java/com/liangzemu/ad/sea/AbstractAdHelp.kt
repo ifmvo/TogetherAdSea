@@ -38,6 +38,7 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long
         if (onlyOnce) {
             //正在加载中
             if (loadingAdType.contains(adConstStr)) {
+                unUseListenerList.clear()
                 unUseListenerList.add(userListener)
                 logi("$adConstStr 正在加载中")
                 return
