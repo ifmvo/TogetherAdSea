@@ -2,12 +2,10 @@ package com.liangzemu.ad.sea
 
 import android.os.CountDownTimer
 import androidx.annotation.NonNull
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import com.liangzemu.ad.sea.TogetherAdSea.context
 import com.liangzemu.ad.sea.other.*
-import java.lang.ref.WeakReference
 import kotlin.math.max
+import kotlin.math.min
 
 /**
  * 广告开始请求时监听器与广告实体(or loader)对应存储
@@ -17,14 +15,18 @@ import kotlin.math.max
  * @property adConstStr String
  * @constructor
  */
-abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long, val owner:String) : AdBase, IAdListener {
-    val levelHorizontal: Int = max(TogetherAdSea.idListGoogleMap[adConstStr]?.size ?: 0, TogetherAdSea.idListFacebookMap[adConstStr]?.size ?: 0) - 1
+abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond: Long, val owner: String) : AdBase,
+    IAdListener {
+    val levelHorizontal: Int = max(
+        TogetherAdSea.idListGoogleMap[adConstStr]?.size ?: 0,
+        TogetherAdSea.idListFacebookMap[adConstStr]?.size ?: 0
+    ) - 1
     /**
      * 本对象内部正在请求的广告个数
      */
-    var loadingCount=0
+    var loadingCount = 0
         set(value) {
-            field = max(value,0)
+            field = max(value, 0)
         }
     private val unUseListenerList = ArrayList<IAdListener>()//list<监听器>
 
@@ -33,7 +35,7 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long
         @NonNull userListener: IAdListener,
         direction: Direction = Direction.HORIZONTAL,
         onlyOnce: Boolean = false,
-        caCheFilter:(AdWrapper)->Boolean={true}
+        caCheFilter: (AdWrapper) -> Boolean = { true }
     ) {
         if (onlyOnce) {
             //正在加载中
@@ -48,7 +50,7 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long
         val adFromCache = getAdFromCache(caCheFilter)
         adFromCache?.let {
             logi("$adConstStr 已经有缓存了")
-            adFromCache.setListener(userListener,owner)
+            adFromCache.setListener(userListener, owner)
             adFromCache.getListener()?.onAdPrepared("adCache", adFromCache)
             return
         }
@@ -162,7 +164,14 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long
             list.find { predicate.invoke(it) }
     }
 
+    fun getAdListFromCache(size: Int, predicate: (AdWrapper) -> Boolean): List<AdWrapper> {
+        val list = adCacheMap[adConstStr]
+        return if (list.isNullOrEmpty())
+            mutableListOf()
+        else
+            list.filter { predicate(it) }.let { it.subList(0, min(size, it.size)) }
 
+    }
 
     /**
      * 外部广告使用后需要销毁时调用
@@ -193,31 +202,33 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long
      * @param predicate Function1<AdWrapper, Boolean>
      * @return Unit
      */
-    fun removeAd(predicate: (AdWrapper) -> Boolean){
+    fun removeAd(predicate: (AdWrapper) -> Boolean) {
         adCacheMap[adConstStr]?.filter {
             predicate.invoke(it)
         }?.forEach {
             removeAd(it.key)
         }
     }
-    fun getAdByKey(key:String):AdWrapper?{
+
+    fun getAdByKey(key: String): AdWrapper? {
         return adCacheMap[adConstStr]?.find {
-            it.key==key
+            it.key == key
         }
     }
+
     /**
      * 退出Activity时调用 主要用于清空监听器
      * @param other 其他需要删除的广告 返回true 表示删除
      * @receiver AdWrapper
      * @return Unit
      */
-    fun onDestory(other:(AdWrapper)->Boolean={false}) {
+    fun onDestory(other: (AdWrapper) -> Boolean = { false }) {
         /**
          * 多页面同时请求同类型，并且其中一方先调用这个方法时  可能会导致另一个页面的广告无法回调
          */
         unUseListenerList.clear()
         adCacheMap[adConstStr]?.filter {
-            (it.getOwner()==owner)||other.invoke(it)
+            (it.getOwner() == owner) || other.invoke(it)
         }?.forEach {
             it.resetListener()
         }
@@ -258,16 +269,19 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long
     internal fun isTimeOut(key: String): Boolean {
         return timeOutSet.contains(key)
     }
+
     private fun bindListener(key: String) {
 
-        getAdByKey(key)?.setListener(getUnuseListener(),owner)
+        getAdByKey(key)?.setListener(getUnuseListener(), owner)
     }
-    private fun getUnuseListener():IAdListener? {
-         if(unUseListenerList.isEmpty()){
-             return null
+
+    private fun getUnuseListener(): IAdListener? {
+        if (unUseListenerList.isEmpty()) {
+            return null
         }
         return unUseListenerList.removeAt(0)
     }
+
     /**
      *  ======================== 这堆监听器回调是为了方便子类扩展 =======================
      *  key 一般是 ADhash or loaderhash 区别在于能不能再加载前拿到ad
@@ -275,7 +289,7 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long
      */
     override fun onStartRequest(channel: String, key: String) {
         //TODO 目前无法回调
-        getAdByKey(key)?.getListener()?.onStartRequest(channel,key)
+        getAdByKey(key)?.getListener()?.onStartRequest(channel, key)
     }
 
     override fun onAdClick(channel: String, key: String) {
@@ -292,12 +306,11 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond:Long
     }
 
 
-
     override fun onAdShow(channel: String, key: String) {
         adCacheMap[adConstStr]?.find {
             it.key == key
         }?.apply {
-            showedTime=System.currentTimeMillis() //标记为已展示
+            showedTime = System.currentTimeMillis() //标记为已展示
         }
         getAdByKey(key)?.getListener()?.onAdShow(channel, key)
     }
