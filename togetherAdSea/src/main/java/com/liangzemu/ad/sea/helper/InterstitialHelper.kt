@@ -17,7 +17,11 @@ import com.liangzemu.ad.sea.other.logi
  * 
  * Created by Matthew_Chen on 2019-06-25.
  */
-class InterstitialHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSea.timeoutMillsecond,  owner:String=adConstStr) : BaseAdHelp(adConstStr,timeOutMillsecond,owner) {
+class InterstitialHelper(
+    adConstStr: String,
+    timeOutMillsecond: Long = TogetherAdSea.timeoutMillsecond,
+    owner: String = adConstStr
+) : BaseAdHelp(adConstStr, timeOutMillsecond, owner) {
 
     @Throws(IllegalArgumentException::class)
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
@@ -53,9 +57,13 @@ class InterstitialHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAd
         }.build())
         adOrBuilder.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                timer.cancel()
-                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.prepared)}")
-                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(adOrBuilder))
+                if (adOrBuilder.isLoaded) {
+                    timer.cancel()
+                    logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${context.getString(R.string.prepared)}")
+                    adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(adOrBuilder))
+                } else {
+                    errorCallback("Google InterstitialAd is not loaded")
+                }
             }
 
             override fun onAdClosed() {

@@ -20,7 +20,11 @@ import com.liangzemu.ad.sea.other.logi
  * 
  * Created by Matthew_Chen on 2019-07-11.
  */
-class RewardTempHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSea.timeoutMillsecond,  owner:String=adConstStr) : BaseAdHelp(adConstStr,timeOutMillsecond,owner) {
+class RewardTempHelper(
+    adConstStr: String,
+    timeOutMillsecond: Long = TogetherAdSea.timeoutMillsecond,
+    owner: String = adConstStr
+) : BaseAdHelp(adConstStr, timeOutMillsecond, owner) {
 
     override fun initAD(id: String, adNameType: AdNameType): Pair<Any, String> {
         return when (adNameType) {
@@ -60,9 +64,13 @@ class RewardTempHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSe
             }
 
             override fun onRewardedVideoAdLoaded() {
-                logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.prepared)}")
-                timer.cancel()
-                adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(adOrBuilder))
+                if (adOrBuilder.isLoaded) {
+                    logi("${AdNameType.GOOGLE_ADMOB.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.prepared)}")
+                    timer.cancel()
+                    adListener.onAdPrepared(AdNameType.GOOGLE_ADMOB.type, AdWrapper(adOrBuilder))
+                } else {
+                    errorCallback("Google RewardedVideoAd is not Loaded")
+                }
             }
 
             override fun onRewardedVideoAdOpened() {
@@ -83,7 +91,7 @@ class RewardTempHelper(adConstStr: String,  timeOutMillsecond:Long= TogetherAdSe
             }
 
             override fun onRewardedVideoAdFailedToLoad(p0: Int) {
-                errorCallback(p0.hashCode().toString())
+                errorCallback(p0.toString())
             }
         }
         adOrBuilder.loadAd(id, getGoogleAdRequest())
