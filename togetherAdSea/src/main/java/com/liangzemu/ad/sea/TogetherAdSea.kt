@@ -22,10 +22,6 @@ object TogetherAdSea {
     var testDeviceID: String? = null
         private set
     /**
-     * 当前正在加载中的广告
-     */
-    val loadingAdTask = HashMap<String, Int>() //HashMap<adConstStr,lastLevel>()
-    /**
      * 保存application
      */
     lateinit var context: Application
@@ -33,17 +29,6 @@ object TogetherAdSea {
      * 超时时间
      */
     var timeoutMillsecond: Long = 10000
-    /**
-     * 缓存广告
-     */
-    internal val adCacheMap = HashMap<String, Any>()//HashMap<adConstStr,AD>()
-    /**
-     * 是否是中介模式
-     * 中介模式，就会忽略 configStr，就是不理会广告的比例，写死 google_admob:1,other:0
-     * 在项目里面任意时刻调用，实时生效
-     */
-    var isMediationMode = false
-
     /**
      * 初始化 Google 广告
      */
