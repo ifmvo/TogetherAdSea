@@ -1,10 +1,6 @@
 package com.liangzemu.ad.sea.helper
 
 import android.os.CountDownTimer
-import com.facebook.ads.Ad
-import com.facebook.ads.AdError
-import com.facebook.ads.NativeAd
-import com.facebook.ads.NativeAdListener
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.formats.NativeAdOptions
@@ -12,7 +8,6 @@ import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.liangzemu.ad.sea.*
 import com.liangzemu.ad.sea.TogetherAdSea.context
 import com.liangzemu.ad.sea.other.AdNameType
-import com.liangzemu.ad.sea.other.logd
 import com.liangzemu.ad.sea.other.logi
 
 
@@ -28,10 +23,6 @@ class FlowHelper(adConstStr: String, private val googleAdPostion:Int=NativeAdOpt
         return when(adNameType){
             AdNameType.GOOGLE_ADMOB->{
                 val ad = AdLoader.Builder(context, id)
-                Pair(ad,ad.hashCode().toString())
-            }
-            AdNameType.FACEBOOK->{
-                val ad = NativeAd(context, id)
                 Pair(ad,ad.hashCode().toString())
             }
             else ->{
@@ -84,32 +75,7 @@ class FlowHelper(adConstStr: String, private val googleAdPostion:Int=NativeAdOpt
         timer: CountDownTimer,
         errorCallback: (String?) -> Unit
     ) {
-        adOrBuilder as NativeAd
-        adOrBuilder.setAdListener(object : NativeAdListener {
-            override fun onAdClicked(ad: Ad) {
-                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.clicked)}")
-                adListener.onAdClick(AdNameType.FACEBOOK.type,ad.hashCode().toString())
-            }
-
-            override fun onMediaDownloaded(ad: Ad?) {
-            }
-
-            override fun onError(ad: Ad, adError: AdError?) {
-                errorCallback(adError?.errorMessage)
-            }
-
-            override fun onAdLoaded(ad: Ad) {
-                logi("${AdNameType.FACEBOOK.type} $adConstStr: ${context.getString(R.string.prepared)}")
-                timer.cancel()
-                adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(ad,ad.hashCode().toString()))
-            }
-
-            override fun onLoggingImpression(ad: Ad) {
-                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.exposure)}")
-                adListener.onAdShow(AdNameType.FACEBOOK.type,ad.hashCode().toString())
-            }
-        })
-        adOrBuilder.loadAd()
+        errorCallback("Delete FB")
     }
 }
 

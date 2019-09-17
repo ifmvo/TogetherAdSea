@@ -1,8 +1,6 @@
 package com.liangzemu.ad.sea.helper
 
 import android.os.CountDownTimer
-import com.facebook.ads.Ad
-import com.facebook.ads.AdError
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -31,13 +29,6 @@ class BannerHelper(
                 val adView = AdView(context)
                 adView.adSize = AdSize.SMART_BANNER
                 adView.adUnitId = id
-                Pair(adView, adView.hashCode().toString())
-            }
-            AdNameType.FACEBOOK -> {
-                val adView = com.facebook.ads.AdView(
-                    context, id,
-                    com.facebook.ads.AdSize.BANNER_HEIGHT_50
-                )
                 Pair(adView, adView.hashCode().toString())
             }
             else -> {
@@ -100,30 +91,6 @@ class BannerHelper(
         timer: CountDownTimer,
         errorCallback: (String?) -> Unit
     ) {
-        adOrBuilder as com.facebook.ads.AdView
-        adOrBuilder.setAdListener(object : com.facebook.ads.AdListener {
-            override fun onAdClicked(ad: Ad?) {
-                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.clicked)}")
-                adListener.onAdClick(AdNameType.FACEBOOK.type, adOrBuilder.hashCode().toString())
-            }
-
-            override fun onError(ad: Ad?, adError: AdError?) {
-                loge("${AdNameType.FACEBOOK.type}: $adConstStr ${context.getString(R.string.failed)}")
-                errorCallback(adError?.errorMessage)
-            }
-
-            override fun onAdLoaded(ad: Ad) {
-                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.prepared)}")
-                timer.cancel()
-                adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(adOrBuilder, adOrBuilder.hashCode().toString()))
-            }
-
-            override fun onLoggingImpression(ad: Ad?) {
-                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${context.getString(R.string.exposure)}")
-                adListener.onAdShow(AdNameType.FACEBOOK.type, adOrBuilder.hashCode().toString())
-            }
-        })
-
-        adOrBuilder.loadAd()
+        errorCallback("Delete FB")
     }
 }

@@ -1,10 +1,6 @@
 package com.liangzemu.ad.sea.helper
 
 import android.os.CountDownTimer
-import com.facebook.ads.Ad
-import com.facebook.ads.AdError
-import com.facebook.ads.InterstitialAd
-import com.facebook.ads.InterstitialAdListener
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
@@ -30,10 +26,6 @@ class RewardTempHelper(
         return when (adNameType) {
             AdNameType.GOOGLE_ADMOB -> {
                 val ad = MobileAds.getRewardedVideoAdInstance(TogetherAdSea.context)
-                Pair(ad, ad.hashCode().toString())
-            }
-            AdNameType.FACEBOOK -> {
-                val ad = InterstitialAd(TogetherAdSea.context, id)
                 Pair(ad, ad.hashCode().toString())
             }
             else -> {
@@ -103,39 +95,7 @@ class RewardTempHelper(
         timer: CountDownTimer,
         errorCallback: (String?) -> Unit
     ) {
-        adOrBuilder as InterstitialAd
-        adOrBuilder.setAdListener(object : InterstitialAdListener {
-            override fun onInterstitialDisplayed(p0: Ad?) {
-            }
-
-            override fun onAdClicked(p0: Ad) {
-                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.clicked)}")
-                adListener.onAdClick(AdNameType.FACEBOOK.type, p0.hashCode().toString())
-            }
-
-            override fun onInterstitialDismissed(p0: Ad?) {
-                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.dismiss)}")
-                adListener.onAdClose(AdNameType.FACEBOOK.type, adOrBuilder.hashCode().toString(), true)
-            }
-
-            override fun onError(p0: Ad, adError: AdError?) {
-                errorCallback(adError?.errorMessage)
-            }
-
-            override fun onAdLoaded(p0: Ad) {
-                //取消超时
-                timer.cancel()
-
-                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.prepared)}")
-                adListener.onAdPrepared(AdNameType.FACEBOOK.type, AdWrapper(p0))
-            }
-
-            override fun onLoggingImpression(p0: Ad) {
-                logi("${AdNameType.FACEBOOK.type}:$adConstStr ${TogetherAdSea.context.getString(R.string.show)}")
-                adListener.onAdShow(AdNameType.FACEBOOK.type, p0.hashCode().toString())
-            }
-        })
-        adOrBuilder.loadAd()
+        errorCallback("Delete FB")
     }
 
 }
