@@ -26,7 +26,7 @@ class App : Application() {
          * 初始化 Facebook 广告
          * testMode: 是否开启测试模式
          */
-        TogetherAdSea.initAdFacebook(this, AdIdFactory.getFbAdIdList(), BuildConfig.DEBUG)
+//        TogetherAdSea.initAdFacebook(this, AdIdFactory.getFbAdIdList(), BuildConfig.DEBUG)
 //        TogetherAdSea.isMediationMode = true
     }
 
