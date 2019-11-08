@@ -56,4 +56,9 @@ object TogetherAdSea {
         AudienceNetworkAds.initialize(context)
         AdSettings.setTestMode(testMode)
     }
+
+    /**
+     * 真实请求回调
+     */
+    var realRequest:(id:String)->Unit={}
 }
