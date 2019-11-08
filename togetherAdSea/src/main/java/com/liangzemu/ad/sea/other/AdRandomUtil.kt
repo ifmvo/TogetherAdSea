@@ -1,7 +1,5 @@
 package com.liangzemu.ad.sea.other
 
-import com.liangzemu.ad.sea.TogetherAdSea
-
 /*
  * (●ﾟωﾟ●)
  *
@@ -36,14 +34,9 @@ object AdRandomUtil {
                 val splitKeyValue = itemStr.split(":")
                 if (splitKeyValue.size == 2) {
                     val keyStr = splitKeyValue[0]//google
-                    var valueStr = splitKeyValue[1]//2
+                    val valueStr = splitKeyValue[1]//2
                     if (keyStr.isNotEmpty() && valueStr.isNotEmpty()) {
                         //加到 list 里面 2 个 "google"
-                        //当中介模式时只管 Google , 其他的都忽略
-                        if (TogetherAdSea.isMediationMode && keyStr != AdNameType.GOOGLE_ADMOB.type) {
-                            valueStr = "0"
-                        }
-
                         repeat(valueStr.toInt()) {
                             when (keyStr) {
                                 AdNameType.GOOGLE_ADMOB.type -> {
