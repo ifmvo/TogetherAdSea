@@ -61,4 +61,8 @@ object TogetherAdSea {
      * 真实请求回调
      */
     var realRequest:(id:String)->Unit={}
+    /**
+     * 点击广告的回调
+     */
+    var realClick:()->Unit={}
 }

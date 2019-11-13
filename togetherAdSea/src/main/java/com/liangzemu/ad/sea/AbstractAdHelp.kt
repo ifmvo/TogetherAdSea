@@ -294,6 +294,7 @@ abstract class AbstractAdHelp(val adConstStr: String, val timeOutMillsecond: Lon
 
     override fun onAdClick(channel: String, key: String) {
         getAdByKey(key)?.getListener()?.onAdClick(channel, key)
+        TogetherAdSea.realClick.invoke()
     }
 
     override fun onAdFailed(failedMsg: String?, key: String) {
