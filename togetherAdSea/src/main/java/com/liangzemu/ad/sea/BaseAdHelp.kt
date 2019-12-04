@@ -97,6 +97,11 @@ abstract class BaseAdHelp(adConstStr: String, timeOutMillsecond:Long,  owner:Str
         logi("${adNameType.type}: ${TogetherAdSea.context.getString(R.string.start_request)}")
 
         val ad_id = getIDList(level, adNameType)!![index]
+
+        /**
+         * 加入每次请求的回调
+         */
+        TogetherAdSea.realRequest(ad_id)
         /**
          * 请求广告
          */
