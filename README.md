@@ -164,10 +164,6 @@ TogetherAdSea.initAdFacebook(this, AdIdFactory.getFbAdIdList(), BuildConfig.DEBU
 只需要在 Logcat 中过滤 ``TogetherAdSeaInfo``
 
 
-## 有疑问？VX 联系我!
-![WeChat](img/Wechat.jpeg)
-
-
 ## 版本日志
 v1.3.5
 添加了 RewardTempHelper
