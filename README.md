@@ -1,6 +1,6 @@
-![TogetherAdSea](app/src/main/res/mipmap-xxhdpi/ic_logo.png)
-
 # 本项目停止维护，建议使用[Google中介](https://developers.google.com/admob/android/mediate?hl=zh_cn)代替，各方面比较后者优势明显
+
+![TogetherAdSea](app/src/main/res/mipmap-xxhdpi/ic_logo.png)
 
 # 让广告收益最大化
 
